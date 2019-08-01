@@ -1,0 +1,54 @@
+.loginBtn {
+    font-size: 20px;
+    color: black;
+    opacity: .3;
+}
+
+.signUpBtn {
+    font-size: 20px;
+    color: white;
+    background: black;
+    border-radius: 1000px;
+    opacity: .3;
+}
+
+.loginBtn:hover {
+    color: #74a73d;
+    opacity: 1;
+    transition-duration: 0.5s;
+}
+
+.signUpBtn:hover {
+    background: #74a73d;
+    opacity: 1;
+    transition-duration: 0.5s;
+}
+
+.site-header {
+    margin: 0;
+    background: #fff;
+    border-bottom: 1px solid #ccccca;
+    border-top: 1px solid #ccccca;
+    min-height: 50px;
+}
+
+.label-header {
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 40px;
+}
+
+.logo-header {
+    margin: 10px 10px 10px 20px;
+    width: 280px;
+    height: 60px;
+}
+
+.search-logo-header {
+    width: 30px;
+    height: 30px;
+    opacity: .3;
+}
+
+.search-field-header {
+}
