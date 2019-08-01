@@ -5,9 +5,9 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import ru.aleynikov.blogcamp.StaticResources;
+import ru.aleynikov.blogcamp.staticComponents.StaticResources;
 
-@StyleSheet("styles/stylesHeaderElements.css")
+@StyleSheet(StaticResources.HEADER_COMPONENT_STYLES)
 public class HeaderComponent extends HorizontalLayout {
     private HorizontalLayout leftSideLayout = new HorizontalLayout();
     private HorizontalLayout rightSideLayout = new HorizontalLayout();
