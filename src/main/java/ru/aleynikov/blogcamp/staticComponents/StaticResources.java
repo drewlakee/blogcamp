@@ -6,6 +6,7 @@ public class StaticResources {
 
         public static final String LOGO_IMAGE = "images/logo.png";
         public static final String ERROR404_IMAGE = "images/errorImage.png";
+        public static final String SEARCHLOOP_IMAGE = "images/searchLoop.png";
 
         // Styles View
 

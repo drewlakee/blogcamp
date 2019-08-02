@@ -31,7 +31,7 @@
     border-top: 1px solid #ccccca;
     min-height: 50px;
 }
-
+#e7ebef
 .label-header {
     font-family: monospace;
     font-weight: bold;
@@ -45,10 +45,17 @@
 }
 
 .search-logo-header {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     opacity: .3;
 }
 
-.search-field-header {
+.search-logo-header:hover {
+    opacity: 1;
+    transition: 0.5s;
+}
+
+.search-button-header {
+    color: #74a73d;
+    background: #e7ebef;
 }
