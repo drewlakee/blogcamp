@@ -1,12 +1,13 @@
 package ru.aleynikov.blogcamp.component;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.BeforeEnterEvent;
 import ru.aleynikov.blogcamp.staticComponents.StaticResources;
 
 @StyleSheet(StaticResources.HEADER_COMPONENT_STYLES)
@@ -87,6 +88,10 @@ public class HeaderComponent extends HorizontalLayout {
            searchButton.setVisible(true);
            searchLoopImage.setVisible(false);
            searchField.focus();
+        });
+
+        logoImage.addClickListener(imageClickEvent -> {
+            UI.getCurrent().getUI().ifPresent(ui -> ui.navigate("feed"));
         });
 
 
