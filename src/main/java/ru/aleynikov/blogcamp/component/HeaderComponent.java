@@ -1,26 +1,28 @@
 package ru.aleynikov.blogcamp.component;
 
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.BeforeEnterEvent;
 import ru.aleynikov.blogcamp.staticComponents.StaticResources;
 
 @StyleSheet(StaticResources.HEADER_COMPONENT_STYLES)
 public class HeaderComponent extends HorizontalLayout {
     private HorizontalLayout leftSideLayout = new HorizontalLayout();
     private HorizontalLayout rightSideLayout = new HorizontalLayout();
+    private HorizontalLayout mainSideLayout = new HorizontalLayout();
 
     private Image logoImage = new Image(StaticResources.LOGO_IMAGE, "logo");
-    private Image searchLoopImage = new Image(StaticResources.SEARCHLOOP_IMAGE, "searchLoop");
     private Button signUpButton = new Button("Sign up");
     private Button loginButton = new Button("Login");
     private TextField searchField = new TextField();
-    private Button searchButton = new Button("Search");
 
     public HeaderComponent() {
         initHeaderLayoutProperties();
@@ -35,6 +37,8 @@ public class HeaderComponent extends HorizontalLayout {
     public void initHeaderLayoutProperties() {
         setWidth("100%");
         setClassName("site-header");
+        mainSideLayout.setWidth("1100px");
+        mainSideLayout.getStyle().set("margin", "0 auto");
     }
 
     public void initHeaderButtonProperties() {
@@ -49,49 +53,42 @@ public class HeaderComponent extends HorizontalLayout {
 
     public void initHeaderLeftSide() {
         leftSideLayout.setWidth("100%");
-        leftSideLayout.getStyle().set("padding-left", "10px");
         leftSideLayout.setJustifyContentMode(JustifyContentMode.START);
 
         logoImage.setClassName("logo-header");
         setVerticalComponentAlignment(Alignment.CENTER, logoImage);
 
-        searchLoopImage.setClassName("search-logo-header");
-        setVerticalComponentAlignment(Alignment.CENTER, searchLoopImage);
-
-        searchField.setPlaceholder("Search");
-        searchField.setVisible(false);
+        searchField.setPlaceholder("Search...");
         searchField.setClearButtonVisible(true);
+        searchField.setAutoselect(true);
+        Icon searchIcon = new Icon(VaadinIcon.SEARCH);
+        searchField.setPrefixComponent(searchIcon);
+        searchField.setClassName("search-textfield-header");
         setVerticalComponentAlignment(Alignment.CENTER, searchField);
 
-        searchButton.setVisible(false);
-        searchButton.setClassName("search-button-header");
-        setVerticalComponentAlignment(Alignment.CENTER, searchButton);
+        leftSideLayout.add(logoImage, searchField);
 
-        leftSideLayout.add(logoImage, searchLoopImage, searchField, searchButton);
-
-        add(leftSideLayout);
+        mainSideLayout.add(leftSideLayout);
     }
 
     public void initHeaderRightSide() {
         rightSideLayout.setJustifyContentMode(JustifyContentMode.END);
         rightSideLayout.add(loginButton, signUpButton);
         rightSideLayout.setWidth("100%");
-        rightSideLayout.getStyle().
-                set("padding-right", "10px");
 
-        add(rightSideLayout);
+        mainSideLayout.add(rightSideLayout);
+
+        add(mainSideLayout);
     }
 
     public void initHeaderListeners() {
-        searchLoopImage.addClickListener(imageClickEvent -> {
-           searchField.setVisible(true);
-           searchButton.setVisible(true);
-           searchLoopImage.setVisible(false);
-           searchField.focus();
-        });
 
         logoImage.addClickListener(imageClickEvent -> {
             UI.getCurrent().getUI().ifPresent(ui -> ui.navigate("feed"));
+        });
+
+        searchField.addKeyPressListener(Key.ENTER, KeyEventListener -> {
+            Notification.show(searchField.getValue());
         });
 
 
