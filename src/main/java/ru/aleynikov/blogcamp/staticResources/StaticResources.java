@@ -1,4 +1,4 @@
-package ru.aleynikov.blogcamp.staticComponents;
+package ru.aleynikov.blogcamp.staticResources;
 
 public class StaticResources {
 

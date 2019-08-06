@@ -5,7 +5,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import ru.aleynikov.blogcamp.component.HeaderComponent;
-import ru.aleynikov.blogcamp.staticComponents.StaticResources;
+import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 @PageTitle("blogcamp.")
 @Route("feed")

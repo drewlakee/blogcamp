@@ -7,7 +7,7 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
-import ru.aleynikov.blogcamp.staticComponents.StaticResources;
+import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import javax.servlet.http.HttpServletResponse;
 

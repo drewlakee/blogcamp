@@ -11,10 +11,11 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import ru.aleynikov.blogcamp.staticComponents.StaticResources;
+import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 @StyleSheet(StaticResources.HEADER_COMPONENT_STYLES)
 public class HeaderComponent extends HorizontalLayout {
+
     private HorizontalLayout leftSideLayout = new HorizontalLayout();
     private HorizontalLayout rightSideLayout = new HorizontalLayout();
     private HorizontalLayout mainSideLayout = new HorizontalLayout();
@@ -75,7 +76,6 @@ public class HeaderComponent extends HorizontalLayout {
         rightSideLayout.setJustifyContentMode(JustifyContentMode.END);
         rightSideLayout.add(loginButton, signUpButton);
         rightSideLayout.setWidth("100%");
-
         mainSideLayout.add(rightSideLayout);
 
         add(mainSideLayout);
@@ -90,7 +90,6 @@ public class HeaderComponent extends HorizontalLayout {
         searchField.addKeyPressListener(Key.ENTER, KeyEventListener -> {
             Notification.show(searchField.getValue());
         });
-
 
     }
 
