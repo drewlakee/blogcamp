@@ -7,8 +7,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
-import ru.aleynikov.blogcamp.daoImpl.UserDaoImpl;
-import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.staticResources.ConfigResources;
 
 @SpringBootApplication
@@ -16,9 +14,6 @@ public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
-
-        UserDaoImpl u = context.getBean(UserDaoImpl.class);
-        User us = u.findUserByUsername("ligardo");
     }
 
     @Bean

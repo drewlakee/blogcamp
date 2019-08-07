@@ -7,7 +7,7 @@ import com.vaadin.flow.router.Route;
 import ru.aleynikov.blogcamp.component.HeaderComponent;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
-@PageTitle("blogcamp.")
+@PageTitle("Feed")
 @Route("feed")
 @StyleSheet(StaticResources.FEED_VIEW_STYLES)
 public class FeedView extends VerticalLayout {

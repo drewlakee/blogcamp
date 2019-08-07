@@ -22,7 +22,7 @@ public class HeaderComponent extends HorizontalLayout {
 
     private Image logoImage = new Image(StaticResources.LOGO_IMAGE, "logo");
     private Button signUpButton = new Button("Sign up");
-    private Button loginButton = new Button("Login");
+    private Button logInButton = new Button("Log in");
     private TextField searchField = new TextField();
 
     public HeaderComponent() {
@@ -44,12 +44,12 @@ public class HeaderComponent extends HorizontalLayout {
 
     public void initHeaderButtonProperties() {
         signUpButton.setClassName("signUpBtn");
-        loginButton.setClassName("loginBtn");
+        logInButton.setClassName("loginBtn");
 
-        loginButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        logInButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         setVerticalComponentAlignment(Alignment.CENTER, signUpButton);
-        setVerticalComponentAlignment(Alignment.CENTER, loginButton);
+        setVerticalComponentAlignment(Alignment.CENTER, logInButton);
     }
 
     public void initHeaderLeftSide() {
@@ -74,7 +74,7 @@ public class HeaderComponent extends HorizontalLayout {
 
     public void initHeaderRightSide() {
         rightSideLayout.setJustifyContentMode(JustifyContentMode.END);
-        rightSideLayout.add(loginButton, signUpButton);
+        rightSideLayout.add(logInButton, signUpButton);
         rightSideLayout.setWidth("100%");
         mainSideLayout.add(rightSideLayout);
 
@@ -83,9 +83,11 @@ public class HeaderComponent extends HorizontalLayout {
 
     public void initHeaderListeners() {
 
-        logoImage.addClickListener(imageClickEvent -> {
-            UI.getCurrent().getUI().ifPresent(ui -> ui.navigate("feed"));
-        });
+        logoImage.addClickListener(imageClickEvent -> UI.getCurrent().getUI().ifPresent(ui -> ui.navigate("feed")));
+
+        logInButton.addClickListener(ClickEvent -> getUI().ifPresent(ui -> ui.navigate("login")));
+
+        signUpButton.addClickListener(ClickEvent -> getUI().ifPresent(ui -> ui.navigate("registration")));
 
         searchField.addKeyPressListener(Key.ENTER, KeyEventListener -> {
             Notification.show(searchField.getValue());

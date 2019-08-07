@@ -11,6 +11,7 @@ public class StaticResources {
 
         public static final String FEED_VIEW_STYLES = "styles/Feed.css";
         public static final String NOT_FOUND_PAGE_STYLES = "styles/NotFoundPage.css";
+        public static final String LOGIN_VIEW_STYLES = "styles/Login.css";
 
         // Styles View Components
 
