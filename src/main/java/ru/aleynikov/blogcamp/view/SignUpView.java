@@ -4,9 +4,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
@@ -18,7 +16,7 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 
 
-@PageTitle("Sign Up")
+@PageTitle("Sign up")
 @Route("registration")
 @StyleSheet(StaticResources.SIGNUP_VIEW_STYLES)
 public class SignUpView extends HorizontalLayout {
@@ -46,7 +44,6 @@ public class SignUpView extends HorizontalLayout {
 
         signUpLayout.setClassName("signup-layout");
         signUpLayout.setAlignItems(Alignment.CENTER);
-
 
         signUpFormLayout.setSizeFull();
         signUpFormLayout.setWidth("360px");
@@ -107,7 +104,5 @@ public class SignUpView extends HorizontalLayout {
         setVerticalComponentAlignment(Alignment.CENTER, signUpLayout);
 
         add(signUpLayout);
-
-
     }
 }

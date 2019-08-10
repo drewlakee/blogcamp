@@ -1,6 +1,5 @@
 .login-form {
-    margin: auto;
-    margin-top: 200px;
+    padding: var(--lumo-space-l);
 }
 
 .logo-login {
@@ -10,6 +9,30 @@
     margin-bottom: 0;
 }
 
-.login-form > vaadin-login-form > vaadin-login-form-wrapper > form > vaadin-button[part="vaadin-login-submit"] {
+.login-layout {
+    margin: auto;
+    margin-top: 200px;
+}
+
+.field {}
+
+.button {}
+
+.login-form > .button {
+    width: 100%;
     background-color: #55a92f;
+    color: var(--lumo-primary-contrast-color);
+    font-weight: 600;
+}
+
+.login-form > .field {
+    margin-top: 0;
+}
+
+h2 {
+    margin-bottom: 0;
+}
+
+.signup-link {
+    margin-top: 0;
 }
