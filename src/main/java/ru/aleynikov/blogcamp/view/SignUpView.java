@@ -104,5 +104,40 @@ public class SignUpView extends HorizontalLayout {
         setVerticalComponentAlignment(Alignment.CENTER, signUpLayout);
 
         add(signUpLayout);
+
+        continueButton.addClickListener(clickEvent -> {
+           if (isFormValid() && isUsernameUnique()) {
+               usernameField.setVisible(false);
+               passwordField.setVisible(false);
+               repeatPasswordField.setVisible(false);
+               continueButton.setVisible(false);
+
+               secretQuestionField.setVisible(true);
+               secretAnswerField.setVisible(true);
+               signUpButton.setVisible(true);
+           }
+        });
+    }
+
+    private Boolean isFormValid() {
+        Boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty();
+        Boolean isPasswordValid = !passwordField.isInvalid() && !passwordField.isEmpty();
+        Boolean isPasswordRepeatValid = passwordField.getValue().equals(repeatPasswordField.getValue());
+
+        return isUsernameValid && isPasswordValid && isPasswordRepeatValid;
+    }
+
+    private Boolean isUsernameUnique() {
+        //
+        // TODO: Get username from db and check
+        //
+        return true;
+    }
+
+    private Boolean isSecretQuestionValid() {
+        Boolean isQuestionValid = !secretQuestionField.isInvalid() && !secretQuestionField.isEmpty();
+        Boolean isAnswerValid = !secretAnswerField.isInvalid() && !secretAnswerField.isEmpty();
+
+        return isAnswerValid && isQuestionValid;
     }
 }
