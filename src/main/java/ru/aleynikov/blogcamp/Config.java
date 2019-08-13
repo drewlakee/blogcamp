@@ -1,6 +1,6 @@
-package ru.aleynikov.blogcamp.staticResources;
+package ru.aleynikov.blogcamp;
 
-public class ConfigResources {
+public class Config {
 
     // PSQL
 
