@@ -1,5 +1,6 @@
 package ru.aleynikov.blogcamp.view;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H2;
@@ -35,7 +36,7 @@ public class SignUpView extends HorizontalLayout {
     private Button continueButton = new Button("Continue");
     private Button signUpButton = new Button("Sign Up");
 
-    private RouterLink LogInLink = new RouterLink("Log in", LogInView.class);
+    private RouterLink LogInLink = new RouterLink("Log in", LoginView.class);
 
     public SignUpView() {
         signUpLayout.setSizeFull();
@@ -105,6 +106,8 @@ public class SignUpView extends HorizontalLayout {
 
         add(signUpLayout);
 
+        logoImage.addClickListener(imageClickEvent -> UI.getCurrent().getUI().ifPresent(ui -> ui.navigate("feed")));
+
         continueButton.addClickListener(clickEvent -> {
            if (isFormValid() && isUsernameUnique()) {
                usernameField.setVisible(false);
@@ -117,26 +120,30 @@ public class SignUpView extends HorizontalLayout {
                signUpButton.setVisible(true);
            }
         });
+
+        //
+        // TODO: Registration to BD with Bcrypt encoder for password
+        //
     }
 
-    private Boolean isFormValid() {
-        Boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty();
-        Boolean isPasswordValid = !passwordField.isInvalid() && !passwordField.isEmpty();
-        Boolean isPasswordRepeatValid = passwordField.getValue().equals(repeatPasswordField.getValue());
+    private boolean isFormValid() {
+        boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty();
+        boolean isPasswordValid = !passwordField.isInvalid() && !passwordField.isEmpty();
+        boolean isPasswordRepeatValid = passwordField.getValue().equals(repeatPasswordField.getValue());
 
         return isUsernameValid && isPasswordValid && isPasswordRepeatValid;
     }
 
-    private Boolean isUsernameUnique() {
+    private boolean isUsernameUnique() {
         //
         // TODO: Get username from db and check
         //
         return true;
     }
 
-    private Boolean isSecretQuestionValid() {
-        Boolean isQuestionValid = !secretQuestionField.isInvalid() && !secretQuestionField.isEmpty();
-        Boolean isAnswerValid = !secretAnswerField.isInvalid() && !secretAnswerField.isEmpty();
+    private boolean isSecretQuestionValid() {
+        boolean isQuestionValid = !secretQuestionField.isInvalid() && !secretQuestionField.isEmpty();
+        boolean isAnswerValid = !secretAnswerField.isInvalid() && !secretAnswerField.isEmpty();
 
         return isAnswerValid && isQuestionValid;
     }

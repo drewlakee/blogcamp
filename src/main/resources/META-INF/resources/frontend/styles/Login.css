@@ -36,3 +36,18 @@ h2 {
 .signup-link {
     margin-top: 0;
 }
+
+.error-login {
+    background-color: #ffebea;
+    border-radius: 5px;
+    border: 2px solid #ffc7d3;
+    color: #ff7075;
+}
+
+.error-label-login {
+    padding: 5px 10px 5px 10px;
+}
+
+.login-label {
+    margin-top: 15px;
+}
