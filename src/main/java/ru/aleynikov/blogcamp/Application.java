@@ -7,6 +7,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
@@ -33,4 +34,8 @@ public class Application extends SpringBootServletInitializer {
         return new JdbcTemplate(HikariDataSource());
     }
 
+    @Bean
+    public BCryptPasswordEncoder BCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

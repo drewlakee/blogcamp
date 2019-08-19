@@ -41,6 +41,7 @@ public final class SecurityUtils {
      * Tests if some user is authenticated. As Spring Security always will create an {@link AnonymousAuthenticationToken}
      * we have to ignore those tokens explicitly.
      */
+
     public static boolean isUserLoggedIn() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null

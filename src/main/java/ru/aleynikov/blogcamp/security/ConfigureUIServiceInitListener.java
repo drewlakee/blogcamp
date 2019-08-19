@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.RootResender;
 import ru.aleynikov.blogcamp.view.FeedView;
 import ru.aleynikov.blogcamp.view.LoginView;
+import ru.aleynikov.blogcamp.view.PasswordRestoreView;
 import ru.aleynikov.blogcamp.view.SignUpView;
 
 @Component
@@ -32,7 +33,8 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
                 && !SignUpView.class.equals(event.getNavigationTarget())
                 && !FeedView.class.equals(event.getNavigationTarget())
                 && !RootResender.class.equals(event.getNavigationTarget())
-                && !SecurityUtils.isUserLoggedIn()) {
+                && !SecurityUtils.isUserLoggedIn()
+                && !PasswordRestoreView.class.equals(event.getNavigationTarget())) {
             event.rerouteTo(LoginView.class);
         }
     }

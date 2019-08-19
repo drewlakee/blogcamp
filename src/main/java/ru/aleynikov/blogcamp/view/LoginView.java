@@ -5,6 +5,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
@@ -12,18 +13,23 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import ru.aleynikov.blogcamp.daoImpl.UserDaoImpl;
 import ru.aleynikov.blogcamp.security.CustomRequestCache;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
+
+import javax.swing.*;
 
 @PageTitle("Log in")
 @Route("login")
@@ -110,32 +116,60 @@ public class LoginView extends HorizontalLayout {
 
         loginButton.addClickShortcut(Key.ENTER);
         loginButton.addClickListener(clickEvent -> {
-            try {
-                /**
-                 *   try to authenticate with given credentials, should always return not null or throw an {@link AuthenticationException}
-                 */
+            if (isLoginFormValid()) {
+                try {
+                    /**
+                     *   try to authenticate with given credentials, should always return not null or throw an {@link AuthenticationException}
+                     */
 
-                 final Authentication authentication = authenticationManager
-                        .authenticate(new UsernamePasswordAuthenticationToken(usernameField.getValue().trim(), passwordField.getValue().trim()));
+                    log.info("User trying authenticates with username [{}]", usernameField.getValue().trim());
+                    log.info("select username, password, active from usr where username={}", usernameField.getValue().trim());
+                    final Authentication authentication = authenticationManager
+                            .authenticate(new UsernamePasswordAuthenticationToken(usernameField.getValue().trim(), passwordField.getValue().trim()));
 
-                /**
-                 *   if authentication was successful we will update the security context and redirect to the page requested first
-                 */
+                    /**
+                     *   if authentication was successful we will update the security context and redirect to the page requested first
+                     */
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.info("User was authenticated [{}] with authorities {}",
-                        SecurityContextHolder.getContext().getAuthentication().getName(),
-                        SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    log.info("User was authenticated [{}] with authorities {}",
+                            SecurityContextHolder.getContext().getAuthentication().getName(),
+                            SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 
-                loginErrorLayout.setVisible(false);
-
-                UI.getCurrent().navigate(requestCache.resolveRedirectUrl());
-
-            } catch (AuthenticationException ex) {
-                loginErrorLayout.setVisible(true);
-                // TODO:show default error message
-
+                    UI.getCurrent().navigate(requestCache.resolveRedirectUrl());
+                } catch (AuthenticationException ex) {
+                    loginErrorLayout.setVisible(true);
+                }
             }
         });
+
+        forgotPasswordButton.addClickListener(clickEvent -> UI.getCurrent().navigate("restore"));
+    }
+
+    private boolean isLoginFormValid() {
+        boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty();
+        boolean isPasswordValid = !passwordField.isInvalid() && !passwordField.isEmpty();
+
+        if (isUsernameValid && isPasswordValid) {
+            loginErrorLayout.setVisible(false);
+            return true;
+        } else {
+            if (!isUsernameValid && !isUsernameValid) {
+                usernameField.setInvalid(true);
+                passwordField.setInvalid(true);
+            }
+
+            if (!isUsernameValid) {
+                usernameField.setInvalid(true);
+                usernameField.focus();
+            }
+
+            if (!isPasswordValid && isUsernameValid) {
+                passwordField.setInvalid(true);
+                passwordField.focus();
+            }
+
+            return false;
+        }
     }
 }
