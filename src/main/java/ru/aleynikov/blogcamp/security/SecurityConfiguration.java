@@ -1,5 +1,7 @@
 package ru.aleynikov.blogcamp.security;
 
+import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,6 +10,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 /**
  * Configures spring security, doing the following:
@@ -25,6 +29,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String LOGIN_URL = "/login";
     private static final String LOGOUT_SUCCESS_URL = "/login";
 
+    @Autowired
+    private HikariDataSource dataSource;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -33,10 +43,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("username")
-                .password("{noop}username")
-                .roles("ADMIN");
+        auth.jdbcAuthentication()
+                .dataSource(dataSource)
+                .passwordEncoder(bCryptPasswordEncoder)
+                .usersByUsernameQuery("Select username, password, active from usr where username=?")
+                .authoritiesByUsernameQuery("select username, authority.name from (usr_to_authority JOIN usr USING (user_id)) JOIN authority USING (authority_id) where username=?");
     }
 
     @Bean
@@ -58,7 +69,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Restrict access to our application.
                 .and().authorizeRequests()
 
-                .antMatchers("/registration").permitAll()
+                .antMatchers("/registration", "/feed", "/", "/restore").permitAll()
 
                 // Allow all flow internal requests.
                 .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()

@@ -16,6 +16,10 @@
 
 .field {}
 
+.field-username {
+    padding-top: var(--lumo-space-l);
+}
+
 .button {}
 
 .signup-form > .button {
@@ -31,4 +35,19 @@
 
 h2 {
     margin-bottom: 0;
+}
+
+.error-signup {
+    background-color: #ffebea;
+    border-radius: 5px;
+    border: 2px solid #ffc7d3;
+    color: #ff7075;
+}
+
+.error-label-signup {
+    padding: 5px 10px 5px 10px;
+}
+
+.signup-form-label {
+    margin-top: 15px;
 }

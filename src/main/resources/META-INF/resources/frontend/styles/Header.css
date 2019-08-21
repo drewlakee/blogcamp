@@ -10,6 +10,7 @@
     background: black;
     border-radius: 1000px;
     opacity: .3;
+    margin-right: 10px;
 }
 
 .loginBtn:hover {
@@ -40,8 +41,9 @@
 
 .logo-header {
     margin: 10px 10px 10px 20px;
-    width: 230px;
-    height: 50px;
+    width: 155px;
+    height: 32px;
+    padding-left: 20px;
 }
 
 .search-textfield-header {
