@@ -16,6 +16,10 @@
 
 .field {}
 
+.field-username {
+    padding-top: var(--lumo-space-l);
+}
+
 .button {}
 
 .signup-form > .button {

@@ -10,7 +10,7 @@ import ru.aleynikov.blogcamp.dao.UserDao;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.rowMapper.UserRowMapper;
 
-import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -59,5 +59,14 @@ public class UserDaoImpl implements UserDao {
         Object[] newUserId = new Object[] {userId};
         log.info(insertDefaultAuthorityForNewUser + ", [{}]", newUserId);
         jdbc.update(insertDefaultAuthorityForNewUser, newUserId);
+    }
+
+    @Override
+    public void updateUserPassword(String username, String newPassword) {
+        String updatePassQuery = "UPDATE usr SET password=? WHERE username=?";
+
+        Object[] userData = new Object[] {newPassword, username};
+        log.info(updatePassQuery + ", {}", Arrays.toString(userData));
+        jdbc.update(updatePassQuery, userData);
     }
 }

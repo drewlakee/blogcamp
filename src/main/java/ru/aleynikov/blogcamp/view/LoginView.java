@@ -53,7 +53,7 @@ public class LoginView extends HorizontalLayout {
     private PasswordField passwordField = new PasswordField();
 
     private Button loginButton = new Button("Log in");
-    private Button forgotPasswordButton = new Button("Forgot password");
+    private Button forgotPasswordButton = new Button("Forgot password?");
 
     private RouterLink signUpLink = new RouterLink("Sign up", SignUpView.class);
 
@@ -147,7 +147,7 @@ public class LoginView extends HorizontalLayout {
     }
 
     private boolean isLoginFormValid() {
-        boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty();
+        boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty() && !usernameField.getValue().contains(" ");
         boolean isPasswordValid = !passwordField.isInvalid() && !passwordField.isEmpty();
 
         if (isUsernameValid && isPasswordValid) {

@@ -89,7 +89,6 @@ public class SignUpView extends HorizontalLayout {
         signUpFormLayout.setSizeFull();
         signUpFormLayout.setWidth("360px");
         signUpFormLayout.setClassName("signup-form");
-
         signUpFormLayout.setHorizontalComponentAlignment(Alignment.START, signUpLabel);
         signUpFormLayout.setAlignItems(Alignment.CENTER);
 
@@ -99,7 +98,7 @@ public class SignUpView extends HorizontalLayout {
         usernameField.setMaxLength(30);
         usernameField.setMinLength(6);
         usernameField.setRequired(true);
-        usernameField.setErrorMessage("Minimal length of username is " + usernameField.getMinLength() + " characters.");
+        usernameField.setErrorMessage("Minimal length is " + usernameField.getMinLength() + " characters, without white spaces.");
 
         passwordField.setLabel("Password");
         passwordField.setClassName("field");
@@ -188,7 +187,7 @@ public class SignUpView extends HorizontalLayout {
     }
 
     private boolean isFormValid() {
-        boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty();
+        boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty() && !usernameField.getValue().contains(" ");
         boolean isPasswordValid = !passwordField.isInvalid() && !passwordField.isEmpty();
         boolean isPasswordRepeatValid = passwordField.getValue().equals(repeatPasswordField.getValue());
 
