@@ -9,7 +9,7 @@ public class StaticResources {
 
         // Styles View
 
-        public static final String FEED_VIEW_STYLES = "styles/Feed.css";
+        public static final String MAIN_VIEW_STYLES = "styles/Main.css";
         public static final String NOT_FOUND_PAGE_STYLES = "styles/NotFoundPage.css";
         public static final String LOGIN_VIEW_STYLES = "styles/Login.css";
         public static final String SIGNUP_VIEW_STYLES = "styles/SignUp.css";

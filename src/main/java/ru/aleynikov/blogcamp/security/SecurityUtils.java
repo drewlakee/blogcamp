@@ -6,6 +6,7 @@ import com.vaadin.flow.shared.ApplicationConstants;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import ru.aleynikov.blogcamp.view.LoginView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.stream.Stream;
@@ -47,6 +48,26 @@ public final class SecurityUtils {
         return authentication != null
                 && !(authentication instanceof AnonymousAuthenticationToken)
                 && authentication.isAuthenticated();
+    }
+
+    public static Object getUserDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getDetails();
+    }
+
+    public static Object getUserPrincipal() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getPrincipal();
+    }
+
+    public static Object getUserAuthorities() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getAuthorities();
+    }
+
+    public static String getUserUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 
     public static void destroySession() {

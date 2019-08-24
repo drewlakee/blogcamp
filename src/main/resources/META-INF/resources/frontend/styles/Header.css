@@ -1,36 +1,22 @@
-.loginBtn {
-    font-size: 20px;
+.logoutBtn {
     color: black;
     opacity: .3;
 }
 
-.signUpBtn {
-    font-size: 20px;
-    color: white;
-    background: black;
-    border-radius: 1000px;
-    opacity: .3;
-    margin-right: 10px;
-}
-
-.loginBtn:hover {
-    color: #74a73d;
+.logoutBtn:hover  {
     opacity: 1;
-    transition-duration: 0.5s;
-}
-
-.signUpBtn:hover {
-    background: #74a73d;
-    opacity: 1;
-    transition-duration: 0.5s;
+    transition: background cubic-bezier(.165, .84, .44, 1) .25s;
 }
 
 .site-header {
+    position: fixed;
     margin: 0;
-    background: #fff;
-    border-bottom: 1px solid #ccccca;
+    top: 0;
+    background: #fafafb;
     border-top: 1px solid #ccccca;
     min-height: 50px;
+    box-shadow: 0 1px 0 rgba(12,13,14,0.1),0 1px 6px rgba(59,64,69,0.1);
+    border-top: 3px solid #55a92f;
 }
 
 .label-header {
@@ -40,12 +26,13 @@
 }
 
 .logo-header {
-    margin: 10px 10px 10px 20px;
+    margin: 10px 10px 10px 10px;
     width: 155px;
     height: 32px;
-    padding-left: 20px;
 }
 
-.search-textfield-header {
-    --lumo-border-radius: 2.25em;
+.div-component:hover {
+    background-color: rgba(239,240,241,0.75);
+    transition: background-color cubic-bezier(.165, .84, .44, 1) .25s;
 }
+

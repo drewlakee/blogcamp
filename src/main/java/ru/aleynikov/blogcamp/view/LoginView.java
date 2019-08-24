@@ -5,7 +5,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
@@ -13,23 +12,18 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import ru.aleynikov.blogcamp.daoImpl.UserDaoImpl;
 import ru.aleynikov.blogcamp.security.CustomRequestCache;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
-
-import javax.swing.*;
 
 @PageTitle("Log in")
 @Route("login")
@@ -111,8 +105,6 @@ public class LoginView extends HorizontalLayout {
         setVerticalComponentAlignment(Alignment.CENTER, loginLayout);
 
         add(loginLayout);
-
-        logoImage.addClickListener(imageClickEvent -> UI.getCurrent().getUI().ifPresent(ui -> ui.navigate("feed")));
 
         loginButton.addClickShortcut(Key.ENTER);
         loginButton.addClickListener(clickEvent -> {

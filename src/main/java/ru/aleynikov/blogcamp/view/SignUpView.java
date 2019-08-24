@@ -149,8 +149,6 @@ public class SignUpView extends HorizontalLayout {
 
         add(signUpLayout);
 
-        logoImage.addClickListener(imageClickEvent -> UI.getCurrent().getUI().ifPresent(ui -> ui.navigate("feed")));
-
         continueButton.addClickShortcut(Key.ENTER).setEventPropagationAllowed(!signUpButton.isVisible());
         continueButton.addClickListener(clickEvent -> {
            if (isFormValid() && isUsernameUnique()) {
@@ -181,7 +179,7 @@ public class SignUpView extends HorizontalLayout {
                        SecurityContextHolder.getContext().getAuthentication().getName(),
                        SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 
-               UI.getCurrent().getUI().ifPresent(ui -> ui.navigate("feed"));
+               UI.getCurrent().getUI().ifPresent(ui -> ui.navigate(""));
            }
         });
     }

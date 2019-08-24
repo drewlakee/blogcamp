@@ -13,6 +13,7 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,8 @@ public class PasswordRestoreView extends HorizontalLayout {
 
     private boolean lockPickForAnswer = false;
 
+    private RouterLink backToLoginLink = new RouterLink("Back to Login", LoginView.class);
+
     public PasswordRestoreView() {
         passRestoreLayout.setSizeFull();
 
@@ -89,6 +92,7 @@ public class PasswordRestoreView extends HorizontalLayout {
         passRestoreFormLayout.setHorizontalComponentAlignment(Alignment.START, enterUsernameLabel);
         passRestoreFormLayout.setHorizontalComponentAlignment(Alignment.START, answerOnQuestionLabel);
         passRestoreFormLayout.setHorizontalComponentAlignment(Alignment.START, changeNewPassLabel);
+        passRestoreFormLayout.setHorizontalComponentAlignment(Alignment.CENTER, backToLoginLink);
         passRestoreFormLayout.setAlignItems(Alignment.CENTER);
 
         answerOnQuestionLabel.setVisible(false);
@@ -133,13 +137,11 @@ public class PasswordRestoreView extends HorizontalLayout {
         changePassButton.setVisible(false);
 
         passRestoreFormLayout.add(passRestoreErrorLayout, passRestoreLabel, changeNewPassLabel, answerOnQuestionLabel, enterUsernameLabel,
-                questionLabel, answerField, usernameField, newPassField, repeatNewPassField, continueButton, changePassButton);
+                questionLabel, answerField, usernameField, newPassField, repeatNewPassField, continueButton, changePassButton, backToLoginLink);
 
         passRestoreLayout.add(logoImage, passRestoreFormLayout);
 
         add(passRestoreLayout);
-
-        logoImage.addClickListener(imageClickEvent -> UI.getCurrent().getUI().ifPresent(ui -> ui.navigate("feed")));
 
         continueButton.addClickShortcut(Key.ENTER).setEventPropagationAllowed(!changePassButton.isVisible());
         continueButton.addClickListener(clickEvent -> {
@@ -162,6 +164,7 @@ public class PasswordRestoreView extends HorizontalLayout {
                         continueButton.setVisible(false);
 
                     } else if (lockPickForAnswer) {
+                        answerField.setInvalid(true);
                         passRestoreErrorLayout.setVisible(true);
                         errorAnswerLabel.setVisible(true);
                         errorAccountNotExistLabel.setVisible(false);
