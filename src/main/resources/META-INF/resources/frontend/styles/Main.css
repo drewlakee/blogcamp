@@ -1,6 +1,57 @@
-.mainView {
-    padding-left: 0;
-    padding-right: 0;
-    padding-bottom: 0;
+.main-body {
+    padding: 0;
     background: #ffffff;
+}
+
+.container {
+    max-width: 1270px;
+    background: none;
+    margin: 0 auto;
+    padding: 66px 0 0;
+    box-sizing: content-box;
+}
+
+.container:before {
+    margin: 0;
+}
+
+.left-sidebar {
+    margin: 0;
+    padding: 24px 0 0 0;
+    max-width: 173px;
+    border-right: 1px solid #dbdcdc;
+}
+
+.navigation-bar {
+    width: 100%;
+    box-shadow: none;
+}
+
+.navigation-tab[aria-selected="true"] {
+    background: rgba(12,13,14,0.05);
+    color: black;
+}
+
+.navigation-tab:before, .navigation-tab:after {
+    left: 169px;
+    border-radius: 0;
+    width: 3px;
+    height: 36px;
+    background-color: #55a92f;
+}
+
+.child-tab {
+    padding-left: 20px;
+}
+
+.title-tab {
+    color: #868290;
+}
+
+.home-tab {
+    margin-bottom: 15px;
+}
+
+.under-icon-tab {
+    padding-left: 45px;
 }

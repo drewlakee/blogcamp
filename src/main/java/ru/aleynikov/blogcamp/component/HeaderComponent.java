@@ -37,7 +37,7 @@ public class HeaderComponent extends HorizontalLayout {
         setHeight("10px");
         setClassName("site-header");
 
-        mainSideLayout.setWidth("1100px");
+        mainSideLayout.setWidth("1274px");
         mainSideLayout.getStyle().set("margin", "0 auto");
 
         leftSideLayout.setWidth("100%");

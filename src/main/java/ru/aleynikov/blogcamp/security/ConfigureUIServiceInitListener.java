@@ -6,6 +6,7 @@ import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.view.LoginView;
+import ru.aleynikov.blogcamp.view.MainView;
 import ru.aleynikov.blogcamp.view.PasswordRestoreView;
 import ru.aleynikov.blogcamp.view.SignUpView;
 
@@ -30,6 +31,7 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
         if (!LoginView.class.equals(event.getNavigationTarget())
                 && !SignUpView.class.equals(event.getNavigationTarget())
                 && !SecurityUtils.isUserLoggedIn()
+                && !MainView.class.equals(event.getNavigationTarget())
                 && !PasswordRestoreView.class.equals(event.getNavigationTarget())) {
             event.rerouteTo(LoginView.class);
         }

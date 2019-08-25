@@ -69,7 +69,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Restrict access to our application.
                 .and().authorizeRequests()
 
-                .antMatchers("/registration", "/restore", "/login").permitAll()
+                .antMatchers("/registration", "/restore", "/login", "/").permitAll()
 
                 // Allow all flow internal requests.
                 .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
