@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 @PageTitle("Page Not Found")
 @StyleSheet(StaticResources.NOT_FOUND_PAGE_STYLES)
 public class CustomNotFoundView extends RouteNotFoundError {
-    private Image errorImage = new Image(StaticResources.ERROR404_IMAGE, "404");
+    private Image errorImage = new Image(StaticResources.CODE404_IMAGE, "404");
     private HorizontalLayout layout = new HorizontalLayout();
 
     @Override

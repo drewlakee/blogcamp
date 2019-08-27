@@ -24,8 +24,6 @@ public class Application extends SpringBootServletInitializer {
         hikariDataSource.setUsername(Config.USERNAME_PSQL);
         hikariDataSource.setPassword(Config.PASSWORD_PSQL);
 
-        hikariDataSource.setMaximumPoolSize(Config.MAX_HIKARI_POOL_SIZE);
-
         return hikariDataSource;
     }
 

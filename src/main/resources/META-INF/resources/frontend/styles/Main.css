@@ -17,6 +17,7 @@
 
 .left-sidebar {
     margin: 0;
+    position: fixed;
     padding: 24px 0 0 0;
     max-width: 173px;
     border-right: 1px solid #dbdcdc;
@@ -54,4 +55,28 @@
 
 .under-icon-tab {
     padding-left: 45px;
+}
+
+.content {
+    margin-left: 172px;
+    padding: 0;
+    min-width: 780px;
+    max-width: 780px;
+}
+
+.content-header {
+    height: 140px;
+    min-height: 140px;
+    padding: 18px 0 0 24px;
+}
+
+.content-body {
+    height: 100%;
+    padding: 0;
+    margin-top: 0;
+    border-top: 1px solid #dbdcdc;
+}
+
+.content-label {
+    font-size: 30px;
 }

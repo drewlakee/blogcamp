@@ -229,7 +229,7 @@ public class SignUpView extends HorizontalLayout {
 
         // Warn: be carefully with using button.focus(), because was some problem with JS - TypeError: $0 is null;
         if (!isQuestionValid) {
-            secretQuestionField.setValue("");
+            secretQuestionField.setInvalid(true);
             secretQuestionField.focus();
         }
 
