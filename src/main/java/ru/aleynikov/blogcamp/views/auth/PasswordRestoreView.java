@@ -1,4 +1,4 @@
-package ru.aleynikov.blogcamp.view;
+package ru.aleynikov.blogcamp.views.auth;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;

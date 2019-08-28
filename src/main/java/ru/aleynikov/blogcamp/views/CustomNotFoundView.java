@@ -1,4 +1,4 @@
-package ru.aleynikov.blogcamp;
+package ru.aleynikov.blogcamp.views;
 
 
 import com.vaadin.flow.component.UI;
@@ -21,10 +21,11 @@ public class CustomNotFoundView extends RouteNotFoundError {
     public int setErrorParameter(BeforeEnterEvent event,
                                  ErrorParameter<NotFoundException> parameter) {
 
+        layout.addClassName("background");
         layout.setSizeFull();
         layout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, errorImage);
         layout.add(errorImage);
-        errorImage.setClassName("layout404");
+        errorImage.setClassName("image404");
 
         UI.getCurrent().add(layout);
 

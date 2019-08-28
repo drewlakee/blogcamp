@@ -49,11 +49,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authoritiesByUsernameQuery("select username, authority.name from (usr_to_authority JOIN usr USING (user_id)) JOIN authority USING (authority_id) where username=?");
     }
 
-    @Bean
-    public CustomRequestCache requestCache() {
-        return new CustomRequestCache();
-    }
-
     /**
      * Require login to access internal pages and configure login form.
      */
@@ -61,14 +56,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // Not using Spring CSRF here to be able to use plain HTML for the login page
         http.csrf().disable()
-                // Register our CustomRequestCache, that saves unauthorized access attempts, so
-                // the user is redirected after login.
-                .requestCache().requestCache(new CustomRequestCache())
 
                 // Restrict access to our application.
-                .and().authorizeRequests()
+                .authorizeRequests()
 
-                .antMatchers("/registration", "/restore", "/login", "/").permitAll()
+                .antMatchers("/registration", "/restore", "/login").permitAll()
 
                 // Allow all flow internal requests.
                 .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()

@@ -1,4 +1,4 @@
-package ru.aleynikov.blogcamp.view;
+package ru.aleynikov.blogcamp.views.auth;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
@@ -22,7 +22,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import ru.aleynikov.blogcamp.security.CustomRequestCache;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 @PageTitle("Log in")
@@ -51,8 +50,7 @@ public class LoginView extends HorizontalLayout {
 
     private RouterLink signUpLink = new RouterLink("Sign up", SignUpView.class);
 
-    public LoginView(AuthenticationManager authenticationManager,
-                     CustomRequestCache requestCache) {
+    public LoginView(AuthenticationManager authenticationManager) {
         loginLayout.setSizeFull();
         loginLayout.setClassName("login-layout");
         loginLayout.setAlignItems(Alignment.CENTER);
@@ -115,7 +113,7 @@ public class LoginView extends HorizontalLayout {
                      */
 
                     log.info("User trying authenticates with username [{}]", usernameField.getValue().trim());
-                    log.info("select username, password, active from usr where username={}", usernameField.getValue().trim());
+                    log.info("SELECT username, password, active FROM usr WHERE username= ?, [{}]", usernameField.getValue().trim());
                     final Authentication authentication = authenticationManager
                             .authenticate(new UsernamePasswordAuthenticationToken(usernameField.getValue().trim(), passwordField.getValue().trim()));
 
@@ -128,7 +126,7 @@ public class LoginView extends HorizontalLayout {
                             SecurityContextHolder.getContext().getAuthentication().getName(),
                             SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 
-                    UI.getCurrent().navigate(requestCache.resolveRedirectUrl());
+                    UI.getCurrent().navigate("home");
                 } catch (AuthenticationException ex) {
                     loginErrorLayout.setVisible(true);
                 }

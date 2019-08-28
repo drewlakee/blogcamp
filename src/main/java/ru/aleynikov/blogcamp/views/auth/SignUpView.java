@@ -1,4 +1,4 @@
-package ru.aleynikov.blogcamp.view;
+package ru.aleynikov.blogcamp.views.auth;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
@@ -180,7 +180,7 @@ public class SignUpView extends HorizontalLayout {
                        SecurityContextHolder.getContext().getAuthentication().getName(),
                        SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 
-               UI.getCurrent().getUI().ifPresent(ui -> ui.navigate(""));
+               UI.getCurrent().navigate("home");
            }
         });
     }

@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
-public class MainViewIT extends AbstractViewTest {
+public class MainLayoutIT extends AbstractViewTest {
 
     @Test
     public void clickingButtonShowsNotification() {

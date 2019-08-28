@@ -80,7 +80,7 @@ public class HeaderComponent extends HorizontalLayout {
 
         add(mainSideLayout);
 
-        logoImage.addClickListener(imageClickEvent -> UI.getCurrent().navigate(""));
+        logoImage.addClickListener(imageClickEvent -> UI.getCurrent().navigate("home"));
         logoutButton.addClickListener(clickEvent -> SecurityUtils.destroySession());
 
         searchField.addKeyPressListener(Key.ENTER, KeyEventListener -> {
