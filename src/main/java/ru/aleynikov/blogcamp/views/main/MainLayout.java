@@ -104,17 +104,19 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEvent) {
-        if (beforeEvent.getNavigationTarget().getSimpleName().equals(HomeView.class.getSimpleName())) {
-            if (beforeEvent.getLocation().getPath().equals("")) {
-              UI.getCurrent().navigate("home");
+        if (!navigationBar.getSelectedTab().toString().toLowerCase().contains(beforeEvent.getLocation().getPath())) {
+            if (beforeEvent.getNavigationTarget().getSimpleName().equals(HomeView.class.getSimpleName())) {
+                if (beforeEvent.getLocation().getPath().equals("")) {
+                    UI.getCurrent().navigate("home");
+                }
+                navigationBar.setSelectedTab(homeTab);
+            } else if (beforeEvent.getNavigationTarget().getSimpleName().equals(GlobalView.class.getSimpleName())) {
+                navigationBar.setSelectedTab(globalTab);
+            } else if (beforeEvent.getNavigationTarget().getSimpleName().equals(TagsView.class.getSimpleName())) {
+                navigationBar.setSelectedTab(tagsTab);
+            } else if (beforeEvent.getNavigationTarget().getSimpleName().equals(UsersView.class.getSimpleName())) {
+                navigationBar.setSelectedTab(usersTab);
             }
-            navigationBar.setSelectedTab(homeTab);
-        } else if (beforeEvent.getNavigationTarget().getSimpleName().equals(GlobalView.class.getSimpleName())) {
-            navigationBar.setSelectedTab(globalTab);
-        } else if (beforeEvent.getNavigationTarget().getSimpleName().equals(TagsView.class.getSimpleName())) {
-            navigationBar.setSelectedTab(tagsTab);
-        } else if (beforeEvent.getNavigationTarget().getSimpleName().equals(UsersView.class.getSimpleName())) {
-            navigationBar.setSelectedTab(usersTab);
         }
     }
 }

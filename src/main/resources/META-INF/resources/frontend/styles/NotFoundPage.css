@@ -5,3 +5,15 @@
 .background {
     background-color: #15ab84;
 }
+
+.return-label {
+    font-size: 30px;
+    text-decoration: none;
+    color: #172f42;
+}
+
+.return-label:hover {
+    transition: 0.2s;
+    color: white;
+    text-decoration: none;
+}
