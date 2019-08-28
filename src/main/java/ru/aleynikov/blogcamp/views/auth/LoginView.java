@@ -46,7 +46,8 @@ public class LoginView extends HorizontalLayout {
     private PasswordField passwordField = new PasswordField();
 
     private Button loginButton = new Button("Log in");
-    private Button forgotPasswordButton = new Button("Forgot password?");
+
+    private RouterLink forgotPasswordButton = new RouterLink("Forgot password?", PasswordRestoreView.class);
 
     private RouterLink signUpLink = new RouterLink("Sign up", SignUpView.class);
 
@@ -91,10 +92,6 @@ public class LoginView extends HorizontalLayout {
 
         loginButton.setClassName("button");
 
-        forgotPasswordButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
-        signUpLink.setClassName("signup-link");
-
         loginFormLayout.add(loginErrorLayout, loginLabel, usernameField,
                 passwordField, loginButton, forgotPasswordButton, signUpLink);
 
@@ -132,8 +129,6 @@ public class LoginView extends HorizontalLayout {
                 }
             }
         });
-
-        forgotPasswordButton.addClickListener(clickEvent -> UI.getCurrent().navigate("restore"));
     }
 
     private boolean isLoginFormValid() {
