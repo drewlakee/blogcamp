@@ -30,8 +30,30 @@
     height: 32px;
 }
 
+.div-component {
+    height: 100%;
+}
+
 .div-component:hover {
     background-color: rgba(239,240,241,0.75);
     transition: background-color cubic-bezier(.165, .84, .44, 1) .25s;
 }
 
+.search-textfield-header {
+    width: 64%;
+}
+
+.right-side-component {
+    margin-left: auto;
+}
+
+.icon {
+    height: 100%;
+    opacity: .3;
+    padding: 0 10px 0 10px;
+}
+
+.icon:hover {
+    opacity: 1;
+    transition: .25s;
+}
