@@ -3,7 +3,7 @@ package ru.aleynikov.blogcamp.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.LinkedList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -13,6 +13,5 @@ public class Post {
     private User user;
     private String label;
     private String text;
-    private LinkedList<Tag> tags;
-
+    private List<Tag> tags;
 }

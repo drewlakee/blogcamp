@@ -15,5 +15,6 @@ public class StaticResources {
         public static final String SIGNUP_VIEW_STYLES = "styles/SignUp.css";
         public static final String PASS_RESTORE_VIEW_STYLES = "styles/PasswordRestore.css";
         public static final String HEADER_COMPONENT_STYLES = "styles/Header.css";
+        public static final String TAG_COMPONENT_STYLES = "styles/Tag.css";
 
 }

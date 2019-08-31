@@ -52,21 +52,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // Not using Spring CSRF here to be able to use plain HTML for the login page
-        http.csrf().disable()
-
-                // Restrict access to our application.
-                .authorizeRequests()
-
-                .antMatchers("/registration", "/restore", "/login").permitAll()
-
-                // Allow all flow internal requests.
-                .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
-
-                // Allow all requests by logged in users.
-                .anyRequest().authenticated()
-
-                // Configure the login page.
-                .and().formLogin().loginPage(LOGIN_URL).permitAll();
+        http.csrf().disable();
+//
+//                // Restrict access to our application.
+//                .authorizeRequests()
+//
+//                .antMatchers("/registration", "/restore", "/login").permitAll()
+//
+//                // Allow all flow internal requests.
+//                .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
+//
+//                // Allow all requests by logged in users.
+//                .anyRequest().authenticated()
+//
+//                // Configure the login page.
+//                .and().formLogin().loginPage(LOGIN_URL).permitAll();
     }
 
     /**

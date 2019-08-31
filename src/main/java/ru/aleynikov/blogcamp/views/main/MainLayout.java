@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.aleynikov.blogcamp.component.HeaderComponent;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
-
+import ru.aleynikov.blogcamp.views.TagsView;
 
 
 @StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)

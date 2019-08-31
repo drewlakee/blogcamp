@@ -171,6 +171,7 @@ public class SignUpView extends HorizontalLayout {
                newUserData.put("secret_question", secretQuestionField.getValue().trim().replaceAll("/?", "") + "?");
                newUserData.put("secret_answer", passwordEncoder.encode(secretAnswerField.getValue().trim()));
                userDao.addUser(newUserData);
+
                log.info("User with username [{}] was successfully registered.", newUserData.get("username"));
 
                final Authentication authentication = authenticationManager

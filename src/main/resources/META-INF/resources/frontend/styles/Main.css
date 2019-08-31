@@ -60,7 +60,9 @@
 .content {
     margin-left: 172px;
     padding: 0;
-    min-width: 850px;
+    max-width: 1099px;
+    min-width: 100px;
+    width: 100%;
 }
 
 .content-header {
@@ -71,11 +73,32 @@
 
 .content-body {
     height: 100%;
-    padding: 0;
+    padding: 18px 0 0 24px;
     margin-top: 0;
     border-top: 1px solid #dbdcdc;
 }
 
 .content-label {
     font-size: 30px;
+}
+
+.left-side-component {
+    margin-left: auto;
+}
+
+.sort-bar {
+    box-shadow: none;
+}
+
+.sort-bar > vaadin-tab[aria-selected="true"] {
+    color: black;
+}
+
+.sort-bar > vaadin-tab:before, vaadin-tab:after {
+    box-shadow: none;
+    background-color: #55a92f;
+    color: #55a92f;
+    border-radius: 0;
+    width: 66px;
+    height: 3px;
 }
