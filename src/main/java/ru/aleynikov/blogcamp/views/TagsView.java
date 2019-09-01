@@ -92,11 +92,12 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         int rowTagLimit = 4;
         int counter = 0;
         HorizontalLayout row;
+        List<Tag> tagList;
 
         row = new HorizontalLayout();
         row.setWidth("100%");
 
-        List<Tag> tagList = tagService.getPopularTagList(page);
+        tagList = tagService.getPopularTagList(page);
         for (Tag tag : tagList) {
             counter += 1;
             row.add(new TagComponent(tag, false));

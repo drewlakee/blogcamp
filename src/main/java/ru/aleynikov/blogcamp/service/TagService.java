@@ -22,8 +22,9 @@ public class TagService {
             page = 0;
 
         if (page > 0) {
-            offset += 36 * page - 1;
+            offset += 36 * (page - 1);
         }
+
 
         return tagDao.getSortedByPostCountDescTagsList(offset, TAGS_ON_PAGE_LIMIT);
     }
