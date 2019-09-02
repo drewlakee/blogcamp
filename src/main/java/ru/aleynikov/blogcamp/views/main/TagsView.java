@@ -5,6 +5,7 @@ import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -12,6 +13,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.component.TagComponent;
+import ru.aleynikov.blogcamp.daoImpl.TagDaoImpl;
 import ru.aleynikov.blogcamp.model.Tag;
 import ru.aleynikov.blogcamp.service.TagService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
@@ -27,6 +29,9 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
 
     @Autowired
     private TagService tagService;
+
+    @Autowired
+    private TagDaoImpl tagDao;
 
     private VerticalLayout contentLayout = new VerticalLayout();
     private VerticalLayout headerLayout = new VerticalLayout();
