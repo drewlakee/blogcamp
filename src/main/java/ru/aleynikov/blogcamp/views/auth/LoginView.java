@@ -3,7 +3,6 @@ package ru.aleynikov.blogcamp.views.auth;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
@@ -123,7 +122,7 @@ public class LoginView extends HorizontalLayout {
                             SecurityContextHolder.getContext().getAuthentication().getName(),
                             SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 
-                    UI.getCurrent().navigate("home");
+                    UI.getCurrent().navigate("");
                 } catch (AuthenticationException ex) {
                     loginErrorLayout.setVisible(true);
                 }
@@ -139,7 +138,7 @@ public class LoginView extends HorizontalLayout {
             loginErrorLayout.setVisible(false);
             return true;
         } else {
-            if (!isUsernameValid && !isUsernameValid) {
+            if (!isUsernameValid && !isPasswordValid) {
                 usernameField.setInvalid(true);
                 passwordField.setInvalid(true);
             }

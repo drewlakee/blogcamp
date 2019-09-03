@@ -15,17 +15,26 @@ public class TagService {
     @Autowired
     private TagDaoImpl tagDao;
 
-    public List<Tag> getPopularTagList(int page) {
+    private int filterOffset(int page) {
         int offset = 0;
 
-        if (page == 1)
+        if (page == 1 || page < 0)
             page = 0;
 
         if (page > 0) {
             offset += 36 * (page - 1);
         }
 
+        return offset;
+    }
 
-        return tagDao.getSortedByPostCountDescTagsList(offset, TAGS_ON_PAGE_LIMIT);
+    public List<Tag> getPopularTagList(int page) {
+
+        return tagDao.getSortedByPostCountTagsList(filterOffset(page), TAGS_ON_PAGE_LIMIT);
+    }
+
+    public List<Tag> getNewestTagList(int page) {
+
+        return tagDao.getSortedByCreatedDateNewestTagsList(filterOffset(page), TAGS_ON_PAGE_LIMIT);
     }
 }

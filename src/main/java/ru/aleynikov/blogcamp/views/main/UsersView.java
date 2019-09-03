@@ -9,7 +9,7 @@ import com.vaadin.flow.router.Route;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 @Route(value = "users", layout = MainLayout.class)
-@PageTitle("Users - Blogcamp.")
+@PageTitle("Users - Blogcamp")
 @StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
 public class UsersView extends Composite<VerticalLayout> implements HasComponents {
 

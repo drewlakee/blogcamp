@@ -30,6 +30,10 @@
     border-bottom: 1px dotted #e4e6e8;
 }
 
+.tag-block > .tag-date {
+    font-size: 11px;
+}
+
 .tag-block > .tag-desc {
     color: #848d95;
     font-size: 12px;

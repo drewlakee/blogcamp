@@ -14,18 +14,18 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.RouterLayout;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.aleynikov.blogcamp.component.HeaderComponent;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
-import ru.aleynikov.blogcamp.views.TagsView;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
 public class MainLayout extends Composite<VerticalLayout> implements HasComponents, RouterLayout, BeforeEnterObserver {
-
-    private static final Logger log = LoggerFactory.getLogger(MainLayout.class);
 
     private Div contentDiv = new Div();
 
@@ -38,9 +38,11 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
     private Tabs navigationBar = new Tabs();
     private Tab homeTab = new Tab("Home");
     private Tab publicTabTitle = new Tab("Public");
-    private Tab globalTab = new Tab("Blogcamp.");
+    private Tab globalTab = new Tab("Blogcamp");
     private Tab tagsTab = new Tab("Tags");
     private Tab usersTab = new Tab("Users");
+
+    public QueryParameters qparams;
 
     public MainLayout() {
         getContent().setSizeFull();
@@ -86,13 +88,13 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
             String selectedTab = event.getSource().getSelectedTab().getLabel();
 
             if (selectedTab.equals(homeTab.getLabel())) {
-                UI.getCurrent().navigate("home");
+                UI.getCurrent().navigate("");
             } else if (selectedTab.equals(globalTab.getLabel())) {
-                UI.getCurrent().navigate("global");
-            } else if (selectedTab.equals(tagsTab.getLabel())) {
-                UI.getCurrent().navigate("tags");
+                UI.getCurrent().navigate("global", qparams);
+            } else if (selectedTab.equals(tagsTab.getLabel()) ) {
+                UI.getCurrent().navigate("tags", qparams);
             } else if (selectedTab.equals(usersTab.getLabel())) {
-                UI.getCurrent().navigate("users");
+                UI.getCurrent().navigate("users", qparams);
             }
         });
     }
@@ -103,20 +105,22 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
     }
 
     @Override
-    public void beforeEnter(BeforeEnterEvent beforeEvent) {
-        if (!navigationBar.getSelectedTab().toString().toLowerCase().contains(beforeEvent.getLocation().getPath())) {
-            if (beforeEvent.getNavigationTarget().getSimpleName().equals(HomeView.class.getSimpleName())) {
-                if (beforeEvent.getLocation().getPath().equals("")) {
-                    UI.getCurrent().navigate("home");
-                }
+    public void beforeEnter(BeforeEnterEvent event) {
+        qparams = event.getLocation().getQueryParameters();
+        Map<String, List<String>> emptyQParams = new HashMap<>();
+
+        if (!navigationBar.getSelectedTab().toString().toLowerCase().contains(event.getLocation().getPath())) {
+            if (event.getNavigationTarget().getSimpleName().equals(HomeView.class.getSimpleName())) {
                 navigationBar.setSelectedTab(homeTab);
-            } else if (beforeEvent.getNavigationTarget().getSimpleName().equals(GlobalView.class.getSimpleName())) {
+            } else if (event.getNavigationTarget().getSimpleName().equals(GlobalView.class.getSimpleName())) {
                 navigationBar.setSelectedTab(globalTab);
-            } else if (beforeEvent.getNavigationTarget().getSimpleName().equals(TagsView.class.getSimpleName())) {
+            } else if (event.getNavigationTarget().getSimpleName().equals(TagsView.class.getSimpleName())) {
                 navigationBar.setSelectedTab(tagsTab);
-            } else if (beforeEvent.getNavigationTarget().getSimpleName().equals(UsersView.class.getSimpleName())) {
+            } else if (event.getNavigationTarget().getSimpleName().equals(UsersView.class.getSimpleName())) {
                 navigationBar.setSelectedTab(usersTab);
             }
         }
+
+        qparams = new QueryParameters(emptyQParams);
     }
 }

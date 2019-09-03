@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface TagDao {
 
-    List<Tag> getSortedByPostCountDescTagsList(int offset, int limit);
+    List<Tag> getSortedByPostCountTagsList(int offset, int limit);
+    List<Tag> getSortedByCreatedDateNewestTagsList(int offset, int limit);
+    int getTagsCount();
 }

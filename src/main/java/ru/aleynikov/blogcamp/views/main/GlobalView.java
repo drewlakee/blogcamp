@@ -10,7 +10,7 @@ import com.vaadin.flow.router.Route;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 @Route(value = "global", layout = MainLayout.class)
-@PageTitle("Global - Blogcamp.")
+@PageTitle("Global - Blogcamp")
 @StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
 public class GlobalView extends Composite<VerticalLayout> implements HasComponents {
 

@@ -2,8 +2,6 @@ package ru.aleynikov.blogcamp.component;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
@@ -65,7 +63,7 @@ public class HeaderComponent extends HorizontalLayout {
 
         add(mainSideLayout);
 
-        logoImage.addClickListener(imageClickEvent -> UI.getCurrent().navigate("home"));
+        logoImage.addClickListener(imageClickEvent -> UI.getCurrent().navigate(""));
         logoutIcon.addClickListener(clickEvent -> SecurityUtils.destroySession());
 
         searchIcon.addClickListener(iconClickEvent -> searchFieldProcess());

@@ -21,7 +21,7 @@ public class TagDaoImpl implements TagDao {
     private JdbcTemplate jdbc;
 
     @Override
-    public List<Tag> getSortedByPostCountDescTagsList(int offset, int limit) {
+    public List<Tag> getSortedByPostCountTagsList(int offset, int limit) {
         String querySortedTagList = "SELECT * FROM tag ORDER BY post_count DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {offset, limit};
         List<Tag> tagList = null;
@@ -34,5 +34,30 @@ public class TagDaoImpl implements TagDao {
         }
 
         return tagList;
+    }
+
+    @Override
+    public List<Tag> getSortedByCreatedDateNewestTagsList(int offset, int limit) {
+        String querySortedTagList = "SELECT * FROM tag ORDER BY created DESC OFFSET ? LIMIT ?";
+        Object[] qparams = new Object[] {offset, limit};
+        List<Tag> tagList = null;
+
+        try {
+            log.info(querySortedTagList + ", {}", Arrays.toString(qparams));
+            tagList = jdbc.query(querySortedTagList, qparams, new TagRowMapper());
+        } catch (NullPointerException e) {
+            log.info("Tags not founded.");
+        }
+
+        return tagList;
+    }
+
+    @Override
+    public int getTagsCount() {
+        String queryTagsCount = "SELECT COUNT(*) FROM tag";
+
+        int count = jdbc.queryForObject(queryTagsCount, Integer.class);
+
+        return count;
     }
 }
