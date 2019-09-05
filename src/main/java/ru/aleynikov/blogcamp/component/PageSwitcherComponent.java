@@ -63,7 +63,7 @@ public class PageSwitcherComponent extends HorizontalLayout {
             buttonsLayout.add(nextPageButton);
         }
 
-        if (currentPage < lastPage - 1) {
+        if (currentPage <= lastPage - 2) {
             lastPageButton.setText(String.valueOf(lastPage));
             lastPageButton.addClickListener(event -> clickOnPageButtonHandler(lastPageButton, location, qparams));
 
