@@ -56,6 +56,7 @@ public class TagDaoImpl implements TagDao {
     public int getTagsCount() {
         String queryTagsCount = "SELECT COUNT(*) FROM tag";
 
+        log.info(queryTagsCount);
         int count = jdbc.queryForObject(queryTagsCount, Integer.class);
 
         return count;

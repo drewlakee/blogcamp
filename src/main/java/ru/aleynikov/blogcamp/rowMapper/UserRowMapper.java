@@ -17,6 +17,7 @@ public class UserRowMapper implements RowMapper {
         user.setSecretQuestion(resultSet.getString("secret_question"));
         user.setSecretAnswer(resultSet.getString("secret_answer"));
         user.setActive(resultSet.getBoolean("active"));
+        user.setRegisteredDate(resultSet.getDate("registered"));
 
         return user;
     }

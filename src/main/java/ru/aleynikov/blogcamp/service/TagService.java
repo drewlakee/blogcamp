@@ -10,8 +10,6 @@ import java.util.List;
 @Service
 public class TagService {
 
-    private static final int TAGS_ON_PAGE_LIMIT = 36;
-
     @Autowired
     private TagDaoImpl tagDao;
 
@@ -28,13 +26,17 @@ public class TagService {
         return offset;
     }
 
-    public List<Tag> getPopularTagList(int page) {
+    public List<Tag> getPopularTagList(int page,  int tagsOnPageLimit) {
 
-        return tagDao.getSortedByPostCountTagsList(filterOffset(page), TAGS_ON_PAGE_LIMIT);
+        return tagDao.getSortedByPostCountTagsList(filterOffset(page), tagsOnPageLimit);
     }
 
-    public List<Tag> getNewestTagList(int page) {
+    public List<Tag> getNewestTagList(int page,  int tagsOnPageLimit) {
 
-        return tagDao.getSortedByCreatedDateNewestTagsList(filterOffset(page), TAGS_ON_PAGE_LIMIT);
+        return tagDao.getSortedByCreatedDateNewestTagsList(filterOffset(page), tagsOnPageLimit);
+    }
+
+    public int getAllTagsCount() {
+        return tagDao.getTagsCount();
     }
 }

@@ -42,7 +42,7 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
     private Tab tagsTab = new Tab("Tags");
     private Tab usersTab = new Tab("Users");
 
-    public QueryParameters qparams;
+    private QueryParameters qparams;
 
     public MainLayout() {
         getContent().setSizeFull();

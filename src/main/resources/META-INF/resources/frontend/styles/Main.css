@@ -1,3 +1,7 @@
+body {
+    width: 100%;
+}
+
 .main-body {
     padding: 0;
     background: #ffffff;
@@ -21,6 +25,8 @@
     padding: 24px 0 0 0;
     max-width: 173px;
     border-right: 1px solid #dbdcdc;
+    background: #ffffff;
+    z-index: 1;
 }
 
 .navigation-bar {
@@ -64,6 +70,7 @@
     min-width: 100px;
     width: 100%;
 }
+
 
 .content-header {
     height: 140px;

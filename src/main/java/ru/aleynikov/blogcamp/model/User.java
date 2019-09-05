@@ -3,6 +3,8 @@ package ru.aleynikov.blogcamp.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Setter
 @Getter
 public class User {
@@ -13,5 +15,6 @@ public class User {
     private String secretQuestion;
     private String secretAnswer;
     private boolean active;
+    private Date registeredDate;
 
 }
