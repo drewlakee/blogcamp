@@ -84,30 +84,11 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
 
         sortBar.addSelectedChangeListener(event -> {
             String selectedTab = event.getSource().getSelectedTab().getLabel();
-            Map<String, List<String>> qmap = new HashMap<>();
-            List<String> param;
-            QueryParameters qparams;
 
             if (selectedTab.equals(popularTab.getLabel())) {
-                param = new ArrayList<>();
-                param.add(popularTab.getLabel().toLowerCase());
-                qmap.put("tab", param);
-                param = new ArrayList<>();
-                param.add("1");
-                qmap.put("page", param);
-                qparams = new QueryParameters(qmap);
-
-                UI.getCurrent().navigate("tags", qparams);
+                UI.getCurrent().navigate("tags", queryParametersBuilder(popularTab.getLabel()));
             } else if (selectedTab.equals(newestTab.getLabel())) {
-                param = new ArrayList<>();
-                param.add(newestTab.getLabel().toLowerCase());
-                qmap.put("tab", param);
-                param = new ArrayList<>();
-                param.add("1");
-                qmap.put("page", param);
-                qparams = new QueryParameters(qmap);
-
-                UI.getCurrent().navigate("tags", qparams);
+                UI.getCurrent().navigate("tags", queryParametersBuilder(newestTab.getLabel()));
             }
         });
     }
@@ -180,5 +161,27 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
                 counter = 0;
             }
         }
+    }
+
+    private QueryParameters queryParametersBuilder(String tabLabel, int page) {
+        Map<String, List<String>> qmap = new HashMap<>();
+        List<String> param;
+        QueryParameters qparams;
+
+        param = new ArrayList<>();
+        param.add(tabLabel.toLowerCase());
+        qmap.put("tab", param);
+        param = new ArrayList<>();
+
+        param.add((page == 0) ? "1" : String.valueOf(page));
+
+        qmap.put("page", param);
+        qparams = new QueryParameters(qmap);
+
+        return qparams;
+    }
+
+    private QueryParameters queryParametersBuilder (String tabLabel) {
+        return queryParametersBuilder(tabLabel, 0);
     }
 }
