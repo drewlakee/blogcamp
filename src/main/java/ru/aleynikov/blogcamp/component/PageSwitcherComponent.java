@@ -35,6 +35,8 @@ public class PageSwitcherComponent extends HorizontalLayout {
         nextPageButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         lastPageButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
+        if (lastPage == 0) lastPage = 1;
+
         if (currentPage > 2) {
             firstPageButton.setText("1");
             firstPageButton.addClickListener(event -> clickOnPageButtonHandler(firstPageButton, location, qparams));

@@ -2,6 +2,7 @@ package ru.aleynikov.blogcamp.component;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
@@ -45,7 +46,7 @@ public class HeaderComponent extends HorizontalLayout {
         logoDiv.getStyle().set("margin-left", "25px");
         logoDiv.add(logoImage);
 
-        searchField.setPlaceholder("Search...");
+        searchField.setPlaceholder("Global search");
         searchField.setClearButtonVisible(true);
         searchField.setAutoselect(true);
         searchField.setPrefixComponent(searchIcon);

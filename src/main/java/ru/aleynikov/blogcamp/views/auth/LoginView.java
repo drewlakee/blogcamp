@@ -51,13 +51,14 @@ public class LoginView extends HorizontalLayout {
     private RouterLink signUpLink = new RouterLink("Sign up", SignUpView.class);
 
     public LoginView(AuthenticationManager authenticationManager) {
-        loginLayout.setSizeFull();
+        setSizeFull();
+
+        loginLayout.setWidth(null);
         loginLayout.setClassName("login-layout");
         loginLayout.setAlignItems(Alignment.CENTER);
 
         logoImage.setClassName("logo-login");
 
-        loginErrorLayout.setSizeFull();
         loginErrorLayout.setClassName("error-login");
         loginErrorLayout.add(errorLoginLabel);
         loginErrorLayout.setAlignItems(Alignment.CENTER);
@@ -65,7 +66,6 @@ public class LoginView extends HorizontalLayout {
 
         errorLoginLabel.setClassName("error-label-login");
 
-        loginFormLayout.setSizeFull();
         loginFormLayout.setWidth("360px");
         loginFormLayout.setClassName("login-form");
         loginFormLayout.setHorizontalComponentAlignment(Alignment.START, loginLabel);

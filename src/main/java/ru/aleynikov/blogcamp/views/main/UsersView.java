@@ -14,6 +14,6 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 public class UsersView extends Composite<VerticalLayout> implements HasComponents {
 
     public UsersView() {
-        add("users");
+
     }
 }

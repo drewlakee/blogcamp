@@ -34,7 +34,7 @@ import java.util.Map;
 
 @PageTitle("Sign up")
 @Route("registration")
-@StyleSheet(StaticResources.SIGNUP_VIEW_STYLES)
+@StyleSheet(StaticResources.SIGN_UP_VIEW_STYLES)
 public class SignUpView extends HorizontalLayout {
 
     private static Logger log = LoggerFactory.getLogger(SignUpView.class);
@@ -70,7 +70,7 @@ public class SignUpView extends HorizontalLayout {
     private Map<String, Object> newUserData = new LinkedHashMap<>();
 
     public SignUpView(AuthenticationManager authenticationManager) {
-        signUpLayout.setSizeFull();
+        setSizeFull();
 
         logoImage.setClassName("logo-signup");
 
@@ -83,6 +83,7 @@ public class SignUpView extends HorizontalLayout {
 
         signUpLabel.setClassName("signup-form-label");
 
+        signUpLayout.setWidth(null);
         signUpLayout.setClassName("signup-layout");
         signUpLayout.setAlignItems(Alignment.CENTER);
 

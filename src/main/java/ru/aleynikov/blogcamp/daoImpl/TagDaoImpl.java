@@ -24,14 +24,10 @@ public class TagDaoImpl implements TagDao {
     public List<Tag> getSortedByPostCountTagsList(int offset, int limit) {
         String querySortedTagList = "SELECT * FROM tag ORDER BY post_count DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {offset, limit};
-        List<Tag> tagList = null;
+        List<Tag> tagList;
 
-        try {
-            log.info(querySortedTagList + ", {}", Arrays.toString(qparams));
-            tagList = jdbc.query(querySortedTagList, qparams, new TagRowMapper());
-        } catch (NullPointerException e) {
-            log.info("Tags not found.");
-        }
+        log.info(querySortedTagList + ", {}", Arrays.toString(qparams));
+        tagList = jdbc.query(querySortedTagList, qparams, new TagRowMapper());
 
         return tagList;
     }
@@ -40,14 +36,11 @@ public class TagDaoImpl implements TagDao {
     public List<Tag> getSortedByCreatedDateNewestTagsList(int offset, int limit) {
         String querySortedTagList = "SELECT * FROM tag ORDER BY created DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {offset, limit};
-        List<Tag> tagList = null;
+        List<Tag> tagList;
 
-        try {
-            log.info(querySortedTagList + ", {}", Arrays.toString(qparams));
-            tagList = jdbc.query(querySortedTagList, qparams, new TagRowMapper());
-        } catch (NullPointerException e) {
-            log.info("Tags not founded.");
-        }
+
+        log.info(querySortedTagList + ", {}", Arrays.toString(qparams));
+        tagList = jdbc.query(querySortedTagList, qparams, new TagRowMapper());
 
         return tagList;
     }
@@ -58,6 +51,29 @@ public class TagDaoImpl implements TagDao {
 
         log.info(queryTagsCount);
         int count = jdbc.queryForObject(queryTagsCount, Integer.class);
+
+        return count;
+    }
+
+    @Override
+    public List<Tag> getSearchByNameTagsList(int offset, int limit, String filter) {
+        String querySearchTagList = "SELECT * FROM tag WHERE LOWER(name) LIKE LOWER(?) OFFSET ? LIMIT ?";
+        Object[] qparams = new Object[] { "%"+filter+"%", offset, limit};
+        List<Tag> tagList;
+
+        log.info(querySearchTagList + ", {}", Arrays.toString(qparams));
+        tagList = jdbc.query(querySearchTagList, qparams, new TagRowMapper());
+
+        return tagList;
+    }
+
+    @Override
+    public int getSearchByNameCount(String filter) {
+        String queryCountSearchByNameTags = "SELECT COUNT(*) FROM tag WHERE name LIKE ?";
+        Object[] qparams = new Object[] {"%"+filter+"%"};
+
+        log.info(queryCountSearchByNameTags);
+        int count = jdbc.queryForObject(queryCountSearchByNameTags, qparams, Integer.class);
 
         return count;
     }

@@ -36,6 +36,15 @@ public class TagService {
         return tagDao.getSortedByCreatedDateNewestTagsList(filterOffset(page), tagsOnPageLimit);
     }
 
+    public List<Tag> getSearchTagList(int page, int tagOnPageLimit, String filter) {
+
+        return tagDao.getSearchByNameTagsList(filterOffset(page), tagOnPageLimit, filter);
+    }
+
+    public int getSearchTagsCount(String filter) {
+        return tagDao.getSearchByNameCount(filter);
+    }
+
     public int getAllTagsCount() {
         return tagDao.getTagsCount();
     }

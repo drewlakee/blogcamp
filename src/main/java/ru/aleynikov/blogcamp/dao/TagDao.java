@@ -9,4 +9,6 @@ public interface TagDao {
     List<Tag> getSortedByPostCountTagsList(int offset, int limit);
     List<Tag> getSortedByCreatedDateNewestTagsList(int offset, int limit);
     int getTagsCount();
+    List<Tag> getSearchByNameTagsList(int offset, int limit, String filter);
+    int getSearchByNameCount(String filter);
 }

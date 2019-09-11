@@ -12,7 +12,7 @@ public class StaticResources {
         public static final String MAIN_LAYOUT_STYLES = "styles/Main.css";
         public static final String NOT_FOUND_PAGE_STYLES = "styles/NotFoundPage.css";
         public static final String LOGIN_VIEW_STYLES = "styles/Login.css";
-        public static final String SIGNUP_VIEW_STYLES = "styles/SignUp.css";
+        public static final String SIGN_UP_VIEW_STYLES = "styles/SignUp.css";
         public static final String PASS_RESTORE_VIEW_STYLES = "styles/PasswordRestore.css";
         public static final String HEADER_COMPONENT_STYLES = "styles/Header.css";
         public static final String TAG_COMPONENT_STYLES = "styles/Tag.css";

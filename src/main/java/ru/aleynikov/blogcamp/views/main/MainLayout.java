@@ -109,16 +109,14 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
         qparams = event.getLocation().getQueryParameters();
         Map<String, List<String>> emptyQParams = new HashMap<>();
 
-        if (!navigationBar.getSelectedTab().toString().toLowerCase().contains(event.getLocation().getPath())) {
-            if (event.getNavigationTarget().getSimpleName().equals(HomeView.class.getSimpleName())) {
-                navigationBar.setSelectedTab(homeTab);
-            } else if (event.getNavigationTarget().getSimpleName().equals(GlobalView.class.getSimpleName())) {
-                navigationBar.setSelectedTab(globalTab);
-            } else if (event.getNavigationTarget().getSimpleName().equals(TagsView.class.getSimpleName())) {
-                navigationBar.setSelectedTab(tagsTab);
-            } else if (event.getNavigationTarget().getSimpleName().equals(UsersView.class.getSimpleName())) {
-                navigationBar.setSelectedTab(usersTab);
-            }
+        if (event.getNavigationTarget().getSimpleName().equals(HomeView.class.getSimpleName())) {
+            navigationBar.setSelectedTab(homeTab);
+        } else if (event.getNavigationTarget().getSimpleName().equals(GlobalView.class.getSimpleName())) {
+            navigationBar.setSelectedTab(globalTab);
+        } else if (event.getNavigationTarget().getSimpleName().equals(TagsView.class.getSimpleName())) {
+            navigationBar.setSelectedTab(tagsTab);
+        } else if (event.getNavigationTarget().getSimpleName().equals(UsersView.class.getSimpleName())) {
+            navigationBar.setSelectedTab(usersTab);
         }
 
         qparams = new QueryParameters(emptyQParams);
