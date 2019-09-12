@@ -111,12 +111,15 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
 
         if (event.getNavigationTarget().getSimpleName().equals(HomeView.class.getSimpleName())) {
             navigationBar.setSelectedTab(homeTab);
+            leftSideBarLayout.setVisible(true);
         } else if (event.getNavigationTarget().getSimpleName().equals(GlobalView.class.getSimpleName())) {
             navigationBar.setSelectedTab(globalTab);
         } else if (event.getNavigationTarget().getSimpleName().equals(TagsView.class.getSimpleName())) {
             navigationBar.setSelectedTab(tagsTab);
         } else if (event.getNavigationTarget().getSimpleName().equals(UsersView.class.getSimpleName())) {
             navigationBar.setSelectedTab(usersTab);
+        } else if (event.getLocation().getPath().equals("profile")) {
+            leftSideBarLayout.setVisible(false);
         }
 
         qparams = new QueryParameters(emptyQParams);

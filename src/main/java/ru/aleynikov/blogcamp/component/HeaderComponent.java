@@ -2,10 +2,10 @@ package ru.aleynikov.blogcamp.component;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -20,12 +20,14 @@ public class HeaderComponent extends HorizontalLayout {
     private HorizontalLayout mainSideLayout = new HorizontalLayout();
 
     private Image logoImage = new Image(StaticResources.LOGO_IMAGE, "logo");
+    private Image userAvatarImage = new Image("", "avatar");
 
     private TextField searchField = new TextField();
 
     private Icon searchIcon = new Icon(VaadinIcon.SEARCH);
     private Icon logoutIcon = new Icon(VaadinIcon.SIGN_OUT);
 
+    private Div userAvatarDiv = new Div();
     private Div logoDiv = new Div();
     private Div logoutDiv = new Div();
 
@@ -39,7 +41,7 @@ public class HeaderComponent extends HorizontalLayout {
         mainSideLayout.getStyle().set("margin", "0 auto");
 
         logoImage.setClassName("logo-header");
-        setVerticalComponentAlignment(Alignment.CENTER, logoImage);
+
 
         logoDiv.setTitle("Home");
         logoDiv.setClassName("div-component");
@@ -53,14 +55,22 @@ public class HeaderComponent extends HorizontalLayout {
         searchField.setClassName("search-textfield-header");
         setVerticalComponentAlignment(Alignment.CENTER, searchField);
 
-        mainSideLayout.add(logoDiv, searchField, logoutDiv);
+        userAvatarImage.addClassName("user-avatar");
+        userAvatarImage.setSrc(StaticResources.DEFAULT_USER_AVATAR);
+        userAvatarImage.setTitle(SecurityUtils.getUsername());
+
+
+        userAvatarDiv.addClassName("div-component");
+        userAvatarDiv.addClassName("right-side-component");
+        userAvatarDiv.add(userAvatarImage);
 
         logoutIcon.addClassName("icon");
 
         logoutDiv.setTitle("Logout");
         logoutDiv.addClassName("div-component");
-        logoutDiv.addClassName("right-side-component");
         logoutDiv.add(logoutIcon);
+
+        mainSideLayout.add(logoDiv, searchField, userAvatarDiv, logoutDiv);
 
         add(mainSideLayout);
 
@@ -69,6 +79,8 @@ public class HeaderComponent extends HorizontalLayout {
 
         searchIcon.addClickListener(iconClickEvent -> searchFieldProcess());
         searchField.addKeyPressListener(Key.ENTER, keyEventListener -> searchFieldProcess());
+
+        userAvatarDiv.addClickListener(event -> UI.getCurrent().navigate("profile"));
     }
 
     private void searchFieldProcess() {

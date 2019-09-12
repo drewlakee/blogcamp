@@ -19,7 +19,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.component.PageSwitcherComponent;
-import ru.aleynikov.blogcamp.component.TagComponent;
 import ru.aleynikov.blogcamp.component.UserComponent;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.service.UserService;

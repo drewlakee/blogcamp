@@ -69,7 +69,7 @@ public final class SecurityUtils {
         return authentication.getAuthorities();
     }
 
-    public static String getUserUsername() {
+    public static String getUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
     }
