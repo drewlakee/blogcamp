@@ -22,58 +22,58 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public List<Tag> getSortedByPostCountTagsList(int offset, int limit) {
-        String querySortedTagList = "SELECT * FROM tag ORDER BY post_count DESC OFFSET ? LIMIT ?";
+        String query = "SELECT * FROM tag ORDER BY post_count DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {offset, limit};
         List<Tag> tagList;
 
-        log.info(querySortedTagList + ", {}", Arrays.toString(qparams));
-        tagList = jdbc.query(querySortedTagList, qparams, new TagRowMapper());
+        log.info(query + ", {}", Arrays.toString(qparams));
+        tagList = jdbc.query(query, qparams, new TagRowMapper());
 
         return tagList;
     }
 
     @Override
     public List<Tag> getSortedByCreatedDateNewestTagsList(int offset, int limit) {
-        String querySortedTagList = "SELECT * FROM tag ORDER BY created DESC OFFSET ? LIMIT ?";
+        String query = "SELECT * FROM tag ORDER BY created DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {offset, limit};
         List<Tag> tagList;
 
 
-        log.info(querySortedTagList + ", {}", Arrays.toString(qparams));
-        tagList = jdbc.query(querySortedTagList, qparams, new TagRowMapper());
+        log.info(query + ", {}", Arrays.toString(qparams));
+        tagList = jdbc.query(query, qparams, new TagRowMapper());
 
         return tagList;
     }
 
     @Override
     public int getTagsCount() {
-        String queryTagsCount = "SELECT COUNT(*) FROM tag";
+        String query = "SELECT COUNT(*) FROM tag";
 
-        log.info(queryTagsCount);
-        int count = jdbc.queryForObject(queryTagsCount, Integer.class);
+        log.info(query);
+        int count = jdbc.queryForObject(query, Integer.class);
 
         return count;
     }
 
     @Override
     public List<Tag> getSearchByNameTagsList(int offset, int limit, String filter) {
-        String querySearchTagList = "SELECT * FROM tag WHERE LOWER(name) LIKE LOWER(?) OFFSET ? LIMIT ?";
+        String query = "SELECT * FROM tag WHERE LOWER(name) LIKE LOWER(?) OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] { "%"+filter+"%", offset, limit};
         List<Tag> tagList;
 
-        log.info(querySearchTagList + ", {}", Arrays.toString(qparams));
-        tagList = jdbc.query(querySearchTagList, qparams, new TagRowMapper());
+        log.info(query + ", {}", Arrays.toString(qparams));
+        tagList = jdbc.query(query, qparams, new TagRowMapper());
 
         return tagList;
     }
 
     @Override
-    public int getSearchByNameCount(String filter) {
-        String queryCountSearchByNameTags = "SELECT COUNT(*) FROM tag WHERE name LIKE ?";
+    public int getFilterByNameCount(String filter) {
+        String query = "SELECT COUNT(*) FROM tag WHERE name LIKE ?";
         Object[] qparams = new Object[] {"%"+filter+"%"};
 
-        log.info(queryCountSearchByNameTags);
-        int count = jdbc.queryForObject(queryCountSearchByNameTags, qparams, Integer.class);
+        log.info(query);
+        int count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;
     }

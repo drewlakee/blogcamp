@@ -75,7 +75,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
 
         headerLowerLayout.setSizeFull();
 
-        searchTagField.setPlaceholder("Tag search");
+        searchTagField.setPlaceholder("Filter by tag");
         searchTagField.setPrefixComponent(searchTagFieldIcon);
         searchTagField.setClearButtonVisible(true);
         headerLowerLayout.setVerticalComponentAlignment(FlexComponent.Alignment.END, searchTagField);
@@ -127,7 +127,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
 
-        parameterSetter();
+        queryParametersSetter();
 
         if (sortBar.getSelectedTab() != null) {
             if (qparams.containsKey("search")) {
@@ -145,7 +145,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
             tagsBrowserBuilder(page, sortTab, event.getLocation().getPath(), "");
     }
 
-    public void parameterSetter() {
+    public void queryParametersSetter() {
         if (qparams.containsKey("page")) {
             page = Integer.parseInt(qparams.get("page").get(0));
         }
@@ -160,7 +160,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     }
 
     private void tagsBrowserBuilder(int page, String sortTab, String locationPath, String filter) {
-        int rowTagLimit = 4;
+        int rowLimit = 4;
         int counter = 0;
         HorizontalLayout row;
         List<Tag> tagList = null;
@@ -172,8 +172,8 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         row.setWidth("100%");
 
         if (!filter.isEmpty()) {
-            tagList = tagService.getSearchTagList(page, TAGS_ON_PAGE_LIMIT, filter);
-            countTags = tagService.getSearchTagsCount(filter);
+            tagList = tagService.getFilterTagList(page, TAGS_ON_PAGE_LIMIT, filter);
+            countTags = tagService.getFilterTagsCount(filter);
         } else if (sortTab.equals(newestTab.getLabel().toLowerCase())) {
             tagList = tagService.getNewestTagList(page, TAGS_ON_PAGE_LIMIT);
             countTags = tagService.getAllTagsCount();
@@ -187,7 +187,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
                 counter += 1;
                 row.add(new TagComponent(tag, false));
 
-                if (counter == rowTagLimit || tagList.indexOf(tag) == tagList.size() - 1) {
+                if (counter == rowLimit || tagList.indexOf(tag) == tagList.size() - 1) {
                     bodyLayout.add(row);
                     if (!(tagList.indexOf(tag) == tagList.size() - 1)) {
                         row = new HorizontalLayout();

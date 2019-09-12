@@ -11,6 +11,7 @@ import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.rowMapper.UserRowMapper;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -23,8 +24,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findUserByUsername(String username) {
-        Object[] qparams = new Object[] { username };
         String query = "SELECT * FROM usr WHERE username = ?";
+        Object[] qparams = new Object[] { username };
 
         User user = null;
         try {
@@ -39,21 +40,66 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void addUser(Map<String, Object> newUser) {
-        String insertNewUserQuery = "INSERT INTO usr (username, password, secret_question, secret_answer) VALUES " +
+        String query = "INSERT INTO usr (username, password, secret_question, secret_answer) VALUES " +
                 "(?, ?, ?, ?)";
 
         Object[] newUserData = new Object[] {newUser.get("username"), newUser.get("password"),
                 newUser.get("secret_question"), newUser.get("secret_answer")};
-        log.info(insertNewUserQuery + ", {}", Arrays.toString(newUserData));
-        jdbc.update(insertNewUserQuery, newUserData);
+        log.info(query + ", {}", Arrays.toString(newUserData));
+        jdbc.update(query, newUserData);
     }
 
     @Override
     public void updateUserPassword(String username, String newPassword) {
-        String updatePassQuery = "UPDATE usr SET password=? WHERE username=?";
+        String query = "UPDATE usr SET password=? WHERE username=?";
 
         Object[] userData = new Object[] {newPassword, username};
-        log.info(updatePassQuery + ", {}", Arrays.toString(userData));
-        jdbc.update(updatePassQuery, userData);
+        log.info(query + ", {}", Arrays.toString(userData));
+        jdbc.update(query, userData);
+    }
+
+    @Override
+    public List<User> getSortedByUsernameAscUserList(int offset, int limit) {
+        String query = "SELECT * FROM usr ORDER BY (username) ASC OFFSET ? LIMIT ?";
+        Object[] qparams = new Object[] {offset, limit};
+        List<User> userList;
+
+        log.info(query + ", {}", Arrays.toString(qparams));
+        userList = jdbc.query(query, qparams, new UserRowMapper());
+
+        return userList;
+    }
+
+    @Override
+    public List<User> getFilterByUsernameUserList(int offset, int limit, String filter) {
+        String query = "SELECT * FROM usr WHERE username LIKE ? OFFSET ? LIMIT ?";
+        Object[] qparams = new Object[] {"%"+filter+"%", offset, limit};
+        List<User> userList;
+
+        log.info(query + ", {}", Arrays.toString(qparams));
+        userList = jdbc.query(query, qparams, new UserRowMapper());
+
+        return userList;
+    }
+
+    @Override
+    public int getAllUsersCount() {
+        String query = "SELECT COUNT(*) FROM usr";
+
+        log.info(query);
+        int count = jdbc.queryForObject(query, Integer.class);
+
+        return count;
+    }
+
+    @Override
+    public int getFilterByUsernameCount(String filter) {
+        String query = "SELECT COUNT(*) FROM usr WHERE username LIKE ?";
+        Object[] qparams = new Object[] {"%"+filter+"%"};
+
+        log.info(query + ", {}", qparams);
+        int count = jdbc.queryForObject(query, qparams, Integer.class);
+
+        return count;
     }
 }

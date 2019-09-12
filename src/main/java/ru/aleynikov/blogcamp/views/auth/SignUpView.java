@@ -96,7 +96,7 @@ public class SignUpView extends HorizontalLayout {
         usernameField.setLabel("Username");
         usernameField.setClassName("field");
         usernameField.setWidth("100%");
-        usernameField.setMaxLength(30);
+        usernameField.setMaxLength(20);
         usernameField.setMinLength(6);
         usernameField.setRequired(true);
         usernameField.setErrorMessage("Minimal length is " + usernameField.getMinLength() + " characters, without white spaces.");

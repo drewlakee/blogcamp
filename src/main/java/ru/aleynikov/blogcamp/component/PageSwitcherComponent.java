@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.QueryParameters;
+import ru.aleynikov.blogcamp.service.JavaScriptUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +83,7 @@ public class PageSwitcherComponent extends HorizontalLayout {
         qparams.replace("page", page);
 
         UI.getCurrent().navigate(location, new QueryParameters(qparams));
+        JavaScriptUtils.scrollPageTop();
     }
 
 }
