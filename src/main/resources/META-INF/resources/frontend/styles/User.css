@@ -41,3 +41,11 @@
     color: #4a9ef2;
     transition: background .1s ease-in-out;
 }
+
+.you {
+    background: #ffdd40;
+    border-radius: 5px;
+    font-size: 14px;
+    padding: 1px 5px;
+    color: #84763d;
+}

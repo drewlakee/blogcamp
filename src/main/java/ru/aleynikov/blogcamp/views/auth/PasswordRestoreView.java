@@ -62,12 +62,10 @@ public class PasswordRestoreView extends HorizontalLayout {
 
     private User existingAccount;
 
-    private boolean lockPickForAnswer = false;
-
     private RouterLink backToLoginLink = new RouterLink("Back to Login", LoginView.class);
 
     public PasswordRestoreView() {
-        passRestoreLayout.setSizeFull();
+        setSizeFull();
 
         logoImage.setClassName("logo-pass-restore");
 
@@ -163,14 +161,14 @@ public class PasswordRestoreView extends HorizontalLayout {
                         answerField.setVisible(false);
                         continueButton.setVisible(false);
 
-                    } else if (lockPickForAnswer) {
+                    } else if (!answerField.isEmpty()) {
                         answerField.setInvalid(true);
                         passRestoreErrorLayout.setVisible(true);
                         errorAnswerLabel.setVisible(true);
                         errorAccountNotExistLabel.setVisible(false);
-                    }
 
-                    lockPickForAnswer = true;
+                    } else if (!usernameField.isVisible() && answerField.isEmpty())
+                        answerField.focus();
                 }
             }
 
@@ -209,6 +207,7 @@ public class PasswordRestoreView extends HorizontalLayout {
         if (existingAccount != null) {
             passRestoreErrorLayout.setVisible(false);
             return true;
+
         } else {
             passRestoreErrorLayout.setVisible(true);
             errorAnswerLabel.setVisible(false);

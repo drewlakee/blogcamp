@@ -59,6 +59,7 @@ public class LoginView extends HorizontalLayout {
 
         logoImage.setClassName("logo-login");
 
+        loginErrorLayout.setSizeFull();
         loginErrorLayout.setClassName("error-login");
         loginErrorLayout.add(errorLoginLabel);
         loginErrorLayout.setAlignItems(Alignment.CENTER);

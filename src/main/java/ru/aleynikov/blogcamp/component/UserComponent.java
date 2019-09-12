@@ -8,6 +8,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import ru.aleynikov.blogcamp.model.User;
+import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 @StyleSheet(StaticResources.USER_COMPONENT_STYLES)
@@ -16,15 +17,17 @@ public class UserComponent extends Div {
     private VerticalLayout contentLayout = new VerticalLayout();
     private VerticalLayout contentBodyLeftLayout = new VerticalLayout();
     private VerticalLayout contentBodyRightLayout = new VerticalLayout();
-    private VerticalLayout contentFoot = new VerticalLayout();
+    private VerticalLayout contentFootLayout = new VerticalLayout();
 
-    private HorizontalLayout contentBody = new HorizontalLayout();
+    private HorizontalLayout contentBodyLayout = new HorizontalLayout();
+    private HorizontalLayout usernameLayout = new HorizontalLayout();
 
 
     private RouterLink userLink = new RouterLink();
 
     private Span aboutTitle = new Span("About");
     private Span userAbout = new Span();
+    private Span itsYouSpan = new Span("It's you");
 
     private Image userAvatar = new Image();
 
@@ -33,7 +36,7 @@ public class UserComponent extends Div {
 
         contentLayout.addClassName("padding-none");
 
-        contentBody.setSizeFull();
+        contentBodyLayout.setSizeFull();
 
         contentBodyLeftLayout.setWidth(null);
         contentBodyLeftLayout.addClassName("padding-none");
@@ -49,23 +52,30 @@ public class UserComponent extends Div {
         userLink.addClassName("user-link");
         userLink.setText(user.getUsername());
 
-        contentBodyRightLayout.add(userLink);
+        usernameLayout.add(userLink);
 
-        contentBody.add(contentBodyLeftLayout, contentBodyRightLayout);
+        if (SecurityUtils.getUsername().equals(user.getUsername())) {
+            itsYouSpan.addClassName("you");
+            usernameLayout.add(itsYouSpan);
+        }
 
-        contentLayout.add(contentBody);
+        contentBodyRightLayout.add(usernameLayout);
+
+        contentBodyLayout.add(contentBodyLeftLayout, contentBodyRightLayout);
+
+        contentLayout.add(contentBodyLayout);
 
         if (user.getAbout() != null) {
-            contentFoot.setSizeFull();
-            contentFoot.addClassName("padding-none");
-            contentFoot.addClassName("user-about");
+            contentFootLayout.setSizeFull();
+            contentFootLayout.addClassName("padding-none");
+            contentFootLayout.addClassName("user-about");
 
             userAbout.addClassName("user-about-content");
             userAbout.setText(user.getAbout());
 
-            contentFoot.add(aboutTitle, userAbout);
+            contentFootLayout.add(aboutTitle, userAbout);
 
-            contentLayout.add(contentFoot);
+            contentLayout.add(contentFootLayout);
         }
 
         add(contentLayout);
