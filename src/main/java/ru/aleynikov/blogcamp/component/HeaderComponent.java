@@ -5,7 +5,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -13,6 +12,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
+
 
 @StyleSheet(StaticResources.HEADER_COMPONENT_STYLES)
 public class HeaderComponent extends HorizontalLayout {
@@ -80,7 +80,7 @@ public class HeaderComponent extends HorizontalLayout {
         searchIcon.addClickListener(iconClickEvent -> searchFieldProcess());
         searchField.addKeyPressListener(Key.ENTER, keyEventListener -> searchFieldProcess());
 
-        userAvatarDiv.addClickListener(event -> UI.getCurrent().navigate("profile"));
+        userAvatarDiv.addClickListener(event -> UI.getCurrent().navigate("profile/about"));
     }
 
     private void searchFieldProcess() {

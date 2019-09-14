@@ -24,7 +24,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findUserByUsername(String username) {
-        String query = "SELECT * FROM usr WHERE username = ?";
+        String query = "SELECT * FROM usr WHERE LOWER(username) = LOWER(?)";
         Object[] qparams = new Object[] { username };
 
         User user = null;
@@ -72,7 +72,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getFilterByUsernameUserList(int offset, int limit, String filter) {
-        String query = "SELECT * FROM usr WHERE username LIKE ? OFFSET ? LIMIT ?";
+        String query = "SELECT * FROM usr WHERE LOWER(username) LIKE LOWER(?) OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {"%"+filter+"%", offset, limit};
         List<User> userList;
 

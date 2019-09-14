@@ -12,17 +12,13 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.QueryParameters;
-import com.vaadin.flow.router.RouterLayout;
+import com.vaadin.flow.router.*;
 import ru.aleynikov.blogcamp.component.HeaderComponent;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 @StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
 public class MainLayout extends Composite<VerticalLayout> implements HasComponents, RouterLayout, BeforeEnterObserver {
