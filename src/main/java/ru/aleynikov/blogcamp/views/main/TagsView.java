@@ -83,7 +83,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         sortBar.add(popularTab);
         sortBar.add(newestTab);
         sortBar.addClassName("left-side-component");
-        sortBar.addClassName("sort-bar");
+        sortBar.addClassName("tabs-bar");
 
         sortTab = sortBar.getSelectedTab().getLabel().toLowerCase();
 

@@ -25,7 +25,6 @@ public class UserComponent extends Div {
 
     private RouterLink userLink = new RouterLink();
 
-    private Span aboutTitle = new Span("About");
     private Span userAbout = new Span();
     private Span itsYouSpan = new Span("It's you");
 
@@ -73,7 +72,7 @@ public class UserComponent extends Div {
             userAbout.addClassName("user-about-content");
             userAbout.setText(user.getAbout());
 
-            contentFootLayout.add(aboutTitle, userAbout);
+            contentFootLayout.add(userAbout);
 
             contentLayout.add(contentFootLayout);
         }

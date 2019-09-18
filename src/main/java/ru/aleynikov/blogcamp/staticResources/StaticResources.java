@@ -18,5 +18,5 @@ public class StaticResources {
         public static final String HEADER_COMPONENT_STYLES = "styles/Header.css";
         public static final String TAG_COMPONENT_STYLES = "styles/Tag.css";
         public static final String USER_COMPONENT_STYLES = "styles/User.css";
-
+        public static final String PROFILE_VIEW_STYLES = "styles/Profile.css";
 }

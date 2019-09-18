@@ -67,7 +67,7 @@ body {
 .content {
     margin-left: 172px;
     padding: 0;
-    max-width: 1099px;
+    max-width: 1000px;
     min-width: 100px;
     width: 100%;
 
@@ -94,15 +94,15 @@ body {
     margin-left: auto;
 }
 
-.sort-bar {
+.tabs-bar {
     box-shadow: none;
 }
 
-.sort-bar > vaadin-tab[aria-selected="true"] {
+.tabs-bar > vaadin-tab[aria-selected="true"] {
     color: black;
 }
 
-.sort-bar > vaadin-tab:before, vaadin-tab:after {
+.tabs-bar > vaadin-tab:before, vaadin-tab:after {
     box-shadow: none;
     background-color: #55a92f;
     color: #55a92f;
@@ -113,4 +113,12 @@ body {
 
 .padding-none {
     padding: 0;
+}
+
+.margin-none {
+    margin: 0;
+}
+
+.grey-light {
+    color: #6a737c;
 }

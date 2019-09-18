@@ -53,7 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // Not using Spring CSRF here to be able to use plain HTML for the login page
         http.csrf().disable();
-//
+
 //                // Restrict access to our application.
 //                .authorizeRequests()
 //

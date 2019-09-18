@@ -74,7 +74,7 @@ public class HeaderComponent extends HorizontalLayout {
 
         add(mainSideLayout);
 
-        logoImage.addClickListener(imageClickEvent -> UI.getCurrent().navigate(""));
+        logoDiv.addClickListener(event -> UI.getCurrent().navigate(""));
         logoutIcon.addClickListener(clickEvent -> SecurityUtils.destroySession());
 
         searchIcon.addClickListener(iconClickEvent -> searchFieldProcess());

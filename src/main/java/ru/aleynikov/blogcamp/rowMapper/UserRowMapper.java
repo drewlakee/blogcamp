@@ -19,6 +19,9 @@ public class UserRowMapper implements RowMapper {
         user.setActive(resultSet.getBoolean("active"));
         user.setRegisteredDate(resultSet.getDate("registered"));
         user.setAbout(resultSet.getString("about"));
+        user.setBirthday(resultSet.getDate("birthday"));
+        user.setCountry(resultSet.getString("country"));
+        user.setCity(resultSet.getString("city"));
 
         return user;
     }

@@ -114,7 +114,7 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
             navigationBar.setSelectedTab(tagsTab);
         } else if (event.getNavigationTarget().getSimpleName().equals(UsersView.class.getSimpleName())) {
             navigationBar.setSelectedTab(usersTab);
-        } else if (event.getLocation().getPath().equals("profile")) {
+        } else if (event.getLocation().getPath().startsWith("profile")) {
             leftSideBarLayout.setVisible(false);
         }
 

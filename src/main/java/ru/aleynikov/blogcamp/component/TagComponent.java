@@ -21,7 +21,7 @@ public class TagComponent extends Div {
 
     private Paragraph br = new Paragraph("");
 
-    private SimpleDateFormat createdDateFormat = new SimpleDateFormat("dd MMM yyyy 'at' HH:mm", Locale.ENGLISH);
+    private SimpleDateFormat createdDateFormat = new SimpleDateFormat("d MMMM yyyy", Locale.ENGLISH);
 
     private HorizontalLayout contentLayout = new HorizontalLayout();
 

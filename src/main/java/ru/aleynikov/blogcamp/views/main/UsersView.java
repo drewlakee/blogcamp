@@ -37,7 +37,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
     @Autowired
     private UserService userService;
 
-    private static final int USERS_ON_PAGE_LIMIT = 36;
+    private static final int USERS_ON_PAGE_LIMIT = 18;
 
     private VerticalLayout contentLayout = new VerticalLayout();
     private VerticalLayout headerLayout = new VerticalLayout();
@@ -51,7 +51,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
     private Icon searchUserFieldIcon = new Icon(VaadinIcon.SEARCH);
 
     private Label tagsLabel = new Label("Users");
-    private Tab nameTab = new Tab("Name");
+    private Tab nameTab = new Tab("A - Z");
 
     private Tabs sortBar = new Tabs();
 
@@ -79,9 +79,8 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
         searchUserField.setClearButtonVisible(true);
         headerLowerLayout.setVerticalComponentAlignment(FlexComponent.Alignment.END, searchUserField);
 
-
         sortBar.addClassName("left-side-component");
-        sortBar.addClassName("sort-bar");
+        sortBar.addClassName("tabs-bar");
         sortBar.add(nameTab);
 
         sortTab = sortBar.getSelectedTab().getLabel().toLowerCase();
@@ -155,7 +154,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
     }
 
     private void tagsBrowserBuilder(int page, String sortTab, String locationPath, String filter) {
-        int rowLimit = 4;
+        int rowLimit = 3;
         int counter = 0;
         HorizontalLayout row;
         List<User> userList = null;

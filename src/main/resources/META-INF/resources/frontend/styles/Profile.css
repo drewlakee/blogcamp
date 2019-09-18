@@ -1,0 +1,32 @@
+.username {
+    font-weight: 700;
+    font-size: 40px;
+}
+
+.profile-avatar {
+    border: 1px solid #d6d9dc;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(12,13,14,0.1),0 1px 6px rgba(59,64,69,0.1);
+}
+
+.avatar-img {
+    width: 200px;
+    height: 200px;
+    padding: 12px;
+}
+
+.upload-btn-div {
+    border-top: 1px solid #d6d9dc;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    text-align: center;
+}
+
+.upload-btn-div:hover {
+    background-color: #f4f4f4;
+    transition: background-color cubic-bezier(.165, .84, .44, 1) .25s;
+}
+
+.switch {
+    border-bottom: 1px solid #d6d9dc;
+}

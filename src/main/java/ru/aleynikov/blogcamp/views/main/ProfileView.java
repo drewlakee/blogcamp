@@ -3,52 +3,184 @@ package ru.aleynikov.blogcamp.views.main;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasElement;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.router.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.aleynikov.blogcamp.model.User;
+import ru.aleynikov.blogcamp.security.SecurityUtils;
+import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 @RoutePrefix(value = "profile")
 @ParentLayout(MainLayout.class)
 @PageTitle("Profile - Blogcamp")
 @StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
-public class ProfileView extends Composite<Div> implements HasComponents, RouterLayout {
+@StyleSheet(StaticResources.PROFILE_VIEW_STYLES)
+public class ProfileView extends Composite<Div> implements HasComponents, RouterLayout, BeforeEnterObserver {
+
+    @Autowired
+    private UserService userService;
+
+    private User currentUser;
+
+    private SimpleDateFormat birthDateFormat = new SimpleDateFormat("d MMMM YYYY", Locale.ENGLISH);
+    private int currYear = Calendar.getInstance().get(Calendar.YEAR);
+    private Calendar userCalendar = Calendar.getInstance();
 
     private VerticalLayout mainLayout = new VerticalLayout();
-    private VerticalLayout userLayout = new VerticalLayout();
+    private VerticalLayout userVerticalLayout = new VerticalLayout();
     private VerticalLayout switchLayout = new VerticalLayout();
+    private VerticalLayout avatarLayout = new VerticalLayout();
+    private VerticalLayout infoLayout = new VerticalLayout();
+
+    private HorizontalLayout userHorizontalLayout = new HorizontalLayout();
+
+    private Span userUsernameSpan = new Span();
+    private Span userFromSpan = new Span();
+    private Span userBirthdaySpan = new Span();
+    private Span userAboutSpan = new Span();
+
+    private Image userAvatarImage = new Image("", "avatar");
+
+    private MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
+    private Upload avatarUpload = new Upload(buffer);
+
+    private Button uploadAvatarButton = new Button("Upload avatar");
 
     private Div contentDiv = new Div();
+    private Div uploadButtonDiv = new Div();
 
-    private HorizontalLayout avatarLayout = new HorizontalLayout();
-    private HorizontalLayout infoLayout = new HorizontalLayout();
+    private Tabs switchBar = new Tabs();
+    private Tab aboutTab = new Tab("About");
+    private Tab accountTab = new Tab("Account");
 
     public ProfileView() {
         getContent().setSizeFull();
 
         mainLayout.setSizeFull();
 
-        userLayout.setSizeFull();
+        userVerticalLayout.setSizeFull();
 
-        avatarLayout.setSizeFull();
+        userHorizontalLayout.setSizeFull();
+
+        avatarLayout.addClassName("profile-avatar");
+        avatarLayout.addClassName("margin-none");
+        avatarLayout.addClassName("padding-none");
+        avatarLayout.setWidth(null);
+
+        userAvatarImage.addClassName("avatar-img");
+        userAvatarImage.setSrc(StaticResources.DEFAULT_USER_AVATAR);
+
+        uploadAvatarButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        uploadAvatarButton.setSizeFull();
+
+        avatarUpload.setDropAllowed(false);
+        avatarUpload.setUploadButton(uploadAvatarButton);
+        avatarUpload.setSizeFull();
+
+        uploadButtonDiv.setSizeFull();
+        uploadButtonDiv.addClassName("upload-btn-div");
+        uploadButtonDiv.addClassName("margin-none");
+        uploadButtonDiv.add(avatarUpload);
+
+        avatarLayout.add(userAvatarImage, uploadButtonDiv);
 
         infoLayout.setSizeFull();
+        infoLayout.addClassName("margin-none");
+        infoLayout.setWidth("50%");
 
-        userLayout.add(avatarLayout, infoLayout);
+        userUsernameSpan.addClassName("username");
+
+        userFromSpan.addClassName("grey-light");
+        userFromSpan.addClassName("margin-none");
+
+        userBirthdaySpan.addClassName("grey-light");
+        userBirthdaySpan.addClassName("margin-none");
+
+        userHorizontalLayout.add(avatarLayout, infoLayout);
+
+        userVerticalLayout.add(userHorizontalLayout);
 
         switchLayout.setSizeFull();
+        switchLayout.addClassName("switch");
+        switchLayout.addClassName("padding-none");
+
+        switchBar.addClassName("tabs-bar");
+        switchBar.add(aboutTab, accountTab);
+
+        switchLayout.add(switchBar);
 
         contentDiv.setSizeFull();
 
-        mainLayout.add(userLayout, switchLayout, contentDiv);
+        mainLayout.add(userVerticalLayout, switchLayout, contentDiv);
 
         add(mainLayout);
+
+        switchBar.addSelectedChangeListener(event -> {
+            String selectedTab = event.getSource().getSelectedTab().getLabel();
+
+            if (aboutTab.getLabel().equals(selectedTab)) {
+                UI.getCurrent().navigate("profile/about");
+            } else if (accountTab.getLabel().equals(selectedTab)) {
+                UI.getCurrent().navigate("profile/account");
+            }
+        });
     }
 
     @Override
     public void showRouterLayoutContent(HasElement content) {
         contentDiv.getElement().appendChild(content.getElement());
     }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        userProfileLayoutBuild(false);
+    }
+
+    public void userProfileLayoutBuild(boolean update) {
+        if (currentUser == null) {
+            currentUser = userService.findUserByUsername(SecurityUtils.getUsername());
+        } else if (update) {
+            currentUser = userService.findUserByUsername(SecurityUtils.getUsername());
+        }
+
+        infoLayout.removeAll();
+
+        userUsernameSpan.setText(currentUser.getUsername());
+        infoLayout.add(userUsernameSpan);
+
+        if (currentUser.getCity() != null & currentUser.getCountry() != null) {
+            userFromSpan.setText(currentUser.getCity() + ", " + currentUser.getCountry());
+            infoLayout.add(userFromSpan);
+        }
+
+        if (currentUser.getBirthday() != null) {
+            userCalendar.setTime(currentUser.getBirthday());
+            userBirthdaySpan.setText(birthDateFormat.format(currentUser.getBirthday()) + " (" + (currYear - userCalendar.get(Calendar.YEAR)) + " years old)");
+            infoLayout.add(userBirthdaySpan);
+        }
+
+        if (currentUser.getAbout() != null) {
+            userAboutSpan.setText(currentUser.getAbout());
+            infoLayout.add(userAboutSpan);
+        }
+    }
+
 }

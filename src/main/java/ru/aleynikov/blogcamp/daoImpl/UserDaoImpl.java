@@ -24,7 +24,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findUserByUsername(String username) {
-        String query = "SELECT * FROM usr WHERE LOWER(username) = LOWER(?)";
+        String query = "SELECT user_id, username, password, secret_question, secret_answer, active, registered, about, birthday, country.name AS \"country\", city.name AS \"city\" FROM usr LEFT JOIN country ON country.country_id = usr.country LEFT JOIN city ON city.city_id = usr.city WHERE usr.username = ?";
         Object[] qparams = new Object[] { username };
 
         User user = null;
