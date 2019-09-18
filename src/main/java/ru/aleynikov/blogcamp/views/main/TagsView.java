@@ -85,7 +85,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         sortBar.addClassName("left-side-component");
         sortBar.addClassName("tabs-bar");
 
-        sortTab = sortBar.getSelectedTab().getLabel().toLowerCase();
+        sortTab = sortBar.getSelectedTab().getLabel();
 
         headerLowerLayout.add(searchTagField, sortBar);
 
@@ -132,9 +132,9 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         if (sortBar.getSelectedTab() != null) {
             if (qparams.containsKey("search")) {
                 sortBar.setSelectedTab(null);
-            } else if (sortTab.contains(popularTab.getLabel().toLowerCase())) {
+            } else if (sortTab.contains(popularTab.getLabel())) {
                 sortBar.setSelectedTab(popularTab);
-            } else if (sortTab.contains(newestTab.getLabel().toLowerCase())) {
+            } else if (sortTab.contains(newestTab.getLabel())) {
                 sortBar.setSelectedTab(newestTab);
             }
         }
@@ -174,10 +174,10 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         if (!filter.isEmpty()) {
             tagList = tagService.getFilterTagList(page, TAGS_ON_PAGE_LIMIT, filter);
             countTags = tagService.getFilterTagsCount(filter);
-        } else if (sortTab.equals(newestTab.getLabel().toLowerCase())) {
+        } else if (sortTab.equals(newestTab.getLabel())) {
             tagList = tagService.getNewestTagList(page, TAGS_ON_PAGE_LIMIT);
             countTags = tagService.getAllTagsCount();
-        } else if (sortTab.equals(popularTab.getLabel().toLowerCase())) {
+        } else if (sortTab.equals(popularTab.getLabel())) {
             tagList = tagService.getPopularTagList(page, TAGS_ON_PAGE_LIMIT);
             countTags = tagService.getAllTagsCount();
         }
@@ -216,7 +216,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
             qmap.put("search", param);
         } else if (sortTabLabel != null){
             param = new ArrayList<>();
-            param.add(sortTabLabel.toLowerCase());
+            param.add(sortTabLabel);
             qmap.put("tab", param);
         }
 

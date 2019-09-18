@@ -83,7 +83,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
         sortBar.addClassName("tabs-bar");
         sortBar.add(nameTab);
 
-        sortTab = sortBar.getSelectedTab().getLabel().toLowerCase();
+        sortTab = sortBar.getSelectedTab().getLabel();
 
         headerLowerLayout.add(searchUserField, sortBar);
 
@@ -128,7 +128,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
         if (sortBar.getSelectedTab() != null) {
             if (qparams.containsKey("search")) {
                 sortBar.setSelectedTab(null);
-            } else if (sortTab.contains(nameTab.getLabel().toLowerCase())) {
+            } else if (sortTab.equals(nameTab.getLabel())) {
                 sortBar.setSelectedTab(nameTab);
             }
         }
@@ -168,7 +168,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
         if (!filter.isEmpty()) {
             userList = userService.getFilterByUsernameUsersList(page, USERS_ON_PAGE_LIMIT, filter);
             countUsers = userService.getFilterUsersCount(filter);
-        } else if (sortTab.equals(nameTab.getLabel().toLowerCase())) {
+        } else if (sortTab.equals(nameTab.getLabel())) {
             userList = userService.getSortedByUsernameUserList(page, USERS_ON_PAGE_LIMIT);
             countUsers = userService.getAllUsersCount();
         }
@@ -207,7 +207,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
             qmap.put("search", param);
         } else if (sortTabLabel != null){
             param = new ArrayList<>();
-            param.add(sortTabLabel.toLowerCase());
+            param.add(sortTabLabel);
             qmap.put("tab", param);
         }
 
