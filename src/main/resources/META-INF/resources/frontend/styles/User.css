@@ -15,8 +15,16 @@
     padding: 0;
 }
 
-.user-about {
+.margin-none {
+    margin: 0;
+}
+
+.user-about, .user-from {
     color: #6a737c;
+}
+
+.user-fullname {
+    color: #778088;
 }
 
 .user-about-content {
@@ -24,8 +32,8 @@
 }
 
 .user-img {
-    width: 48px;
-    height: 48px;
+    width: 55px;
+    height: 55px;
     padding: 5px;
     border-radius: 2px;
     box-shadow: 2px 2px 4px rgba(12,13,14,0.5);

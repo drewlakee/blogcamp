@@ -22,9 +22,11 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     private JdbcTemplate jdbc;
 
+    private static final String userMainInfo = "SELECT user_id, username, password, fullname, secret_question, secret_answer, active, registered, about, birthday, country.name AS \"country\", city.name AS \"city\" FROM usr LEFT JOIN country ON country.country_id = usr.country LEFT JOIN city ON city.city_id = usr.city";
+
     @Override
     public User findUserByUsername(String username) {
-        String query = "SELECT user_id, username, password, secret_question, secret_answer, active, registered, about, birthday, country.name AS \"country\", city.name AS \"city\" FROM usr LEFT JOIN country ON country.country_id = usr.country LEFT JOIN city ON city.city_id = usr.city WHERE usr.username = ?";
+        String query = userMainInfo + " WHERE usr.username = ?";
         Object[] qparams = new Object[] { username };
 
         User user = null;
@@ -60,7 +62,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getSortedByUsernameAscUserList(int offset, int limit) {
-        String query = "SELECT * FROM usr ORDER BY (username) ASC OFFSET ? LIMIT ?";
+        String query = userMainInfo + " ORDER BY (username) ASC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {offset, limit};
         List<User> userList;
 
@@ -72,7 +74,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getFilterByUsernameUserList(int offset, int limit, String filter) {
-        String query = "SELECT * FROM usr WHERE LOWER(username) LIKE LOWER(?) OFFSET ? LIMIT ?";
+        String query = userMainInfo + " WHERE LOWER(username) LIKE LOWER(?) OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {"%"+filter+"%", offset, limit};
         List<User> userList;
 

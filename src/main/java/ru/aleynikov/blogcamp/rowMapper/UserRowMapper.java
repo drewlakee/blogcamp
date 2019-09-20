@@ -22,6 +22,7 @@ public class UserRowMapper implements RowMapper {
         user.setBirthday(resultSet.getDate("birthday"));
         user.setCountry(resultSet.getString("country"));
         user.setCity(resultSet.getString("city"));
+        user.setFullName(resultSet.getString("fullname"));
 
         return user;
     }

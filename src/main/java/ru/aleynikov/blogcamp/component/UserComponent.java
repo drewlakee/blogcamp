@@ -27,10 +27,12 @@ public class UserComponent extends Div {
 
     private Span userAbout = new Span();
     private Span itsYouSpan = new Span("It's you");
+    private Span userFullName = new Span();
+    private Span userFromSpan = new Span();
 
     private Image userAvatar = new Image();
 
-    public UserComponent(User user) {
+    public UserComponent(User currentUser) {
         addClassName("user-block");
 
         contentLayout.addClassName("padding-none");
@@ -49,28 +51,42 @@ public class UserComponent extends Div {
         contentBodyRightLayout.addClassName("padding-none");
 
         userLink.addClassName("user-link");
-        userLink.setText(user.getUsername());
+        userLink.setText(currentUser.getUsername());
 
         usernameLayout.add(userLink);
 
-        if (SecurityUtils.getUsername().equals(user.getUsername())) {
+        if (SecurityUtils.getUsername().equals(currentUser.getUsername())) {
             itsYouSpan.addClassName("you");
             usernameLayout.add(itsYouSpan);
         }
 
         contentBodyRightLayout.add(usernameLayout);
 
+        if (currentUser.getFullName() != null) {
+            userFullName.addClassName("user-fullname");
+            userFullName.addClassName("margin-none");
+            userFullName.setText(currentUser.getFullName());
+            contentBodyRightLayout.add(userFullName);
+        }
+
+        if (currentUser.getCity() != null & currentUser.getCountry() != null) {
+            userFromSpan.addClassName("user-from");
+            userFromSpan.addClassName("margin-none");
+            userFromSpan.setText(currentUser.getCity() + ", " + currentUser.getCountry());
+            contentBodyRightLayout.add(userFromSpan);
+        }
+
         contentBodyLayout.add(contentBodyLeftLayout, contentBodyRightLayout);
 
         contentLayout.add(contentBodyLayout);
 
-        if (user.getAbout() != null) {
+        if (currentUser.getAbout() != null) {
             contentFootLayout.setSizeFull();
             contentFootLayout.addClassName("padding-none");
             contentFootLayout.addClassName("user-about");
 
             userAbout.addClassName("user-about-content");
-            userAbout.setText(user.getAbout());
+            userAbout.setText(currentUser.getAbout());
 
             contentFootLayout.add(userAbout);
 

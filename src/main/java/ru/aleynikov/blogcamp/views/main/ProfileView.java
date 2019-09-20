@@ -24,6 +24,7 @@ import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
+import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -53,6 +54,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
     private HorizontalLayout userHorizontalLayout = new HorizontalLayout();
 
     private Span userUsernameSpan = new Span();
+    private Span userFullNameSpan = new Span();
     private Span userFromSpan = new Span();
     private Span userBirthdaySpan = new Span();
     private Span userAboutSpan = new Span();
@@ -76,7 +78,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
 
         mainLayout.setSizeFull();
 
-        userVerticalLayout.setSizeFull();
+        userVerticalLayout.setWidth("100%");
 
         userHorizontalLayout.setSizeFull();
 
@@ -108,6 +110,9 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
 
         userUsernameSpan.addClassName("username");
 
+        userFullNameSpan.addClassName("grey-light");
+        userFullNameSpan.addClassName("margin-none");
+
         userFromSpan.addClassName("grey-light");
         userFromSpan.addClassName("margin-none");
 
@@ -118,7 +123,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
 
         userVerticalLayout.add(userHorizontalLayout);
 
-        switchLayout.setSizeFull();
+        switchLayout.setWidth("100%");
         switchLayout.addClassName("switch");
         switchLayout.addClassName("padding-none");
 
@@ -128,6 +133,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
         switchLayout.add(switchBar);
 
         contentDiv.setSizeFull();
+        contentDiv.addClassName("margin-none");
 
         mainLayout.add(userVerticalLayout, switchLayout, contentDiv);
 
@@ -151,6 +157,11 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
+        if (event.getLocation().getPath().endsWith("about"))
+            switchBar.setSelectedTab(aboutTab);
+        else if (event.getLocation().getPath().endsWith("account"))
+            switchBar.setSelectedTab(accountTab);
+
         userProfileLayoutBuild(false);
     }
 
@@ -165,6 +176,11 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
 
         userUsernameSpan.setText(currentUser.getUsername());
         infoLayout.add(userUsernameSpan);
+
+        if (currentUser.getFullName() != null) {
+            userFullNameSpan.setText(currentUser.getFullName());
+            infoLayout.add(userFullNameSpan);
+        }
 
         if (currentUser.getCity() != null & currentUser.getCountry() != null) {
             userFromSpan.setText(currentUser.getCity() + ", " + currentUser.getCountry());
