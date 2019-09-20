@@ -54,21 +54,6 @@ public final class SecurityUtils {
                 && authentication.isAuthenticated();
     }
 
-    public static Object getUserDetails() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getDetails();
-    }
-
-    public static Object getUserPrincipal() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getPrincipal();
-    }
-
-    public static Object getUserAuthorities() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getAuthorities();
-    }
-
     public static String getUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();

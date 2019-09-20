@@ -21,6 +21,7 @@ public class User {
     private Date birthday;
     private String country;
     private String city;
+    private String authority;
 
     public User() {}
 }

@@ -43,7 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .dataSource(dataSource)
                 .passwordEncoder(bCryptPasswordEncoder)
                 .usersByUsernameQuery("Select username, password, active from usr where username=?")
-                .authoritiesByUsernameQuery("select username, authority.name from (usr_to_authority JOIN usr USING (user_id)) JOIN authority USING (authority_id) where username=?");
+                .authoritiesByUsernameQuery("select username, authority from usr WHERE username=?");
     }
 
     /**
