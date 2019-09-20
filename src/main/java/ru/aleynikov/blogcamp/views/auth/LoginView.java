@@ -105,10 +105,6 @@ public class LoginView extends HorizontalLayout {
         loginButton.addClickListener(clickEvent -> {
             if (isLoginFormValid()) {
                 try {
-                    /**
-                     *   try to authenticate with given credentials, should always return not null or throw an {@link AuthenticationException}
-                     */
-
                     log.info("User trying authenticates with username [{}]", usernameField.getValue().trim());
                     log.info("SELECT username, password, active FROM usr WHERE username= ?, [{}]", usernameField.getValue().trim());
                     final Authentication authentication = authenticationManager

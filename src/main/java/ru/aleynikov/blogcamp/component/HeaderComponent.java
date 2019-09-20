@@ -57,7 +57,7 @@ public class HeaderComponent extends HorizontalLayout {
 
         userAvatarImage.addClassName("user-avatar");
         userAvatarImage.setSrc(StaticResources.DEFAULT_USER_AVATAR);
-        userAvatarImage.setTitle(SecurityUtils.getUsername());
+        userAvatarImage.setTitle(SecurityUtils.getPrincipal().getUsername());
 
 
         userAvatarDiv.addClassName("div-component");

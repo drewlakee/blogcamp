@@ -26,10 +26,7 @@ import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.ProfileView;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Arrays;
 import java.util.Calendar;
 
 @Route(value = "about", layout = ProfileView.class)
@@ -125,7 +122,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
 
     public void setUserInfoIntoForm() {
         if (currentUser == null) {
-            currentUser = userService.findUserByUsername(SecurityUtils.getUsername());
+            currentUser = SecurityUtils.getPrincipal();
         }
 
         if (currentUser.getFullName() != null) {

@@ -8,23 +8,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import ru.aleynikov.blogcamp.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.stream.Stream;
 
-/**
- * SecurityUtils takes care of all such static operations that have to do with
- * security and querying rights from different beans of the UI.
- *
- */
 public final class SecurityUtils {
 
     private static Logger log = LoggerFactory.getLogger(SecurityUtils.class);
 
 
-    private SecurityUtils() {
-        // Util methods only
-    }
+    private SecurityUtils() { }
 
     /**
      * Tests if the request is an internal framework request. The test consists of
@@ -42,21 +36,16 @@ public final class SecurityUtils {
                 && Stream.of(ServletHelper.RequestType.values()).anyMatch(r -> r.getIdentifier().equals(parameterValue));
     }
 
-    /**
-     * Tests if some user is authenticated. As Spring Security always will create an {@link AnonymousAuthenticationToken}
-     * we have to ignore those tokens explicitly.
-     */
-
     public static boolean isUserLoggedIn() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null
                 && !(authentication instanceof AnonymousAuthenticationToken)
                 && authentication.isAuthenticated();
     }
-
-    public static String getUsername() {
+    
+    public static User getPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getName();
+        return (User) authentication.getPrincipal();
     }
 
     public static void destroySession() {

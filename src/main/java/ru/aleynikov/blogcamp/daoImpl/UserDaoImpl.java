@@ -22,7 +22,7 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     private JdbcTemplate jdbc;
 
-    private static final String userMainInfo = "SELECT user_id, username, password, fullname, secret_question, secret_answer, active, authority, registered, about, birthday, country.name AS \"country\", city.name AS \"city\" FROM usr LEFT JOIN country ON country.country_id = usr.country LEFT JOIN city ON city.city_id = usr.city";
+    private static final String userMainInfo = "SELECT user_id, username, password, fullname, secret_question, secret_answer, active, role, isbanned, registered, about, birthday, country.name AS \"country\", city.name AS \"city\" FROM usr LEFT JOIN country ON country.country_id = usr.country LEFT JOIN city ON city.city_id = usr.city";
 
     @Override
     public User findUserByUsername(String username) {

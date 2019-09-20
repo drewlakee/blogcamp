@@ -55,7 +55,7 @@ public class UserComponent extends Div {
 
         usernameLayout.add(userLink);
 
-        if (SecurityUtils.getUsername().equals(currentUser.getUsername())) {
+        if (SecurityUtils.getPrincipal().getUsername().equals(currentUser.getUsername())) {
             itsYouSpan.addClassName("you");
             usernameLayout.add(itsYouSpan);
         }

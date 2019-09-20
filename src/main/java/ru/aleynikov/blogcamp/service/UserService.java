@@ -49,11 +49,6 @@ public class UserService {
     public User findUserByUsername(String username) {
         User user = userDao.findUserByUsername(username);
 
-        if (user == null) {
-            user = new User();
-            user.setUsername("anonymousUser");
-        }
-
         return user;
     }
 }

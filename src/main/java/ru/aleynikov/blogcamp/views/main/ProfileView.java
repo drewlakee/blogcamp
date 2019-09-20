@@ -10,7 +10,6 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -24,7 +23,6 @@ import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
-import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -167,9 +165,9 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
 
     public void userProfileLayoutBuild(boolean update) {
         if (currentUser == null) {
-            currentUser = userService.findUserByUsername(SecurityUtils.getUsername());
+            currentUser = SecurityUtils.getPrincipal();
         } else if (update) {
-            currentUser = userService.findUserByUsername(SecurityUtils.getUsername());
+            currentUser = userService.findUserByUsername(SecurityUtils.getPrincipal().getUsername());
         }
 
         infoLayout.removeAll();
