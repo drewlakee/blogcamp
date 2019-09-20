@@ -24,7 +24,6 @@ public class UserRowMapper implements RowMapper {
         user.setCity(resultSet.getString("city"));
         user.setFullName(resultSet.getString("fullname"));
         user.setRole(resultSet.getString("role"));
-        user.setBanned(resultSet.getBoolean("isbanned"));
 
         return user;
     }

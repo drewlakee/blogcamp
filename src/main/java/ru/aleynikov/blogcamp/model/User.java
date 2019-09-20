@@ -28,7 +28,6 @@ public class User implements UserDetails {
     private String country;
     private String city;
     private String role;
-    private boolean isBanned;
 
     public User() {}
 
@@ -42,21 +41,20 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return active;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return !isBanned;
+        return active;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return active;
     }
 
     @Override
-    public boolean isEnabled() {
-        return active;
+    public boolean isEnabled() { return active;
     }
 }
