@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.dao.UserDao;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.rowMapper.UserRowMapper;
+import ru.aleynikov.blogcamp.security.SecurityUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,17 +23,20 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     private JdbcTemplate jdbc;
 
-    private static final String userMainInfo = "SELECT user_id, username, password, fullname, secret_question, secret_answer, active, role, registered, about, birthday, country.name AS \"country\", city.name AS \"city\" FROM usr LEFT JOIN country ON country.country_id = usr.country LEFT JOIN city ON city.city_id = usr.city";
+    @Autowired
+    private UserRowMapper userRowMapper;
+
+    private static final String userMainInfoQuery = "SELECT user_id, username, password, fullname, secret_question, secret_answer, active, online, role, registered, about, birthday, country.name AS \"country\", city.name AS \"city\" FROM usr LEFT JOIN country ON country.country_id = usr.country LEFT JOIN city ON city.city_id = usr.city";
 
     @Override
     public User findUserByUsername(String username) {
-        String query = userMainInfo + " WHERE usr.username = ?";
+        String query = userMainInfoQuery + " WHERE usr.username = ?";
         Object[] qparams = new Object[] { username };
 
         User user = null;
         try {
             log.info(query + ", {}", Arrays.toString(qparams));
-            user = (User) jdbc.queryForObject(query, qparams, new UserRowMapper());
+            user = (User) jdbc.queryForObject(query, qparams, userRowMapper);
         } catch (EmptyResultDataAccessException e) {
             log.info("User not found with username [{}]", username);
         }
@@ -44,9 +48,9 @@ public class UserDaoImpl implements UserDao {
     public void addUser(Map<String, Object> newUser) {
         String query = "INSERT INTO usr (username, password, secret_question, secret_answer) VALUES " +
                 "(?, ?, ?, ?)";
-
         Object[] newUserData = new Object[] {newUser.get("username"), newUser.get("password"),
                 newUser.get("secret_question"), newUser.get("secret_answer")};
+
         log.info(query + ", {}", Arrays.toString(newUserData));
         jdbc.update(query, newUserData);
     }
@@ -54,32 +58,32 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void updateUserPassword(String username, String newPassword) {
         String query = "UPDATE usr SET password=? WHERE username=?";
-
         Object[] userData = new Object[] {newPassword, username};
+
         log.info(query + ", {}", Arrays.toString(userData));
         jdbc.update(query, userData);
     }
 
     @Override
     public List<User> getSortedByUsernameAscUserList(int offset, int limit) {
-        String query = userMainInfo + " ORDER BY (username) ASC OFFSET ? LIMIT ?";
+        String query = userMainInfoQuery + " ORDER BY (username) ASC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {offset, limit};
         List<User> userList;
 
-        log.info(query + ", {}", Arrays.toString(qparams));
-        userList = jdbc.query(query, qparams, new UserRowMapper());
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        userList = jdbc.query(query, qparams, userRowMapper);
 
         return userList;
     }
 
     @Override
     public List<User> getFilterByUsernameUserList(int offset, int limit, String filter) {
-        String query = userMainInfo + " WHERE LOWER(username) LIKE LOWER(?) OFFSET ? LIMIT ?";
+        String query = userMainInfoQuery + " WHERE LOWER(username) LIKE LOWER(?) OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {"%"+filter+"%", offset, limit};
         List<User> userList;
 
-        log.info(query + ", {}", Arrays.toString(qparams));
-        userList = jdbc.query(query, qparams, new UserRowMapper());
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        userList = jdbc.query(query, qparams, userRowMapper);
 
         return userList;
     }
@@ -88,7 +92,7 @@ public class UserDaoImpl implements UserDao {
     public int getAllUsersCount() {
         String query = "SELECT COUNT(*) FROM usr";
 
-        log.info(query);
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query);
         int count = jdbc.queryForObject(query, Integer.class);
 
         return count;
@@ -99,7 +103,7 @@ public class UserDaoImpl implements UserDao {
         String query = "SELECT COUNT(*) FROM usr WHERE username LIKE ?";
         Object[] qparams = new Object[] {"%"+filter+"%"};
 
-        log.info(query + ", {}", qparams);
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
         int count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;

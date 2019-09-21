@@ -22,12 +22,16 @@ import ru.aleynikov.blogcamp.model.City;
 import ru.aleynikov.blogcamp.model.Country;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
+import ru.aleynikov.blogcamp.service.CityService;
+import ru.aleynikov.blogcamp.service.CountryService;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.ProfileView;
 
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.List;
+import java.util.TreeSet;
 
 @Route(value = "about", layout = ProfileView.class)
 @PageTitle("Profile - About")
@@ -37,7 +41,19 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CountryService countryService;
+
+    @Autowired
+    private CityService cityService;
+
     private User currentUser;
+
+    private List<Country> countryList;
+    private TreeSet<String> countryNamesTree;
+
+    private List<City> cityList;
+    private TreeSet<String> cityNamesTree;
 
     private Calendar userCalendar = Calendar.getInstance();
 
@@ -54,8 +70,8 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
 
     private DatePicker birthdayPicker = new DatePicker();
 
-    private Select<Country> countrySelect = new Select<>();
-    private Select<City> citySelect = new Select<>();
+    private Select<String> countrySelect = new Select<>();
+    private Select<String> citySelect = new Select<>();
 
     private TextArea aboutArea = new TextArea();
 
@@ -113,16 +129,39 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
         mainLayout.add(infoAbout, bodyAboutLayout, footAboutLayout);
 
         add(mainLayout);
+
+        countrySelect.addValueChangeListener(event -> {
+            cityNamesTree.clear();
+
+            String countrySelectValue;
+
+            if (countrySelect.getValue() == null)
+                countrySelectValue = countrySelect.getEmptySelectionCaption();
+            else
+                countrySelectValue = countrySelect.getValue();
+
+            cityList.stream().filter((x) -> x.getCountryName().equals(countrySelectValue)).forEach((x) -> cityNamesTree.add(x.getCityName()));
+            citySelect.setEmptySelectionAllowed(false);
+            citySelect.setItems(cityNamesTree);
+        });
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        setUserInfoIntoForm();
+        setUserCurrentInfoIntoForm();
     }
 
-    public void setUserInfoIntoForm() {
+    public void setUserCurrentInfoIntoForm() {
         if (currentUser == null) {
             currentUser = SecurityUtils.getPrincipal();
+        }
+
+        if (countryList == null) {
+            countryList = countryService.getAllCountriesList();
+        }
+
+        if (cityList == null) {
+            cityList = cityService.getAllCities();
         }
 
         if (currentUser.getFullName() != null) {
@@ -142,9 +181,23 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
             birthdayPicker.setValue(LocalDate.of(userCalendar.get(Calendar.YEAR), userCalendar.get(Calendar.MONTH), userCalendar.get(Calendar.DAY_OF_MONTH)));
         }
 
-        //
-        // TODO: CITY AND COUNTRY
-        //
+        if (currentUser.getCountry() != null) {
+            countrySelect.setEmptySelectionAllowed(true);
+            countrySelect.setEmptySelectionCaption(currentUser.getCountry());
+        }
+
+        countryNamesTree = new TreeSet<>();
+        countryList.stream().filter((x) -> !x.getCountryName().equals(currentUser.getCountry())).forEach((x) -> countryNamesTree.add(x.getCountryName()));
+        countrySelect.setItems(countryNamesTree);
+
+        if (currentUser.getCity() != null) {
+            citySelect.setEmptySelectionAllowed(true);
+            citySelect.setEmptySelectionCaption(currentUser.getCity());
+        }
+
+        cityNamesTree = new TreeSet<>();
+        cityList.stream().filter((x) -> !x.getCityName().equals(currentUser.getCity()) && x.getCountryName().equals(countrySelect.getValue())).forEach((x) -> cityNamesTree.add(x.getCityName()));
+        citySelect.setItems(cityNamesTree);
 
         if (currentUser.getAbout() != null) {
             aboutArea.setValue(currentUser.getAbout());

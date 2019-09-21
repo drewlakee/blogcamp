@@ -1,29 +1,31 @@
 package ru.aleynikov.blogcamp.rowMapper;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.model.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class UserRowMapper implements RowMapper {
 
     @Override
-    public User mapRow(ResultSet resultSet, int i) throws SQLException {
+    public User mapRow(ResultSet rs, int i) throws SQLException {
         User user = new User();
-        user.setId(resultSet.getInt("user_id"));
-        user.setUsername(resultSet.getString("username"));
-        user.setPassword(resultSet.getString("password"));
-        user.setSecretQuestion(resultSet.getString("secret_question"));
-        user.setSecretAnswer(resultSet.getString("secret_answer"));
-        user.setActive(resultSet.getBoolean("active"));
-        user.setRegisteredDate(resultSet.getDate("registered"));
-        user.setAbout(resultSet.getString("about"));
-        user.setBirthday(resultSet.getDate("birthday"));
-        user.setCountry(resultSet.getString("country"));
-        user.setCity(resultSet.getString("city"));
-        user.setFullName(resultSet.getString("fullname"));
-        user.setRole(resultSet.getString("role"));
+        user.setId(rs.getInt("user_id"));
+        user.setUsername(rs.getString("username"));
+        user.setPassword(rs.getString("password"));
+        user.setSecretQuestion(rs.getString("secret_question"));
+        user.setSecretAnswer(rs.getString("secret_answer"));
+        user.setActive(rs.getBoolean("active"));
+        user.setRegisteredDate(rs.getDate("registered"));
+        user.setAbout(rs.getString("about"));
+        user.setBirthday(rs.getDate("birthday"));
+        user.setCountry(rs.getString("country"));
+        user.setCity(rs.getString("city"));
+        user.setFullName(rs.getString("fullname"));
+        user.setRole(rs.getString("role"));
 
         return user;
     }

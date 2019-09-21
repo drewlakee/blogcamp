@@ -6,6 +6,7 @@ import ru.aleynikov.blogcamp.daoImpl.UserDaoImpl;
 import ru.aleynikov.blogcamp.model.User;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -50,5 +51,9 @@ public class UserService {
         User user = userDao.findUserByUsername(username);
 
         return user;
+    }
+
+    public void addUser(Map<String, Object> newUser) {
+        userDao.addUser(newUser);
     }
 }

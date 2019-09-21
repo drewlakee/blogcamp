@@ -17,7 +17,6 @@ public final class SecurityUtils {
 
     private static Logger log = LoggerFactory.getLogger(SecurityUtils.class);
 
-
     private SecurityUtils() { }
 
     /**
@@ -51,6 +50,7 @@ public final class SecurityUtils {
     public static void destroySession() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("User with username [{}] and authorities {} leave session.", authentication.getName(), authentication.getAuthorities());
+
         authentication.setAuthenticated(false);
         UI.getCurrent().getPage().reload();
     }

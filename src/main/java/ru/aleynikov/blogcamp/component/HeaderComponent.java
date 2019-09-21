@@ -10,12 +10,17 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
+import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 
 @StyleSheet(StaticResources.HEADER_COMPONENT_STYLES)
 public class HeaderComponent extends HorizontalLayout {
+
+    @Autowired
+    private UserService userService;
 
     private HorizontalLayout mainSideLayout = new HorizontalLayout();
 
@@ -75,7 +80,9 @@ public class HeaderComponent extends HorizontalLayout {
         add(mainSideLayout);
 
         logoDiv.addClickListener(event -> UI.getCurrent().navigate(""));
-        logoutIcon.addClickListener(clickEvent -> SecurityUtils.destroySession());
+        logoutIcon.addClickListener(clickEvent -> {
+            SecurityUtils.destroySession();
+        });
 
         searchIcon.addClickListener(iconClickEvent -> searchFieldProcess());
         searchField.addKeyPressListener(Key.ENTER, keyEventListener -> searchFieldProcess());

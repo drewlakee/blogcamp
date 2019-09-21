@@ -23,8 +23,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.aleynikov.blogcamp.daoImpl.UserDaoImpl;
 import ru.aleynikov.blogcamp.model.User;
+import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.util.Arrays;
@@ -40,7 +40,7 @@ public class SignUpView extends HorizontalLayout {
     private static Logger log = LoggerFactory.getLogger(SignUpView.class);
 
     @Autowired
-    private UserDaoImpl userDao;
+    private UserService userService;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -171,7 +171,7 @@ public class SignUpView extends HorizontalLayout {
                newUserData.put("password", passwordEncoder.encode(passwordField.getValue().trim()));
                newUserData.put("secret_question", secretQuestionField.getValue().trim().replaceAll("/?", "") + "?");
                newUserData.put("secret_answer", passwordEncoder.encode(secretAnswerField.getValue().trim()));
-               userDao.addUser(newUserData);
+               userService.addUser(newUserData);
 
                log.info("User with username [{}] was successfully registered.", newUserData.get("username"));
 
@@ -216,7 +216,7 @@ public class SignUpView extends HorizontalLayout {
     }
 
     private boolean isUsernameUnique() {
-        User existingUser = userDao.findUserByUsername(usernameField.getValue().trim());
+        User existingUser = userService.findUserByUsername(usernameField.getValue().trim());
         if (existingUser == null)
             return true;
         else {

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.dao.TagDao;
 import ru.aleynikov.blogcamp.model.Tag;
 import ru.aleynikov.blogcamp.rowMapper.TagRowMapper;
+import ru.aleynikov.blogcamp.security.SecurityUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,14 +21,17 @@ public class TagDaoImpl implements TagDao {
     @Autowired
     private JdbcTemplate jdbc;
 
+    @Autowired
+    private TagRowMapper tagRowMapper;
+
     @Override
     public List<Tag> getSortedByPostCountTagsList(int offset, int limit) {
         String query = "SELECT * FROM tag ORDER BY post_count DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {offset, limit};
         List<Tag> tagList;
 
-        log.info(query + ", {}", Arrays.toString(qparams));
-        tagList = jdbc.query(query, qparams, new TagRowMapper());
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        tagList = jdbc.query(query, qparams, tagRowMapper);
 
         return tagList;
     }
@@ -39,8 +43,8 @@ public class TagDaoImpl implements TagDao {
         List<Tag> tagList;
 
 
-        log.info(query + ", {}", Arrays.toString(qparams));
-        tagList = jdbc.query(query, qparams, new TagRowMapper());
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        tagList = jdbc.query(query, qparams, tagRowMapper);
 
         return tagList;
     }
@@ -49,7 +53,7 @@ public class TagDaoImpl implements TagDao {
     public int getTagsCount() {
         String query = "SELECT COUNT(*) FROM tag";
 
-        log.info(query);
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query);
         int count = jdbc.queryForObject(query, Integer.class);
 
         return count;
@@ -61,8 +65,8 @@ public class TagDaoImpl implements TagDao {
         Object[] qparams = new Object[] { "%"+filter+"%", offset, limit};
         List<Tag> tagList;
 
-        log.info(query + ", {}", Arrays.toString(qparams));
-        tagList = jdbc.query(query, qparams, new TagRowMapper());
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        tagList = jdbc.query(query, qparams, tagRowMapper);
 
         return tagList;
     }
@@ -72,7 +76,7 @@ public class TagDaoImpl implements TagDao {
         String query = "SELECT COUNT(*) FROM tag WHERE name LIKE ?";
         Object[] qparams = new Object[] {"%"+filter+"%"};
 
-        log.info(query);
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query);
         int count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;

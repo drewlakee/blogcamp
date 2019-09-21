@@ -16,11 +16,14 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import ru.aleynikov.blogcamp.security.SecurityUtils;
+import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 @PageTitle("Log in")
@@ -29,6 +32,9 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 public class LoginView extends HorizontalLayout {
 
     private static Logger log = LoggerFactory.getLogger(LoginView.class);
+
+    @Autowired
+    private UserService userService;
 
     private Image logoImage = new Image(StaticResources.LOGO_IMAGE, "logo");
 
@@ -106,7 +112,6 @@ public class LoginView extends HorizontalLayout {
             if (isLoginFormValid()) {
                 try {
                     log.info("User trying authenticates with username [{}]", usernameField.getValue().trim());
-                    log.info("SELECT username, password, active FROM usr WHERE username= ?, [{}]", usernameField.getValue().trim());
                     final Authentication authentication = authenticationManager
                             .authenticate(new UsernamePasswordAuthenticationToken(usernameField.getValue().trim(), passwordField.getValue().trim()));
 
