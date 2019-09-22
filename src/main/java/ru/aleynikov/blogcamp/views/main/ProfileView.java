@@ -24,6 +24,7 @@ import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -39,9 +40,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
 
     private User currentUser;
 
-    private SimpleDateFormat birthDateFormat = new SimpleDateFormat("d MMMM YYYY", Locale.ENGLISH);
     private int currYear = Calendar.getInstance().get(Calendar.YEAR);
-    private Calendar userCalendar = Calendar.getInstance();
 
     private VerticalLayout mainLayout = new VerticalLayout();
     private VerticalLayout userVerticalLayout = new VerticalLayout();
@@ -69,7 +68,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
 
     private Tabs switchBar = new Tabs();
     private Tab aboutTab = new Tab("About");
-    private Tab accountTab = new Tab("Account");
+    private Tab accountTab = new Tab("Account settings");
 
     public ProfileView() {
         getContent().setSizeFull();
@@ -160,15 +159,11 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
         else if (event.getLocation().getPath().endsWith("account"))
             switchBar.setSelectedTab(accountTab);
 
-        userProfileLayoutBuild(false);
+        userProfileLayoutBuild();
     }
 
-    public void userProfileLayoutBuild(boolean update) {
-        if (currentUser == null) {
-            currentUser = SecurityUtils.getPrincipal();
-        } else if (update) {
-            currentUser = userService.findUserByUsername(SecurityUtils.getPrincipal().getUsername());
-        }
+    public void userProfileLayoutBuild() {
+        currentUser = SecurityUtils.getPrincipal();
 
         infoLayout.removeAll();
 
@@ -186,8 +181,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
         }
 
         if (currentUser.getBirthday() != null) {
-            userCalendar.setTime(currentUser.getBirthday());
-            userBirthdaySpan.setText(birthDateFormat.format(currentUser.getBirthday()) + " (" + (currYear - userCalendar.get(Calendar.YEAR)) + " years old)");
+            userBirthdaySpan.setText(currentUser.getBirthday().format(DateTimeFormatter.ofPattern("d MMMM YYYY", Locale.ENGLISH)) + " (" + (currYear - currentUser.getBirthday().getYear()) + " years old)");
             infoLayout.add(userBirthdaySpan);
         }
 

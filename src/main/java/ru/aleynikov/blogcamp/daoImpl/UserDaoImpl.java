@@ -12,6 +12,7 @@ import ru.aleynikov.blogcamp.rowMapper.UserRowMapper;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     private UserRowMapper userRowMapper;
 
-    private static final String userMainInfoQuery = "SELECT user_id, username, password, fullname, secret_question, secret_answer, active, online, role, registered, about, birthday, country.name AS \"country\", city.name AS \"city\" FROM usr LEFT JOIN country ON country.country_id = usr.country LEFT JOIN city ON city.city_id = usr.city";
+    private static final String userMainInfoQuery = "SELECT user_id, username, password, fullname, secret_question, secret_answer, active, role, registered, about, birthday, country.name AS \"country\", city.name AS \"city\" FROM usr LEFT JOIN country ON country.country_id = usr.country LEFT JOIN city ON city.city_id = usr.city";
 
     @Override
     public User findUserByUsername(String username) {
@@ -107,5 +108,23 @@ public class UserDaoImpl implements UserDao {
         int count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;
+    }
+
+    @Override
+    public void updateUserAboutInfo(HashMap<String, Object> infoForUpdate) {
+        String query = "UPDATE usr SET fullname=?, birthday=?, country=?, city=?, about=? WHERE user_id=?";
+        Object[] qparams = infoForUpdate.values().toArray();
+
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        jdbc.update(query, qparams);
+    }
+
+    @Override
+    public void updateUserSecret(String secretQuestion, String secretAnswer, int userId) {
+        String query = "UPDATE usr SET secret_question=?, secret_answer=? WHERE user_id=?";
+        Object[] qparams = new Object[] {secretQuestion, secretAnswer, userId};
+
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        jdbc.update(query, qparams);
     }
 }

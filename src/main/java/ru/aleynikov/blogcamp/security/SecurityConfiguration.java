@@ -26,7 +26,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     @Qualifier("userDetailsService")
-    UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
 
     @Bean
     @Override

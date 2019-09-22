@@ -30,3 +30,7 @@
 .switch {
     border-bottom: 1px solid #d6d9dc;
 }
+
+.success {
+    color: #55a92f;
+}

@@ -2,11 +2,13 @@ package ru.aleynikov.blogcamp.views.main.profile;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasComponents;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -22,16 +24,14 @@ import ru.aleynikov.blogcamp.model.City;
 import ru.aleynikov.blogcamp.model.Country;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
+import ru.aleynikov.blogcamp.security.SessionManager;
 import ru.aleynikov.blogcamp.service.CityService;
 import ru.aleynikov.blogcamp.service.CountryService;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.ProfileView;
 
-import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 @Route(value = "about", layout = ProfileView.class)
 @PageTitle("Profile - About")
@@ -47,6 +47,9 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
     @Autowired
     private CityService cityService;
 
+    @Autowired
+    private SessionManager sessionManager;
+
     private User currentUser;
 
     private List<Country> countryList;
@@ -55,8 +58,6 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
     private List<City> cityList;
     private TreeSet<String> cityNamesTree;
 
-    private Calendar userCalendar = Calendar.getInstance();
-
     private VerticalLayout mainLayout = new VerticalLayout();
     private VerticalLayout leftBodyAboutLayout = new VerticalLayout();
     private VerticalLayout centerBodyAboutLayout = new VerticalLayout();
@@ -64,6 +65,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
     private VerticalLayout footAboutLayout = new VerticalLayout();
 
     private HorizontalLayout bodyAboutLayout = new HorizontalLayout();
+    private HorizontalLayout footerHorizontalLayout = new HorizontalLayout();
 
     private TextField firstNameField = new TextField();
     private TextField lastNameField = new TextField();
@@ -77,7 +79,9 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
 
     private Button updateButton = new Button("Update");
 
-    private H2 infoAbout = new H2("Account information");
+    private Span successfullyUpdatedSpan = new Span("Successfully updated!");
+
+    private H2 infoAbout = new H2("About profile");
 
     public AboutView() {
         mainLayout.setSizeFull();
@@ -121,10 +125,17 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
 
         footAboutLayout.setWidth("100%");
 
-        updateButton.addClassName("main-button");
-        footAboutLayout.setHorizontalComponentAlignment(FlexComponent.Alignment.END, updateButton);
+        footerHorizontalLayout.setWidth("100%");
 
-        footAboutLayout.add(updateButton);
+        updateButton.addClassName("main-button");
+
+        successfullyUpdatedSpan.setVisible(false);
+        successfullyUpdatedSpan.addClassName("success");
+        footerHorizontalLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, successfullyUpdatedSpan);
+
+        footerHorizontalLayout.add(updateButton, successfullyUpdatedSpan);
+
+        footAboutLayout.add(footerHorizontalLayout);
 
         mainLayout.add(infoAbout, bodyAboutLayout, footAboutLayout);
 
@@ -144,6 +155,51 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
             citySelect.setEmptySelectionAllowed(false);
             citySelect.setItems(cityNamesTree);
         });
+
+        updateButton.addClickListener(event -> {
+            HashMap<String, Object> infoForUpdate = new LinkedHashMap<>();
+            infoForUpdate.put("full_name", firstNameField.getValue().trim() + " " + lastNameField.getValue().trim());
+            infoForUpdate.put("birthday", birthdayPicker.getValue());
+
+            String countrySelectValue;
+            if (countrySelect.getValue() == null)
+                countrySelectValue = countrySelect.getEmptySelectionCaption();
+            else
+                countrySelectValue = countrySelect.getValue();
+
+            Country country = new Country();
+            try {
+                country = countryList.stream().filter((x) -> x.getCountryName().equals(countrySelectValue)).findAny().get();
+            } catch (NoSuchElementException e) {
+                country.setId(-1);
+            }
+            infoForUpdate.put("country", country.getId());
+
+            String citySelectValue;
+            if (citySelect.getValue() == null)
+                citySelectValue = citySelect.getEmptySelectionCaption();
+            else
+                citySelectValue = citySelect.getValue();
+
+            City city = new City();
+            try {
+                city = cityList.stream().filter((x) -> x.getCityName().equals(citySelectValue)).findAny().get();
+            } catch (NoSuchElementException e) {
+                city.setId(-1);
+            }
+
+            infoForUpdate.put("city", city.getId());
+            infoForUpdate.put("about", aboutArea.getValue().trim());
+            infoForUpdate.put("current_user_id", SecurityUtils.getPrincipal().getId());
+
+            userService.updateUserAboutInfo(infoForUpdate);
+
+            sessionManager.updateSessionUser();
+
+            UI.getCurrent().navigate("profile/about");
+
+            successfullyUpdatedSpan.setVisible(true);
+        });
     }
 
     @Override
@@ -152,33 +208,28 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
     }
 
     public void setUserCurrentInfoIntoForm() {
-        if (currentUser == null) {
-            currentUser = SecurityUtils.getPrincipal();
-        }
+        currentUser = SecurityUtils.getPrincipal();
 
-        if (countryList == null) {
-            countryList = countryService.getAllCountriesList();
-        }
-
-        if (cityList == null) {
-            cityList = cityService.getAllCities();
-        }
+        countryList = countryService.getAllCountriesList();
+        cityList = cityService.getAllCities();
 
         if (currentUser.getFullName() != null) {
             String[] userNames = currentUser.getFullName().split(" ");
             int userFirstNameId = 0;
+            String lastName = "";
 
             for (int i = 0; i < userNames.length; i++) {
                 if (i == userFirstNameId)
                     firstNameField.setValue(userNames[i]);
                 else
-                    lastNameField.setValue(lastNameField.getValue() + userNames[i]);
+                    lastName += userNames[i] + " ";
             }
+
+            lastNameField.setValue(lastName.trim());
         }
 
         if (currentUser.getBirthday() != null) {
-            userCalendar.setTime(currentUser.getBirthday());
-            birthdayPicker.setValue(LocalDate.of(userCalendar.get(Calendar.YEAR), userCalendar.get(Calendar.MONTH), userCalendar.get(Calendar.DAY_OF_MONTH)));
+            birthdayPicker.setValue(currentUser.getBirthday());
         }
 
         if (currentUser.getCountry() != null) {

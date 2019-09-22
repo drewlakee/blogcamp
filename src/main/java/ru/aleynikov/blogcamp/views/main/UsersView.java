@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.component.PageSwitcherComponent;
 import ru.aleynikov.blogcamp.component.UserComponent;
 import ru.aleynikov.blogcamp.model.User;
+import ru.aleynikov.blogcamp.service.FilterDataManger;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
@@ -37,7 +38,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
     @Autowired
     private UserService userService;
 
-    private static final int USERS_ON_PAGE_LIMIT = 18;
+    private static final int USERS_ON_PAGE_LIMIT = 14;
 
     private VerticalLayout contentLayout = new VerticalLayout();
     private VerticalLayout headerLayout = new VerticalLayout();
@@ -188,7 +189,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
                 }
             }
 
-            int pageLimit = Math.round(countUsers/USERS_ON_PAGE_LIMIT);
+            int pageLimit = FilterDataManger.pageLimit(countUsers, USERS_ON_PAGE_LIMIT);
 
             bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, queryParametersBuilder()));
         } else {

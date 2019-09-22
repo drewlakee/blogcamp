@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.aleynikov.blogcamp.daoImpl.UserDaoImpl;
 import ru.aleynikov.blogcamp.model.User;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,27 +15,14 @@ public class UserService {
     @Autowired
     private UserDaoImpl userDao;
 
-    private int filterOffset(int page) {
-        int offset = 0;
-
-        if (page == 1 || page < 0)
-            page = 0;
-
-        if (page > 0) {
-            offset += 36 * (page - 1);
-        }
-
-        return offset;
-    }
-
     public List<User> getSortedByUsernameUserList(int page, int usersOnPageLimit) {
 
-        return userDao.getSortedByUsernameAscUserList(filterOffset(page), usersOnPageLimit);
+        return userDao.getSortedByUsernameAscUserList(FilterDataManger.filterOffset(page, usersOnPageLimit), usersOnPageLimit);
     }
 
     public List<User> getFilterByUsernameUsersList(int page, int usersOnPageLimit, String filter) {
 
-        return userDao.getFilterByUsernameUserList(filterOffset(page), usersOnPageLimit, filter);
+        return userDao.getFilterByUsernameUserList(FilterDataManger.filterOffset(page, usersOnPageLimit), usersOnPageLimit, filter);
     }
 
     public int getFilterUsersCount(String filter) {
@@ -55,5 +43,21 @@ public class UserService {
 
     public void addUser(Map<String, Object> newUser) {
         userDao.addUser(newUser);
+    }
+
+    public void updateUserAboutInfo(HashMap<String, Object> infoForUpdate) {
+        if ((Integer) infoForUpdate.get("country") == -1) {
+            infoForUpdate.put("country", null);
+        }
+
+        if ((Integer) infoForUpdate.get("city") == -1) {
+            infoForUpdate.put("city", null);
+        }
+
+        userDao.updateUserAboutInfo(infoForUpdate);
+    }
+
+    public void updateUserSecret(String secretQuestion, String secretAnswer, int userId) {
+        userDao.updateUserSecret(secretQuestion, secretAnswer, userId);
     }
 }

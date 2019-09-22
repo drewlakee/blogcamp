@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.component.PageSwitcherComponent;
 import ru.aleynikov.blogcamp.component.TagComponent;
 import ru.aleynikov.blogcamp.model.Tag;
+import ru.aleynikov.blogcamp.service.FilterDataManger;
 import ru.aleynikov.blogcamp.service.TagService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
@@ -197,7 +198,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
                 }
             }
 
-            int pageLimit = Math.round(countTags/TAGS_ON_PAGE_LIMIT);
+            int pageLimit = FilterDataManger.pageLimit(countTags, TAGS_ON_PAGE_LIMIT);
 
             bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, queryParametersBuilder()));
         } else {
