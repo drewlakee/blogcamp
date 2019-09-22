@@ -60,4 +60,8 @@ public class UserService {
     public void updateUserSecret(String secretQuestion, String secretAnswer, int userId) {
         userDao.updateUserSecret(secretQuestion, secretAnswer, userId);
     }
+
+    public void updateUserPassword(String username, String newPassword) {
+        userDao.updateUserPassword(username, newPassword);
+    }
 }

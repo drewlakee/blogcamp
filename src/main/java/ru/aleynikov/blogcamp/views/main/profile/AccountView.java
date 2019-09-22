@@ -5,7 +5,11 @@ import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -36,13 +40,20 @@ public class AccountView extends Composite<Div> implements HasComponents, Before
 
     private VerticalLayout mainLayout = new VerticalLayout();
 
+    private HorizontalLayout secretHorizontalLayout = new HorizontalLayout();
+    private HorizontalLayout passHorizontalLayout = new HorizontalLayout();
+
     private TextField secretQuestionField = new TextField();
     private TextField secretAnswerField = new TextField();
-    private TextField newPassField = new TextField();
-    private TextField newPassRepeatField = new TextField();
+
+    private PasswordField newPassField = new PasswordField();
+    private PasswordField newPassRepeatField = new PasswordField();
 
     private Button changeSecretButton = new Button("Change");
     private Button changePassButton = new Button("Change password");
+
+    private Span successfullySecretUpdate = new Span("Successfully changed!");
+    private Span successfullyPassUpdate = new Span("Password successfully changed!");
 
     public AccountView() {
         mainLayout.setSizeFull();
@@ -62,10 +73,18 @@ public class AccountView extends Composite<Div> implements HasComponents, Before
 
         changeSecretButton.addClassName("main-button");
 
+        successfullySecretUpdate.addClassName("success");
+        successfullySecretUpdate.setVisible(false);
+        secretHorizontalLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, successfullySecretUpdate);
+
+        secretHorizontalLayout.setWidth("100%");
+        secretHorizontalLayout.add(changeSecretButton, successfullySecretUpdate);
+
         newPassField.setWidth("100%");
         newPassField.setLabel("New password");
         newPassField.setMaxLength(60);
         newPassField.setMinLength(8);
+        newPassField.setErrorMessage("Minimal length of password is " + newPassField.getMinLength() + " characters.");
 
         newPassRepeatField.setWidth("100%");
         newPassRepeatField.addClassName("margin-none");
@@ -75,19 +94,30 @@ public class AccountView extends Composite<Div> implements HasComponents, Before
 
         changePassButton.addClassName("main-button");
 
-        mainLayout.add(secretQuestionField, secretAnswerField, changeSecretButton,
-                newPassField, newPassRepeatField, changePassButton);
+        successfullyPassUpdate.addClassName("success");
+        successfullyPassUpdate.setVisible(false);
+        passHorizontalLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, successfullyPassUpdate);
+
+        passHorizontalLayout.setWidth("100%");
+        passHorizontalLayout.add(changePassButton, successfullyPassUpdate);
+
+        mainLayout.add(secretQuestionField, secretAnswerField, secretHorizontalLayout,
+                newPassField, newPassRepeatField, passHorizontalLayout);
 
         add(mainLayout);
 
         changeSecretButton.addClickListener(event -> {
             if (isSecretQuestionValid()) {
                 userService.updateUserSecret(secretQuestionField.getValue().trim(), encoder.encode(secretAnswerField.getValue().trim()), currentUser.getId());
+                successfullySecretUpdate.setVisible(true);
             }
         });
 
         changePassButton.addClickListener(event -> {
-
+            if (isNewPasswordValid()) {
+                userService.updateUserPassword(currentUser.getUsername(), encoder.encode(newPassField.getValue().trim()));
+                successfullyPassUpdate.setVisible(true);
+            }
         });
     }
 
@@ -102,7 +132,6 @@ public class AccountView extends Composite<Div> implements HasComponents, Before
         boolean isQuestionValid = !secretQuestionField.isInvalid() && !secretQuestionField.isEmpty() && isHaveTwoWords(secretQuestionField.getValue().trim());
         boolean isAnswerValid = !secretAnswerField.isInvalid() && !secretAnswerField.isEmpty();
 
-        // Warn: be carefully with using button.focus(), because was some problem with JS - TypeError: $0 is null;
         if (!isQuestionValid) {
             secretQuestionField.setInvalid(true);
             secretQuestionField.focus();
@@ -120,5 +149,27 @@ public class AccountView extends Composite<Div> implements HasComponents, Before
         boolean isContainAtLeastTwoWords = Arrays.stream(words).filter((x) -> !x.equals("")).count() > 1;
 
         return isContainAtLeastTwoWords && isNotContainWhiteSpacesAfterWords;
+    }
+
+    private boolean isNewPasswordValid() {
+        boolean isNewPasswordValid = !newPassField.isInvalid() && !newPassField.isEmpty();
+        boolean isNewPasswordRepeatValid = newPassField.getValue().equals(newPassRepeatField.getValue());
+
+        if (isNewPasswordRepeatValid && isNewPasswordValid) {
+            return true;
+        } else {
+
+            if (!isNewPasswordValid) {
+                newPassField.setInvalid(true);
+                newPassField.focus();
+            }
+
+            if (!isNewPasswordRepeatValid && isNewPasswordValid) {
+                newPassRepeatField.setInvalid(true);
+                newPassRepeatField.focus();
+            }
+
+            return false;
+        }
     }
 }

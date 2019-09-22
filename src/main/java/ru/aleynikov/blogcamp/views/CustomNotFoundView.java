@@ -32,7 +32,6 @@ public class CustomNotFoundView extends RouteNotFoundError implements BeforeLeav
         mainLayout.setVisible(true);
 
         mainLayout.setSizeFull();
-        mainLayout.addClassName("background");
 
         childLayout.setSizeFull();
         childLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, errorContent);
