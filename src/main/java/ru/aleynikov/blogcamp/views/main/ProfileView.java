@@ -23,7 +23,6 @@ import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Locale;
@@ -35,10 +34,7 @@ import java.util.Locale;
 @StyleSheet(StaticResources.PROFILE_VIEW_STYLES)
 public class ProfileView extends Composite<Div> implements HasComponents, RouterLayout, BeforeEnterObserver {
 
-    @Autowired
-    private UserService userService;
-
-    private User currentUser;
+    private User currentUser = SecurityUtils.getPrincipal();
 
     private int currYear = Calendar.getInstance().get(Calendar.YEAR);
 
@@ -85,7 +81,6 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
         avatarLayout.setWidth(null);
 
         userAvatarImage.addClassName("avatar-img");
-        userAvatarImage.setSrc(StaticResources.DEFAULT_USER_AVATAR);
 
         uploadAvatarButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         uploadAvatarButton.setSizeFull();
@@ -109,12 +104,15 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
 
         userFullNameSpan.addClassName("grey-light");
         userFullNameSpan.addClassName("margin-none");
+        userFullNameSpan.addClassName("padding-l-2px");
 
         userFromSpan.addClassName("grey-light");
         userFromSpan.addClassName("margin-none");
+        userFromSpan.addClassName("padding-l-2px");
 
         userBirthdaySpan.addClassName("grey-light");
         userBirthdaySpan.addClassName("margin-none");
+        userBirthdaySpan.addClassName("padding-l-2px");
 
         userHorizontalLayout.add(avatarLayout, infoLayout);
 
@@ -163,7 +161,12 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
     }
 
     public void userProfileLayoutBuild() {
-        currentUser = SecurityUtils.getPrincipal();
+        if (currentUser.getAvatar() != null) {
+            userAvatarImage.setSrc(currentUser.getAvatar());
+        } else {
+            userAvatarImage.addClassName("padding-trl-1px");
+            userAvatarImage.setSrc(StaticResources.DEFAULT_USER_AVATAR);
+        }
 
         infoLayout.removeAll();
 

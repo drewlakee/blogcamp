@@ -10,12 +10,15 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 
 @StyleSheet(StaticResources.HEADER_COMPONENT_STYLES)
 public class HeaderComponent extends HorizontalLayout {
+
+    private User currentUser = SecurityUtils.getPrincipal();
 
     private HorizontalLayout mainSideLayout = new HorizontalLayout();
 
@@ -56,8 +59,11 @@ public class HeaderComponent extends HorizontalLayout {
         setVerticalComponentAlignment(Alignment.CENTER, searchField);
 
         userAvatarImage.addClassName("user-avatar");
-        userAvatarImage.setSrc(StaticResources.DEFAULT_USER_AVATAR);
-        userAvatarImage.setTitle(SecurityUtils.getPrincipal().getUsername());
+        if (currentUser.getAvatar() != null)
+            userAvatarImage.setSrc(currentUser.getAvatar());
+        else
+            userAvatarImage.setSrc(StaticResources.DEFAULT_USER_AVATAR);
+        userAvatarImage.setTitle(currentUser.getUsername());
 
 
         userAvatarDiv.addClassName("div-component");

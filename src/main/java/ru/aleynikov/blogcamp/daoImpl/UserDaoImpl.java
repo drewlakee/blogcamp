@@ -27,7 +27,7 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     private UserRowMapper userRowMapper;
 
-    private static final String userMainInfoQuery = "SELECT user_id, username, password, fullname, secret_question, secret_answer, active, role, registered, about, birthday, country.name AS \"country\", city.name AS \"city\" FROM usr LEFT JOIN country ON country.country_id = usr.country LEFT JOIN city ON city.city_id = usr.city";
+    private static final String userMainInfoQuery = "SELECT user_id, username, password, fullname, secret_question, secret_answer, active, role, registered, about, birthday, avatar, country.name AS \"country\", city.name AS \"city\" FROM usr LEFT JOIN country ON country.country_id = usr.country LEFT JOIN city ON city.city_id = usr.city";
 
     @Override
     public User findUserByUsername(String username) {
@@ -46,11 +46,15 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void addUser(Map<String, Object> newUser) {
-        String query = "INSERT INTO usr (username, password, secret_question, secret_answer) VALUES " +
-                "(?, ?, ?, ?)";
-        Object[] newUserData = new Object[] {newUser.get("username"), newUser.get("password"),
-                newUser.get("secret_question"), newUser.get("secret_answer")};
+    public void saveUser(Map<String, Object> newUser) {
+        String query = "INSERT INTO usr (username, password, secret_question, secret_answer, avatar) VALUES " +
+                "(?, ?, ?, ?, ?)";
+        Object[] newUserData = new Object[] {
+                newUser.get("username"),
+                newUser.get("password"),
+                newUser.get("secret_question"),
+                newUser.get("secret_answer"),
+                newUser.get("avatar")};
 
         log.info(query + ", {}", Arrays.toString(newUserData));
         jdbc.update(query, newUserData);

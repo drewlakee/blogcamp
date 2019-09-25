@@ -25,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.service.UserService;
+import ru.aleynikov.blogcamp.staticResources.RedditAvatars;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.util.Arrays;
@@ -171,7 +172,8 @@ public class SignUpView extends HorizontalLayout {
                newUserData.put("password", passwordEncoder.encode(passwordField.getValue().trim()));
                newUserData.put("secret_question", secretQuestionField.getValue().trim().replaceAll("/?", "") + "?");
                newUserData.put("secret_answer", passwordEncoder.encode(secretAnswerField.getValue().trim()));
-               userService.addUser(newUserData);
+               newUserData.put("avatar", RedditAvatars.getRandomAvatar());
+               userService.saveUser(newUserData);
 
                log.info("User with username [{}] was successfully registered.", newUserData.get("username"));
 

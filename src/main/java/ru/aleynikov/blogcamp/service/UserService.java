@@ -41,8 +41,8 @@ public class UserService {
         return user;
     }
 
-    public void addUser(Map<String, Object> newUser) {
-        userDao.addUser(newUser);
+    public void saveUser(Map<String, Object> newUser) {
+        userDao.saveUser(newUser);
     }
 
     public void updateUserAboutInfo(HashMap<String, Object> infoForUpdate) {

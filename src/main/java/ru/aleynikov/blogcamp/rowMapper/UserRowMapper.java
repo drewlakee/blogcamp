@@ -32,6 +32,7 @@ public class UserRowMapper implements RowMapper {
         user.setCity(rs.getString("city"));
         user.setFullName(rs.getString("fullname"));
         user.setRole(rs.getString("role"));
+        user.setAvatar(rs.getString("avatar"));
 
         return user;
     }

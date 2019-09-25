@@ -44,7 +44,12 @@ public class UserComponent extends Div {
 
         userAvatar.addClassName("user-img");
         userAvatar.setAlt("avatar");
-        userAvatar.setSrc(StaticResources.DEFAULT_USER_AVATAR);
+        if (currentUser.getAvatar() != null)
+            userAvatar.setSrc(currentUser.getAvatar());
+        else {
+            userAvatar.addClassName("padding-trl-1px");
+            userAvatar.setSrc(StaticResources.DEFAULT_USER_AVATAR);
+        }
 
         contentBodyLeftLayout.add(userAvatar);
 

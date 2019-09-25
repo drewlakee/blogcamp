@@ -6,7 +6,7 @@ public class StaticResources {
 
         public static final String LOGO_IMAGE = "images/logo.png";
         public static final String CODE404_IMAGE = "images/error404.gif";
-        public static final String DEFAULT_USER_AVATAR = "images/def_user_avatar.png";
+        public static final String DEFAULT_USER_AVATAR = "images/user_avatar.png";
 
         // Styles View and Layouts
 
