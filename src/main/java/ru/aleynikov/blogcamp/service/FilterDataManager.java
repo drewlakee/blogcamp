@@ -1,6 +1,6 @@
 package ru.aleynikov.blogcamp.service;
 
-public class FilterDataManger {
+public class FilterDataManager {
 
     public static int filterOffset(int page, int componentsOnPageLimit) {
         int offset = 0;
@@ -17,9 +17,5 @@ public class FilterDataManger {
 
     public static int pageLimit(float countOfComponents, int limitOfComponentsOnPage) {
         return Math.round((countOfComponents + limitOfComponentsOnPage / 2) / limitOfComponentsOnPage);
-    }
-
-    public static int pageLimit(int countOfComponents, int limitOfComponentsOnPage) {
-        return pageLimit(Float.valueOf(countOfComponents), limitOfComponentsOnPage);
     }
 }

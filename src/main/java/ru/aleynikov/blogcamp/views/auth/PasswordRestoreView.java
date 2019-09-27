@@ -27,8 +27,6 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 @StyleSheet(StaticResources.PASS_RESTORE_VIEW_STYLES)
 public class PasswordRestoreView extends HorizontalLayout {
 
-    private static Logger log = LoggerFactory.getLogger(PasswordRestoreView.class);
-
     @Autowired
     private UserDaoImpl userDao;
 

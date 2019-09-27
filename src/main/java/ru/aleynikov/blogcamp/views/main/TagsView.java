@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.component.PageSwitcherComponent;
 import ru.aleynikov.blogcamp.component.TagComponent;
 import ru.aleynikov.blogcamp.model.Tag;
-import ru.aleynikov.blogcamp.service.FilterDataManger;
+import ru.aleynikov.blogcamp.service.FilterDataManager;
 import ru.aleynikov.blogcamp.service.TagService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
@@ -58,9 +58,9 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     private Tab newestTab = new Tab("Newest");
 
     private Integer page = 1;
-    private String sortTab = "";
-    private String filter = "";
-    private Map<String, List<String>> qparams = null;
+    private String sortTab;
+    private String filter;
+    private Map<String, List<String>> qparams;
 
     public TagsView() {
         getContent().setSizeFull();
@@ -125,7 +125,6 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
-
         queryParametersSetter();
 
         if (sortBar.getSelectedTab() != null) {
@@ -160,14 +159,14 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
 
     private void tagsBrowserBuilder(int page, String sortTab, String locationPath, String filter) {
         int rowLimit = 4;
+        int pageLimit;
         int counter = 0;
-        HorizontalLayout row;
+        HorizontalLayout row = new HorizontalLayout();
         List<Tag> tagList = null;
         float countTags = 0;
 
         bodyLayout.removeAll();
 
-        row = new HorizontalLayout();
         row.setWidth("100%");
 
         if (!filter.isEmpty()) {
@@ -196,7 +195,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
                 }
             }
 
-            int pageLimit = FilterDataManger.pageLimit(countTags, TAGS_ON_PAGE_LIMIT);
+            pageLimit = FilterDataManager.pageLimit(countTags, TAGS_ON_PAGE_LIMIT);
 
             bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, queryParametersBuilder()));
         } else {

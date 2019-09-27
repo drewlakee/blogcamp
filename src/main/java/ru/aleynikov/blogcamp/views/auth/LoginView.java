@@ -33,9 +33,6 @@ public class LoginView extends HorizontalLayout {
 
     private static Logger log = LoggerFactory.getLogger(LoginView.class);
 
-    @Autowired
-    private UserService userService;
-
     private Image logoImage = new Image(StaticResources.LOGO_IMAGE, "logo");
 
     private HorizontalLayout loginErrorLayout = new HorizontalLayout();

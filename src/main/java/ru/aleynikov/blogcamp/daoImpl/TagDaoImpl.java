@@ -42,7 +42,6 @@ public class TagDaoImpl implements TagDao {
         Object[] qparams = new Object[] {offset, limit};
         List<Tag> tagList;
 
-
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
         tagList = jdbc.query(query, qparams, tagRowMapper);
 
@@ -75,9 +74,10 @@ public class TagDaoImpl implements TagDao {
     public int getFilterByNameCount(String filter) {
         String query = "SELECT COUNT(*) FROM tag WHERE name LIKE ?";
         Object[] qparams = new Object[] {"%"+filter+"%"};
+        int count;
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query);
-        int count = jdbc.queryForObject(query, qparams, Integer.class);
+        count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;
     }

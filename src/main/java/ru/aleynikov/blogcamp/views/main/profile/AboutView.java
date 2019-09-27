@@ -142,9 +142,9 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
         add(mainLayout);
 
         countrySelect.addValueChangeListener(event -> {
-            cityNamesTree.clear();
-
             String countrySelectValue;
+
+            cityNamesTree.clear();
 
             if (countrySelect.getValue() == null)
                 countrySelectValue = countrySelect.getEmptySelectionCaption();
@@ -158,17 +158,20 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
         });
 
         updateButton.addClickListener(event -> {
+            String countrySelectValue;
+            String citySelectValue;
             HashMap<String, Object> infoForUpdate = new LinkedHashMap<>();
+            Country country = new Country();
+            City city = new City();
+
             infoForUpdate.put("full_name", firstNameField.getValue().trim() + " " + lastNameField.getValue().trim());
             infoForUpdate.put("birthday", birthdayPicker.getValue());
 
-            String countrySelectValue;
             if (countrySelect.getValue() == null)
                 countrySelectValue = countrySelect.getEmptySelectionCaption();
             else
                 countrySelectValue = countrySelect.getValue();
 
-            Country country = new Country();
             try {
                 country = countryList.stream().filter((x) -> x.getCountryName().equals(countrySelectValue)).findAny().get();
             } catch (NoSuchElementException e) {
@@ -176,13 +179,11 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
             }
             infoForUpdate.put("country", country.getId());
 
-            String citySelectValue;
             if (citySelect.getValue() == null)
                 citySelectValue = citySelect.getEmptySelectionCaption();
             else
                 citySelectValue = citySelect.getValue();
 
-            City city = new City();
             try {
                 city = cityList.stream().filter((x) -> x.getCityName().equals(citySelectValue)).findAny().get();
             } catch (NoSuchElementException e) {

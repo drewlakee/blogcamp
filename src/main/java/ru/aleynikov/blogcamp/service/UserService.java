@@ -16,28 +16,23 @@ public class UserService {
     private UserDaoImpl userDao;
 
     public List<User> getSortedByUsernameUserList(int page, int usersOnPageLimit) {
-
-        return userDao.getSortedByUsernameAscUserList(FilterDataManger.filterOffset(page, usersOnPageLimit), usersOnPageLimit);
+        return userDao.getSortedByUsernameAscUserList(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit);
     }
 
     public List<User> getFilterByUsernameUsersList(int page, int usersOnPageLimit, String filter) {
-
-        return userDao.getFilterByUsernameUserList(FilterDataManger.filterOffset(page, usersOnPageLimit), usersOnPageLimit, filter);
+        return userDao.getFilterByUsernameUserList(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit, filter);
     }
 
     public int getFilterUsersCount(String filter) {
-
         return userDao.getFilterByUsernameCount(filter);
     }
 
     public int getAllUsersCount() {
-
         return userDao.getAllUsersCount();
     }
 
     public User findUserByUsername(String username) {
         User user = userDao.findUserByUsername(username);
-
         return user;
     }
 
@@ -46,6 +41,7 @@ public class UserService {
     }
 
     public void updateUserAboutInfo(HashMap<String, Object> infoForUpdate) {
+
         if ((Integer) infoForUpdate.get("country") == -1) {
             infoForUpdate.put("country", null);
         }

@@ -14,18 +14,15 @@ public class TagService {
     private TagDaoImpl tagDao;
 
     public List<Tag> getPopularTagList(int page,  int tagsOnPageLimit) {
-
-        return tagDao.getSortedByPostCountTagsList(FilterDataManger.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit);
+        return tagDao.getSortedByPostCountTagsList(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit);
     }
 
     public List<Tag> getNewestTagList(int page,  int tagsOnPageLimit) {
-
-        return tagDao.getSortedByCreatedDateNewestTagsList(FilterDataManger.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit);
+        return tagDao.getSortedByCreatedDateNewestTagsList(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit);
     }
 
     public List<Tag> getFilterTagList(int page, int tagsOnPageLimit, String filter) {
-
-        return tagDao.getSearchByNameTagsList(FilterDataManger.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit, filter);
+        return tagDao.getSearchByNameTagsList(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit, filter);
     }
 
     public int getFilterTagsCount(String filter) {

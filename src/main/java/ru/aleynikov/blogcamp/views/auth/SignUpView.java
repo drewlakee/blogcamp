@@ -219,6 +219,7 @@ public class SignUpView extends HorizontalLayout {
 
     private boolean isUsernameUnique() {
         User existingUser = userService.findUserByUsername(usernameField.getValue().trim());
+
         if (existingUser == null)
             return true;
         else {

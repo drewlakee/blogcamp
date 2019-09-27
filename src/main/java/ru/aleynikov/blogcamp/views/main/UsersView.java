@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.component.PageSwitcherComponent;
 import ru.aleynikov.blogcamp.component.UserComponent;
 import ru.aleynikov.blogcamp.model.User;
-import ru.aleynikov.blogcamp.service.FilterDataManger;
+import ru.aleynikov.blogcamp.service.FilterDataManager;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
@@ -57,9 +57,9 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
     private Tabs sortBar = new Tabs();
 
     private Integer page = 1;
-    private String sortTab = "";
-    private String filter = "";
-    private Map<String, List<String>> qparams = null;
+    private String sortTab;
+    private String filter;
+    private Map<String, List<String>> qparams;
 
     public UsersView() {
         getContent().setSizeFull();
@@ -121,7 +121,6 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
-
         queryParametersSetter();
 
         if (sortBar.getSelectedTab() != null) {
@@ -154,14 +153,14 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
 
     private void tagsBrowserBuilder(int page, String sortTab, String locationPath, String filter) {
         int rowLimit = 3;
+        int pageLimit;
         int counter = 0;
-        HorizontalLayout row;
+        HorizontalLayout row = new HorizontalLayout();;
         List<User> userList = null;
         float countUsers = 0;
 
         bodyLayout.removeAll();
 
-        row = new HorizontalLayout();
         row.setWidth("100%");
 
         if (!filter.isEmpty()) {
@@ -187,7 +186,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
                 }
             }
 
-            int pageLimit = FilterDataManger.pageLimit(countUsers, USERS_ON_PAGE_LIMIT);
+            pageLimit = FilterDataManager.pageLimit(countUsers, USERS_ON_PAGE_LIMIT);
 
             bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, queryParametersBuilder()));
         } else {

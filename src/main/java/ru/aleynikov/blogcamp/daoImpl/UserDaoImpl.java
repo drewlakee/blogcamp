@@ -33,8 +33,8 @@ public class UserDaoImpl implements UserDao {
     public User findUserByUsername(String username) {
         String query = userMainInfoQuery + " WHERE usr.username = ?";
         Object[] qparams = new Object[] { username };
-
         User user = null;
+
         try {
             log.info(query + ", {}", Arrays.toString(qparams));
             user = (User) jdbc.queryForObject(query, qparams, userRowMapper);
@@ -96,9 +96,10 @@ public class UserDaoImpl implements UserDao {
     @Override
     public int getAllUsersCount() {
         String query = "SELECT COUNT(*) FROM usr";
+        int count;
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query);
-        int count = jdbc.queryForObject(query, Integer.class);
+        count = jdbc.queryForObject(query, Integer.class);
 
         return count;
     }
@@ -107,9 +108,10 @@ public class UserDaoImpl implements UserDao {
     public int getFilterByUsernameCount(String filter) {
         String query = "SELECT COUNT(*) FROM usr WHERE username LIKE ?";
         Object[] qparams = new Object[] {"%"+filter+"%"};
+        int count;
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
-        int count = jdbc.queryForObject(query, qparams, Integer.class);
+        count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;
     }
