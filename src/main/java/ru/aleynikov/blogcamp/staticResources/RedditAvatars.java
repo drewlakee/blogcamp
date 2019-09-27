@@ -28,9 +28,10 @@ public class RedditAvatars {
         }
     };
 
+    private static int sourcesSize = redditAvatarsSources.size();
     private static Random random = new Random();
 
     public static String getRandomAvatar() {
-        return redditAvatarsSources.get(random.nextInt(redditAvatarsSources.size()));
-    };
+        return redditAvatarsSources.get(random.nextInt(sourcesSize));
+    }
 }

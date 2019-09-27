@@ -38,7 +38,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
     @Autowired
     private UserService userService;
 
-    private static final int USERS_ON_PAGE_LIMIT = 14;
+    private static final int USERS_ON_PAGE_LIMIT = 12;
 
     private VerticalLayout contentLayout = new VerticalLayout();
     private VerticalLayout headerLayout = new VerticalLayout();
@@ -114,10 +114,8 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
     }
 
     private void searchFieldProcess() {
-        if (!searchUserField.getValue().isEmpty()) {
-            sortBar.setSelectedTab(null);
-            UI.getCurrent().navigate("users", querySearchParametersBuilder(searchUserField.getValue().trim()));
-        }
+        sortBar.setSelectedTab(null);
+        UI.getCurrent().navigate("users", querySearchParametersBuilder(searchUserField.getValue().trim()));
     }
 
     @Override

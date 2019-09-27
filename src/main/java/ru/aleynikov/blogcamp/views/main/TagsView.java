@@ -118,10 +118,8 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     }
 
     private void searchFieldProcess() {
-        if (!searchTagField.getValue().isEmpty()) {
-            sortBar.setSelectedTab(null);
-            UI.getCurrent().navigate("tags", querySearchParametersBuilder(searchTagField.getValue().trim()));
-        }
+        sortBar.setSelectedTab(null);
+        UI.getCurrent().navigate("tags", querySearchParametersBuilder(searchTagField.getValue().trim()));
     }
 
     @Override
