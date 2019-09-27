@@ -22,11 +22,10 @@ import ru.aleynikov.blogcamp.component.PageSwitcherComponent;
 import ru.aleynikov.blogcamp.component.UserComponent;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.service.FilterDataManager;
+import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,9 +51,11 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
     private Icon searchUserFieldIcon = new Icon(VaadinIcon.SEARCH);
 
     private Label tagsLabel = new Label("Users");
-    private Tab nameTab = new Tab("A - Z");
+
+    private H2 notFoundedH2 = new H2("Users not founded.");
 
     private Tabs sortBar = new Tabs();
+    private Tab nameTab = new Tab("A - Z");
 
     private Integer page = 1;
     private String sortTab;
@@ -103,7 +104,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
                 String selectedTab = event.getSource().getSelectedTab().getLabel();
 
                 if (selectedTab.equals(nameTab.getLabel())) {
-                    UI.getCurrent().navigate("users", queryParametersBuilder(nameTab.getLabel()));
+                    UI.getCurrent().navigate("users", QueryParametersManager.queryParametersBuild(nameTab.getLabel()));
                 }
             }
         });
@@ -115,7 +116,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
 
     private void searchFieldProcess() {
         sortBar.setSelectedTab(null);
-        UI.getCurrent().navigate("users", querySearchParametersBuilder(searchUserField.getValue().trim()));
+        UI.getCurrent().navigate("users", QueryParametersManager.querySearchParametersBuild(searchUserField.getValue().trim()));
     }
 
     @Override
@@ -188,56 +189,9 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
 
             pageLimit = FilterDataManager.pageLimit(countUsers, USERS_ON_PAGE_LIMIT);
 
-            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, queryParametersBuilder()));
+            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.queryParametersBuild(page, sortTab)));
         } else {
-            bodyLayout.add(new H2("Users not founded."));
+            bodyLayout.add(notFoundedH2);
         }
-    }
-
-    private QueryParameters queryParametersBuilder(String sortTabLabel, int page, String filter) {
-        Map<String, List<String>> qmap = new HashMap<>();
-        List<String> param;
-        QueryParameters qparams;
-
-        if (!filter.isEmpty()) {
-            param = new ArrayList<>();
-            param.add(filter);
-            qmap.put("search", param);
-        } else if (sortTabLabel != null){
-            param = new ArrayList<>();
-            param.add(sortTabLabel);
-            qmap.put("tab", param);
-        }
-
-        param = new ArrayList<>();
-        param.add((page == 0) ? "1" : String.valueOf(page));
-
-        qmap.put("page", param);
-
-        qparams = new QueryParameters(qmap);
-
-        return qparams;
-    }
-
-    private QueryParameters querySearchParametersBuilder (String filter) {
-        return queryParametersBuilder(null, 0, filter);
-    }
-
-    private QueryParameters queryParametersBuilder (String sortTabLabel) {
-        return queryParametersBuilder(sortTabLabel, 0, "");
-    }
-
-    private Map<String, List<String>> queryParametersBuilder() {
-        Map<String, List<String>> qmap = new HashMap<>();
-        List<String> param;
-
-        param = new ArrayList<>();
-        param.add(String.valueOf(page));
-        qmap.put("page", param);
-        param = new ArrayList<>();
-        param.add(sortTab);
-        qmap.put("tab", param);
-
-        return qmap;
     }
 }

@@ -22,11 +22,10 @@ import ru.aleynikov.blogcamp.component.PageSwitcherComponent;
 import ru.aleynikov.blogcamp.component.TagComponent;
 import ru.aleynikov.blogcamp.model.Tag;
 import ru.aleynikov.blogcamp.service.FilterDataManager;
+import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.service.TagService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +51,8 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     private Icon searchTagFieldIcon = new Icon(VaadinIcon.SEARCH);
 
     private Label tagsLabel = new Label("Tags");
+
+    private H2 notFoundedH2 = new H2("Tags not founded.");
 
     private Tabs sortBar = new Tabs();
     private Tab popularTab = new Tab("Popular");
@@ -105,9 +106,9 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
                 String selectedTab = event.getSource().getSelectedTab().getLabel();
 
                 if (selectedTab.equals(popularTab.getLabel())) {
-                    UI.getCurrent().navigate("tags", queryParametersBuilder(popularTab.getLabel()));
+                    UI.getCurrent().navigate("tags", QueryParametersManager.queryParametersBuild(popularTab.getLabel()));
                 } else if (selectedTab.equals(newestTab.getLabel())) {
-                    UI.getCurrent().navigate("tags", queryParametersBuilder(newestTab.getLabel()));
+                    UI.getCurrent().navigate("tags", QueryParametersManager.queryParametersBuild(newestTab.getLabel()));
                 }
             }
         });
@@ -119,7 +120,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
 
     private void searchFieldProcess() {
         sortBar.setSelectedTab(null);
-        UI.getCurrent().navigate("tags", querySearchParametersBuilder(searchTagField.getValue().trim()));
+        UI.getCurrent().navigate("tags", QueryParametersManager.querySearchParametersBuild(searchTagField.getValue().trim()));
     }
 
     @Override
@@ -197,56 +198,9 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
 
             pageLimit = FilterDataManager.pageLimit(countTags, TAGS_ON_PAGE_LIMIT);
 
-            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, queryParametersBuilder()));
+            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.queryParametersBuild(page, sortTab)));
         } else {
-            bodyLayout.add(new H2("Tags not founded."));
+            bodyLayout.add(notFoundedH2);
         }
-    }
-
-    private QueryParameters queryParametersBuilder(String sortTabLabel, int page, String filter) {
-        Map<String, List<String>> qmap = new HashMap<>();
-        List<String> param;
-        QueryParameters qparams;
-
-        if (!filter.isEmpty()) {
-            param = new ArrayList<>();
-            param.add(filter);
-            qmap.put("search", param);
-        } else if (sortTabLabel != null){
-            param = new ArrayList<>();
-            param.add(sortTabLabel);
-            qmap.put("tab", param);
-        }
-
-        param = new ArrayList<>();
-        param.add((page == 0) ? "1" : String.valueOf(page));
-
-        qmap.put("page", param);
-
-        qparams = new QueryParameters(qmap);
-
-        return qparams;
-    }
-
-    private QueryParameters querySearchParametersBuilder (String filter) {
-        return queryParametersBuilder(null, 0, filter);
-    }
-
-    private QueryParameters queryParametersBuilder (String sortTabLabel) {
-        return queryParametersBuilder(sortTabLabel, 0, "");
-    }
-
-    private Map<String, List<String>> queryParametersBuilder() {
-        Map<String, List<String>> qmap = new HashMap<>();
-        List<String> param;
-
-        param = new ArrayList<>();
-        param.add(String.valueOf(page));
-        qmap.put("page", param);
-        param = new ArrayList<>();
-        param.add(sortTab);
-        qmap.put("tab", param);
-
-        return qmap;
     }
 }
