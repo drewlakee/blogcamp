@@ -84,7 +84,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
 
         sortBar.add(popularTab);
         sortBar.add(newestTab);
-        sortBar.addClassName("left-side-component");
+        sortBar.addClassName("rs-cmp");
         sortBar.addClassName("tabs-bar");
 
         sortTab = sortBar.getSelectedTab().getLabel();
@@ -120,7 +120,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
 
     private void searchFieldProcess() {
         sortBar.setSelectedTab(null);
-        UI.getCurrent().navigate("tags", QueryParametersManager.querySearchParametersBuild(searchTagField.getValue().trim()));
+        UI.getCurrent().navigate("tags", QueryParametersManager.querySearchParametersBuild(searchTagField.getValue().strip()));
     }
 
     @Override

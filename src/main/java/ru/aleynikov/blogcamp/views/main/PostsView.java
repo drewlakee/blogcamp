@@ -9,12 +9,12 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
-@Route(value = "global", layout = MainLayout.class)
-@PageTitle("Global - Blogcamp")
+@Route(value = "posts", layout = MainLayout.class)
+@PageTitle("Posts - Blogcamp")
 @StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
-public class GlobalView extends Composite<VerticalLayout> implements HasComponents {
+public class PostsView extends Composite<VerticalLayout> implements HasComponents {
 
-    public GlobalView() {
+    public PostsView() {
         add(new H2("Hello Feed!"));
     }
 }

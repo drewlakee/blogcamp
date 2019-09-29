@@ -164,7 +164,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
             Country country = new Country();
             City city = new City();
 
-            infoForUpdate.put("full_name", firstNameField.getValue().trim() + " " + lastNameField.getValue().trim());
+            infoForUpdate.put("full_name", firstNameField.getValue().strip() + " " + lastNameField.getValue().strip());
             infoForUpdate.put("birthday", birthdayPicker.getValue());
 
             if (countrySelect.getValue() == null)
@@ -191,7 +191,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
             }
 
             infoForUpdate.put("city", city.getId());
-            infoForUpdate.put("about", aboutArea.getValue().trim());
+            infoForUpdate.put("about", aboutArea.getValue().strip());
             infoForUpdate.put("current_user_id", SecurityUtils.getPrincipal().getId());
 
             userService.updateUserAboutInfo(infoForUpdate);
@@ -227,7 +227,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
                     lastName += userNames[i] + " ";
             }
 
-            lastNameField.setValue(lastName.trim());
+            lastNameField.setValue(lastName.strip());
         }
 
         if (currentUser.getBirthday() != null) {

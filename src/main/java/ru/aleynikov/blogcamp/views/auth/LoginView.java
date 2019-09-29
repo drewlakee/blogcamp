@@ -108,9 +108,8 @@ public class LoginView extends HorizontalLayout {
         loginButton.addClickListener(clickEvent -> {
             if (isLoginFormValid()) {
                 try {
-                    log.info("User trying authenticates with username [{}]", usernameField.getValue().trim());
                     final Authentication authentication = authenticationManager
-                            .authenticate(new UsernamePasswordAuthenticationToken(usernameField.getValue().trim(), passwordField.getValue().trim()));
+                            .authenticate(new UsernamePasswordAuthenticationToken(usernameField.getValue().strip(), passwordField.getValue().strip()));
 
                     /**
                      *   if authentication was successful we will update the security context and redirect to the page requested first
@@ -130,7 +129,7 @@ public class LoginView extends HorizontalLayout {
     }
 
     private boolean isLoginFormValid() {
-        boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty() && !usernameField.getValue().contains(" ");
+        boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty() && !usernameField.getValue().strip().contains(" ");
         boolean isPasswordValid = !passwordField.isInvalid() && !passwordField.isEmpty();
 
         if (isUsernameValid && isPasswordValid) {

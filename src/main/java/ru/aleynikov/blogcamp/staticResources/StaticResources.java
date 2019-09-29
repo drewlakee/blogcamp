@@ -5,7 +5,6 @@ public class StaticResources {
         // Static: images, gif ...
 
         public static final String LOGO_IMAGE = "images/logo.png";
-        public static final String CODE404_IMAGE = "images/error404.gif";
         public static final String DEFAULT_USER_AVATAR = "images/user_avatar.png";
 
         // Styles View and Layouts
@@ -19,4 +18,5 @@ public class StaticResources {
         public static final String TAG_COMPONENT_STYLES = "styles/Tag.css";
         public static final String USER_COMPONENT_STYLES = "styles/User.css";
         public static final String PROFILE_VIEW_STYLES = "styles/Profile.css";
+        public static final String POST_STYLES = "styles/Post.css";
 }

@@ -108,14 +108,14 @@ public class AccountView extends Composite<Div> implements HasComponents, Before
 
         changeSecretButton.addClickListener(event -> {
             if (isSecretQuestionValid()) {
-                userService.updateUserSecret(secretQuestionField.getValue().trim(), encoder.encode(secretAnswerField.getValue().trim()), currentUser.getId());
+                userService.updateUserSecret(secretQuestionField.getValue().strip(), encoder.encode(secretAnswerField.getValue().strip()), currentUser.getId());
                 successfullySecretUpdate.setVisible(true);
             }
         });
 
         changePassButton.addClickListener(event -> {
             if (isNewPasswordValid()) {
-                userService.updateUserPassword(currentUser.getUsername(), encoder.encode(newPassField.getValue().trim()));
+                userService.updateUserPassword(currentUser.getUsername(), encoder.encode(newPassField.getValue().strip()));
                 successfullyPassUpdate.setVisible(true);
             }
         });
@@ -129,7 +129,7 @@ public class AccountView extends Composite<Div> implements HasComponents, Before
     }
 
     private boolean isSecretQuestionValid() {
-        boolean isQuestionValid = !secretQuestionField.isInvalid() && !secretQuestionField.isEmpty() && isHaveTwoWords(secretQuestionField.getValue().trim());
+        boolean isQuestionValid = !secretQuestionField.isInvalid() && !secretQuestionField.isEmpty() && isHaveTwoWords(secretQuestionField.getValue().strip());
         boolean isAnswerValid = !secretAnswerField.isInvalid() && !secretAnswerField.isEmpty();
 
         if (!isQuestionValid) {

@@ -38,9 +38,7 @@ public class UserDaoImpl implements UserDao {
         try {
             log.info(query + ", {}", Arrays.toString(qparams));
             user = (User) jdbc.queryForObject(query, qparams, userRowMapper);
-        } catch (EmptyResultDataAccessException e) {
-            log.info("User not found with username [{}]", username);
-        }
+        } catch (EmptyResultDataAccessException e) {}
 
         return user;
     }

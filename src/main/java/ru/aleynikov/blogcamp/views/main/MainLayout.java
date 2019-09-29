@@ -37,7 +37,7 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
     private Tabs navigationBar = new Tabs();
     private Tab homeTab = new Tab("Home");
     private Tab publicTabTitle = new Tab("Public");
-    private Tab globalTab = new Tab("Blogcamp");
+    private Tab postsTab = new Tab("Blogcamp");
     private Tab tagsTab = new Tab("Tags");
     private Tab usersTab = new Tab("Users");
 
@@ -59,9 +59,9 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
         publicTabTitle.setEnabled(false);
         publicTabTitle.addClassName("title-tab");
 
-        globalTab.addClassName("navigation-tab");
-        globalTab.addClassName("child-tab");
-        globalTab.addComponentAsFirst(new Icon(VaadinIcon.GLOBE));
+        postsTab.addClassName("navigation-tab");
+        postsTab.addClassName("child-tab");
+        postsTab.addComponentAsFirst(new Icon(VaadinIcon.GLOBE));
 
         tagsTab.addClassName("navigation-tab");
         tagsTab.addClassName("child-tab");
@@ -71,7 +71,7 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
         usersTab.addClassName("child-tab");
         usersTab.addClassName("under-icon-tab");
 
-        navigationBar.add(homeTab, publicTabTitle, globalTab, tagsTab, usersTab);
+        navigationBar.add(homeTab, publicTabTitle, postsTab, tagsTab, usersTab);
         navigationBar.addClassName("navigation-bar");
         navigationBar.setOrientation(Tabs.Orientation.VERTICAL);
 
@@ -88,8 +88,8 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
 
             if (selectedTab.equals(homeTab.getLabel())) {
                 UI.getCurrent().navigate("");
-            } else if (selectedTab.equals(globalTab.getLabel())) {
-                UI.getCurrent().navigate("global", qparams);
+            } else if (selectedTab.equals(postsTab.getLabel())) {
+                UI.getCurrent().navigate("posts", qparams);
             } else if (selectedTab.equals(tagsTab.getLabel()) ) {
                 UI.getCurrent().navigate("tags", qparams);
             } else if (selectedTab.equals(usersTab.getLabel())) {
@@ -111,13 +111,15 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
         if (event.getNavigationTarget().getSimpleName().equals(HomeView.class.getSimpleName())) {
             navigationBar.setSelectedTab(homeTab);
             leftSideBarLayout.setVisible(true);
-        } else if (event.getNavigationTarget().getSimpleName().equals(GlobalView.class.getSimpleName())) {
-            navigationBar.setSelectedTab(globalTab);
+        } else if (event.getNavigationTarget().getSimpleName().equals(PostsView.class.getSimpleName())) {
+            navigationBar.setSelectedTab(postsTab);
         } else if (event.getNavigationTarget().getSimpleName().equals(TagsView.class.getSimpleName())) {
             navigationBar.setSelectedTab(tagsTab);
         } else if (event.getNavigationTarget().getSimpleName().equals(UsersView.class.getSimpleName())) {
             navigationBar.setSelectedTab(usersTab);
         } else if (event.getLocation().getPath().startsWith("profile")) {
+            leftSideBarLayout.setVisible(false);
+        } else if (event.getLocation().getPath().equals("posts/add")) {
             leftSideBarLayout.setVisible(false);
         }
 

@@ -151,7 +151,7 @@ public class PasswordRestoreView extends HorizontalLayout {
                     answerField.setVisible(true);
                     questionLabel.setText(existingAccount.getSecretQuestion());
 
-                    if (encoder.matches(answerField.getValue().trim(), existingAccount.getSecretAnswer())) {
+                    if (encoder.matches(answerField.getValue().strip(), existingAccount.getSecretAnswer())) {
                         passRestoreErrorLayout.setVisible(false);
                         answerOnQuestionLabel.setVisible(false);
                         errorAnswerLabel.setVisible(false);
@@ -181,14 +181,14 @@ public class PasswordRestoreView extends HorizontalLayout {
         changePassButton.addClickShortcut(Key.ENTER).setEventPropagationAllowed(!continueButton.isVisible());
         changePassButton.addClickListener(clickEvent -> {
             if (isNewPasswordValid()) {
-                userDao.updateUserPassword(usernameField.getValue().trim(), encoder.encode(newPassField.getValue().trim()));
+                userDao.updateUserPassword(usernameField.getValue().strip(), encoder.encode(newPassField.getValue().strip()));
                 UI.getCurrent().getUI().ifPresent(ui -> ui.navigate("login"));
             }
         });
     }
 
     private boolean isInputFieldValid() {
-        boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty() && !usernameField.getValue().contains(" ");
+        boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty() && !usernameField.getValue().strip().contains(" ");
 
         if (!isUsernameValid) {
             usernameField.setInvalid(true);
@@ -200,7 +200,7 @@ public class PasswordRestoreView extends HorizontalLayout {
 
     private boolean isAccountExist() {
         if (existingAccount == null)
-            existingAccount = userDao.findUserByUsername(usernameField.getValue().trim());
+            existingAccount = userDao.findUserByUsername(usernameField.getValue().strip());
 
         if (existingAccount != null) {
             passRestoreErrorLayout.setVisible(false);

@@ -67,7 +67,7 @@ public class HeaderComponent extends HorizontalLayout {
 
 
         userAvatarDiv.addClassName("div-component");
-        userAvatarDiv.addClassName("right-side-component");
+        userAvatarDiv.addClassName("rs-cmp");
         userAvatarDiv.add(userAvatarImage);
 
         logoutIcon.addClassName("icon");

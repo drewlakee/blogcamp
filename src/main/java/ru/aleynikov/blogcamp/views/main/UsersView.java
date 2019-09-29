@@ -81,7 +81,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
         searchUserField.setClearButtonVisible(true);
         headerLowerLayout.setVerticalComponentAlignment(FlexComponent.Alignment.END, searchUserField);
 
-        sortBar.addClassName("left-side-component");
+        sortBar.addClassName("rs-cmp");
         sortBar.addClassName("tabs-bar");
         sortBar.add(nameTab);
 
@@ -116,7 +116,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
 
     private void searchFieldProcess() {
         sortBar.setSelectedTab(null);
-        UI.getCurrent().navigate("users", QueryParametersManager.querySearchParametersBuild(searchUserField.getValue().trim()));
+        UI.getCurrent().navigate("users", QueryParametersManager.querySearchParametersBuild(searchUserField.getValue().strip()));
     }
 
     @Override

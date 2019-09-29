@@ -168,17 +168,17 @@ public class SignUpView extends HorizontalLayout {
         signUpButton.addClickShortcut(Key.ENTER).setEventPropagationAllowed(!continueButton.isVisible());
         signUpButton.addClickListener(clickEvent -> {
            if (isSecretQuestionValid()) {
-               newUserData.put("username", usernameField.getValue().trim());
-               newUserData.put("password", passwordEncoder.encode(passwordField.getValue().trim()));
-               newUserData.put("secret_question", secretQuestionField.getValue().trim().replaceAll("/?", "") + "?");
-               newUserData.put("secret_answer", passwordEncoder.encode(secretAnswerField.getValue().trim()));
+               newUserData.put("username", usernameField.getValue().strip());
+               newUserData.put("password", passwordEncoder.encode(passwordField.getValue().strip()));
+               newUserData.put("secret_question", secretQuestionField.getValue().strip().replaceAll("/?", "") + "?");
+               newUserData.put("secret_answer", passwordEncoder.encode(secretAnswerField.getValue().strip()));
                newUserData.put("avatar", RedditAvatars.getRandomAvatar());
                userService.saveUser(newUserData);
 
                log.info("User with username [{}] was successfully registered.", newUserData.get("username"));
 
                final Authentication authentication = authenticationManager
-                       .authenticate(new UsernamePasswordAuthenticationToken(usernameField.getValue().trim(), passwordField.getValue().trim()));
+                       .authenticate(new UsernamePasswordAuthenticationToken(usernameField.getValue().strip(), passwordField.getValue().strip()));
                SecurityContextHolder.getContext().setAuthentication(authentication);
                log.info("User was authenticated [{}] with authorities {}",
                        SecurityContextHolder.getContext().getAuthentication().getName(),
@@ -190,7 +190,7 @@ public class SignUpView extends HorizontalLayout {
     }
 
     private boolean isFormValid() {
-        boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty() && !usernameField.getValue().contains(" ");
+        boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty() && !usernameField.getValue().strip().contains(" ");
         boolean isPasswordValid = !passwordField.isInvalid() && !passwordField.isEmpty();
         boolean isPasswordRepeatValid = passwordField.getValue().equals(repeatPasswordField.getValue());
 
@@ -218,7 +218,7 @@ public class SignUpView extends HorizontalLayout {
     }
 
     private boolean isUsernameUnique() {
-        User existingUser = userService.findUserByUsername(usernameField.getValue().trim());
+        User existingUser = userService.findUserByUsername(usernameField.getValue().strip());
 
         if (existingUser == null)
             return true;
@@ -229,7 +229,7 @@ public class SignUpView extends HorizontalLayout {
     }
 
     private boolean isSecretQuestionValid() {
-        boolean isQuestionValid = !secretQuestionField.isInvalid() && !secretQuestionField.isEmpty() && isHaveTwoWords(secretQuestionField.getValue().trim());
+        boolean isQuestionValid = !secretQuestionField.isInvalid() && !secretQuestionField.isEmpty() && isHaveTwoWords(secretQuestionField.getValue().strip());
         boolean isAnswerValid = !secretAnswerField.isInvalid() && !secretAnswerField.isEmpty();
 
         // Warn: be carefully with using button.focus(), because was some problem with JS - TypeError: $0 is null;

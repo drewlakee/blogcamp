@@ -36,7 +36,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
 
     private int currYear = Calendar.getInstance().get(Calendar.YEAR);
 
-    private VerticalLayout mainLayout = new VerticalLayout();
+    private VerticalLayout contentLayout = new VerticalLayout();
     private VerticalLayout userVerticalLayout = new VerticalLayout();
     private VerticalLayout switchLayout = new VerticalLayout();
     private VerticalLayout avatarLayout = new VerticalLayout();
@@ -67,7 +67,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
     public ProfileView() {
         getContent().setSizeFull();
 
-        mainLayout.setSizeFull();
+        contentLayout.setSizeFull();
 
         userVerticalLayout.setWidth("100%");
 
@@ -128,9 +128,9 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
         contentDiv.setSizeFull();
         contentDiv.addClassName("margin-none");
 
-        mainLayout.add(userVerticalLayout, switchLayout, contentDiv);
+        contentLayout.add(userVerticalLayout, switchLayout, contentDiv);
 
-        add(mainLayout);
+        add(contentLayout);
 
         switchBar.addSelectedChangeListener(event -> {
             String selectedTab = event.getSource().getSelectedTab().getLabel();
