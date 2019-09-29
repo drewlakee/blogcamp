@@ -4,8 +4,8 @@ public class StaticResources {
 
         // Static: images, gif ...
 
-        public static final String LOGO_IMAGE = "images/logo.png";
-        public static final String DEFAULT_USER_AVATAR = "images/user_avatar.png";
+        public static final String LOGO_IMAGE = "frontend/images/logo.png";
+        public static final String DEFAULT_USER_AVATAR = "frontend/images/user_avatar.png";
 
         // Styles View and Layouts
 
