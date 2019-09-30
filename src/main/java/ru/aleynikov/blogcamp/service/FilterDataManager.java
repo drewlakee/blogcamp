@@ -18,4 +18,8 @@ public class FilterDataManager {
     public static int pageLimit(float countOfComponents, int limitOfComponentsOnPage) {
         return Math.round((countOfComponents + limitOfComponentsOnPage / 2) / limitOfComponentsOnPage);
     }
+
+    public static String shieldHtml(String html) {
+        return html.replaceAll("\n", " ");
+    }
 }

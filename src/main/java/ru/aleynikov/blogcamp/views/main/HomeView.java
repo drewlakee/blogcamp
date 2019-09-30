@@ -29,7 +29,7 @@ public class HomeView extends Composite<Div> implements HasComponents {
 
     private Label homeLabel = new Label("Home");
 
-    private Button addPostButton = new Button("Add post +");
+    private Button addPostButton = new Button("Add post");
 
     public HomeView() {
         contentLayout.setSizeFull();
