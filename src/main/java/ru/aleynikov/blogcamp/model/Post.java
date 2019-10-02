@@ -3,6 +3,7 @@ package ru.aleynikov.blogcamp.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Date;
 import java.util.List;
 
 @Setter
@@ -13,5 +14,8 @@ public class Post {
     private User user;
     private String label;
     private String text;
+    private String introImage;
+    private Date createdDate;
+    private boolean isBanned;
     private List<Tag> tags;
 }

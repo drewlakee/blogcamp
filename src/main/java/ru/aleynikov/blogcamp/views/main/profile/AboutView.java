@@ -231,7 +231,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
         }
 
         if (currentUser.getBirthday() != null) {
-            birthdayPicker.setValue(currentUser.getBirthday());
+            birthdayPicker.setValue(currentUser.getBirthday().toLocalDate());
         }
 
         if (currentUser.getCountry() != null) {

@@ -1,4 +1,4 @@
-package ru.aleynikov.blogcamp.rowMapper;
+package ru.aleynikov.blogcamp.mapper;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -20,12 +20,12 @@ public class UserRowMapper implements RowMapper {
         user.setSecretAnswer(rs.getString("secret_answer"));
         user.setActive(rs.getBoolean("active"));
         if (rs.getDate("registered") != null)
-            user.setRegisteredDate(rs.getDate("registered").toLocalDate());
+            user.setRegisteredDate(rs.getDate("registered"));
         else
             user.setRegisteredDate(null);
         user.setAbout(rs.getString("about"));
         if (rs.getDate("birthday") != null)
-            user.setBirthday(rs.getDate("birthday").toLocalDate());
+            user.setBirthday(rs.getDate("birthday"));
         else
             user.setBirthday(null);
         user.setCountry(rs.getString("country"));

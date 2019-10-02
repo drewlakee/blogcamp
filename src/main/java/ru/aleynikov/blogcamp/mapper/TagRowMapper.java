@@ -1,4 +1,4 @@
-package ru.aleynikov.blogcamp.rowMapper;
+package ru.aleynikov.blogcamp.mapper;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;

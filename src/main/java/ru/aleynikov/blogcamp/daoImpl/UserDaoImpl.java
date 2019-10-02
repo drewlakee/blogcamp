@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.dao.UserDao;
 import ru.aleynikov.blogcamp.model.User;
-import ru.aleynikov.blogcamp.rowMapper.UserRowMapper;
+import ru.aleynikov.blogcamp.mapper.UserRowMapper;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
 import java.util.Arrays;
@@ -44,18 +44,17 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void saveUser(Map<String, Object> newUser) {
-        String query = "INSERT INTO usr (username, password, secret_question, secret_answer, avatar) VALUES " +
-                "(?, ?, ?, ?, ?)";
-        Object[] newUserData = new Object[] {
-                newUser.get("username"),
-                newUser.get("password"),
-                newUser.get("secret_question"),
-                newUser.get("secret_answer"),
-                newUser.get("avatar")};
+    public void saveUser(Map<String, Object> user) {
+        String query = "INSERT INTO usr (username, password, secret_question, secret_answer, avatar) VALUES (?, ?, ?, ?, ?)";
+        Object[] qparams = new Object[] {
+                user.get("username"),
+                user.get("password"),
+                user.get("secret_question"),
+                user.get("secret_answer"),
+                user.get("avatar")};
 
-        log.info(query + ", {}", Arrays.toString(newUserData));
-        jdbc.update(query, newUserData);
+        log.info(query + ", {}", Arrays.toString(qparams));
+        jdbc.update(query, qparams);
     }
 
     @Override

@@ -6,8 +6,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDate;
 import java.util.*;
+import java.sql.Date;
 
 @Setter
 @Getter
@@ -20,9 +20,9 @@ public class User implements UserDetails {
     private String secretQuestion;
     private String secretAnswer;
     private boolean active;
-    private LocalDate registeredDate;
+    private Date registeredDate;
     private String about;
-    private LocalDate birthday;
+    private Date birthday;
     private String country;
     private String city;
     private String role;

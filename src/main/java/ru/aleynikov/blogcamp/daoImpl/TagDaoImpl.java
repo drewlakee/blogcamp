@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.dao.TagDao;
 import ru.aleynikov.blogcamp.model.Tag;
-import ru.aleynikov.blogcamp.rowMapper.TagRowMapper;
+import ru.aleynikov.blogcamp.mapper.TagRowMapper;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
 import java.util.Arrays;

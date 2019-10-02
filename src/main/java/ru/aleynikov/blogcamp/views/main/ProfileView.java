@@ -23,6 +23,7 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 @RoutePrefix(value = "profile")
@@ -182,7 +183,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
         }
 
         if (currentUser.getBirthday() != null) {
-            userBirthdaySpan.setText(currentUser.getBirthday().format(DateTimeFormatter.ofPattern("d MMMM YYYY", Locale.ENGLISH)) + " (" + (currYear - currentUser.getBirthday().getYear()) + " years old)");
+            userBirthdaySpan.setText(currentUser.getBirthday().toLocalDate().format(DateTimeFormatter.ofPattern("d MMMM YYYY", Locale.ENGLISH)) + " (" + (currYear - currentUser.getBirthday().toLocalDate().getYear()) + " years old)");
             infoLayout.add(userBirthdaySpan);
         }
 

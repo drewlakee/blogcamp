@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.dao.CountryDao;
 import ru.aleynikov.blogcamp.model.Country;
-import ru.aleynikov.blogcamp.rowMapper.CountryRowMapper;
+import ru.aleynikov.blogcamp.mapper.CountryRowMapper;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
 import java.util.List;
