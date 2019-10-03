@@ -3,15 +3,20 @@ package ru.aleynikov.blogcamp.daoImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.dao.TagDao;
+import ru.aleynikov.blogcamp.mapper.PostRowMapper;
+import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.Tag;
 import ru.aleynikov.blogcamp.mapper.TagRowMapper;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class TagDaoImpl implements TagDao {
@@ -80,5 +85,28 @@ public class TagDaoImpl implements TagDao {
         count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;
+    }
+
+    @Override
+    public Tag findTagByName(String name) {
+        String query = "SELECT * FROM tag WHERE name = ?";
+        Object[] qparams = new Object[] {name};
+        Tag tag = null;
+
+        try {
+            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+            tag = (Tag) jdbc.queryForObject(query, qparams, tagRowMapper);
+        } catch (EmptyResultDataAccessException e) {}
+
+        return tag;
+    }
+
+    @Override
+    public void saveTag(String name) {
+        String query = "INSERT INTO tag (name) VALUES (?)";
+        Object[] qparams = new Object[] {name};
+
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
+        jdbc.update(query, qparams);
     }
 }

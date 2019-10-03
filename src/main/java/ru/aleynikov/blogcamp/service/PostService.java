@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.aleynikov.blogcamp.daoImpl.PostDaoImpl;
 
 import java.util.HashMap;
+import java.util.Set;
 
 @Service
 public class PostService {
@@ -14,5 +15,9 @@ public class PostService {
 
     public void savePost(HashMap<String, Object> post) {
         postDao.savePost(post);
+    }
+
+    public void setTagsToPost(Set<String> tags, HashMap<String, Object> post) {
+        postDao.setTagsToPost(tags, post);
     }
 }

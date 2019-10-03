@@ -32,4 +32,8 @@ public class TagService {
     public int getAllTagsCount() {
         return tagDao.getTagsCount();
     }
+
+    public Tag findTagByName(String name) { return tagDao.findTagByName(name); }
+
+    public void saveTag(String name) { tagDao.saveTag(name); }
 }

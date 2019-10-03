@@ -2,6 +2,7 @@ package ru.aleynikov.blogcamp.views.main;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasComponents;
+import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
@@ -22,9 +23,7 @@ import ru.aleynikov.blogcamp.service.PostService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.sql.Date;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 @Route(value = "posts/add", layout = MainLayout.class)
 @PageTitle("Add post - Blogcamp")
@@ -174,6 +173,11 @@ public class AddPostView extends Composite<Div> implements HasComponents {
                newPost.put("user", SecurityUtils.getPrincipal().getId());
                newPost.put("created_date", new Date(System.currentTimeMillis()));
                postService.savePost(newPost);
+
+               Set<String> selectedTags = new LinkedHashSet<>();
+               Arrays.stream(tagsField.getValue().split(" ")).forEach((x) -> selectedTags.add(x.toLowerCase().replaceAll(",", "")));
+               selectedTags.removeIf((x) -> x.equals(""));
+               postService.setTagsToPost(selectedTags, newPost);
            }
         });
     }
