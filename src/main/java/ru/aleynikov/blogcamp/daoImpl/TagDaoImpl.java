@@ -30,7 +30,7 @@ public class TagDaoImpl implements TagDao {
     private TagRowMapper tagRowMapper;
 
     @Override
-    public List<Tag> getSortedByPostCountTagsList(int offset, int limit) {
+    public List<Tag> sortByPostCountTagsList(int offset, int limit) {
         String query = "SELECT * FROM tag ORDER BY post_count DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {offset, limit};
         List<Tag> tagList;
@@ -42,7 +42,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public List<Tag> getSortedByCreatedDateNewestTagsList(int offset, int limit) {
+    public List<Tag> sortByCreatedDateNewestTagsList(int offset, int limit) {
         String query = "SELECT * FROM tag ORDER BY created DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {offset, limit};
         List<Tag> tagList;
@@ -54,7 +54,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public int getTagsCount() {
+    public int count() {
         String query = "SELECT COUNT(*) FROM tag";
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query);
@@ -64,7 +64,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public List<Tag> getSearchByNameTagsList(int offset, int limit, String filter) {
+    public List<Tag> searchByNameTagsList(int offset, int limit, String filter) {
         String query = "SELECT * FROM tag WHERE LOWER(name) LIKE LOWER(?) OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] { "%"+filter+"%", offset, limit};
         List<Tag> tagList;
@@ -76,7 +76,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public int getFilterByNameCount(String filter) {
+    public int countByName(String filter) {
         String query = "SELECT COUNT(*) FROM tag WHERE name LIKE ?";
         Object[] qparams = new Object[] {"%"+filter+"%"};
         int count;
@@ -108,5 +108,17 @@ public class TagDaoImpl implements TagDao {
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
         jdbc.update(query, qparams);
+    }
+
+    @Override
+    public List<Tag> findTagsByPostId(int id) {
+        String query = "SELECT * FROM (post_to_tag JOIN tag USING (tag_id)) WHERE post_id = ?";
+        Object[] qparams = new Object[] {id};
+        List<Tag> tagList;
+
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        tagList = jdbc.query(query, qparams, tagRowMapper);
+
+        return tagList;
     }
 }

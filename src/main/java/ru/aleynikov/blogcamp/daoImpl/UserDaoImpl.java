@@ -44,6 +44,20 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public User findUserById(int id) {
+        String query = userMainInfoQuery + " WHERE user_id = ?";
+        Object[] qparams = new Object[] {id};
+        User user = null;
+
+        try {
+            log.info(query + ", {}", Arrays.toString(qparams));
+            user = (User) jdbc.queryForObject(query, qparams, userRowMapper);
+        } catch (EmptyResultDataAccessException e) {}
+
+        return user;
+    }
+
+    @Override
     public void saveUser(Map<String, Object> user) {
         String query = "INSERT INTO usr (username, password, secret_question, secret_answer, avatar) VALUES (?, ?, ?, ?, ?)";
         Object[] qparams = new Object[] {

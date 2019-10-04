@@ -9,6 +9,7 @@ import java.util.Map;
 public interface UserDao {
 
     User findUserByUsername(String username);
+    User findUserById(int id);
     void saveUser(Map<String, Object> user);
     void updateUserPassword(String username, String newPassword);
     List<User> getSortedByUsernameAscUserList(int offset, int limit);

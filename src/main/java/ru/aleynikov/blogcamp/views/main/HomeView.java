@@ -12,7 +12,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import ru.aleynikov.blogcamp.component.PostComponent;
+import ru.aleynikov.blogcamp.model.Post;
+import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
+
+import java.sql.Date;
 
 @Route(value = "", layout = MainLayout.class)
 @RouteAlias(value = "home", layout = MainLayout.class)
@@ -55,6 +60,22 @@ public class HomeView extends Composite<Div> implements HasComponents {
 
         bodyLayout.setSizeFull();
         bodyLayout.addClassName("content-body");
+
+
+        // TEST
+        Post postadd = new Post();
+
+        User user = new User();
+        user.setUsername("drewlakee");
+
+        postadd.setUser(user);
+
+        postadd.setCreatedDate(new Date(System.currentTimeMillis()));
+
+        PostComponent post = new PostComponent(postadd);
+
+        bodyLayout.add(post);
+        // TEST
 
         contentLayout.add(headerLayout, bodyLayout);
 

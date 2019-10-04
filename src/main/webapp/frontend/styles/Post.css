@@ -12,3 +12,18 @@
 .padding-10px {
     padding: 10px;
 }
+
+.post-block {
+    width: 700px;
+    border-radius: 4px;
+    border: 1px solid #cccccc;
+}
+
+.post-block:hover {
+    border: 1px solid #878a8c;
+}
+
+
+.username:hover {
+    text-decoration: underline;
+}

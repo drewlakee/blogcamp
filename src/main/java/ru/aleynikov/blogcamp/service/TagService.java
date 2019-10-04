@@ -14,26 +14,28 @@ public class TagService {
     private TagDaoImpl tagDao;
 
     public List<Tag> getPopularTagList(int page,  int tagsOnPageLimit) {
-        return tagDao.getSortedByPostCountTagsList(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit);
+        return tagDao.sortByPostCountTagsList(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit);
     }
 
     public List<Tag> getNewestTagList(int page,  int tagsOnPageLimit) {
-        return tagDao.getSortedByCreatedDateNewestTagsList(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit);
+        return tagDao.sortByCreatedDateNewestTagsList(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit);
     }
 
     public List<Tag> getFilterTagList(int page, int tagsOnPageLimit, String filter) {
-        return tagDao.getSearchByNameTagsList(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit, filter);
+        return tagDao.searchByNameTagsList(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit, filter);
     }
 
     public int getFilterTagsCount(String filter) {
-        return tagDao.getFilterByNameCount(filter);
+        return tagDao.countByName(filter);
     }
 
     public int getAllTagsCount() {
-        return tagDao.getTagsCount();
+        return tagDao.count();
     }
 
     public Tag findTagByName(String name) { return tagDao.findTagByName(name); }
 
     public void saveTag(String name) { tagDao.saveTag(name); }
+
+    public List<Tag> findTagsByPostId(int id) { return tagDao.findTagsByPostId(id); }
 }

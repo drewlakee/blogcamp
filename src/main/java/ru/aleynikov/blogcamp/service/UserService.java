@@ -32,8 +32,11 @@ public class UserService {
     }
 
     public User findUserByUsername(String username) {
-        User user = userDao.findUserByUsername(username);
-        return user;
+        return userDao.findUserByUsername(username);
+    }
+
+    public User findUserById(int id) {
+        return userDao.findUserById(id);
     }
 
     public void saveUser(Map<String, Object> newUser) {
