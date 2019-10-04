@@ -12,10 +12,10 @@ public interface UserDao {
     User findUserById(int id);
     void saveUser(Map<String, Object> user);
     void updateUserPassword(String username, String newPassword);
-    List<User> getSortedByUsernameAscUserList(int offset, int limit);
-    List<User> getFilterByUsernameUserList(int offset, int limit, String filter);
-    int getAllUsersCount();
-    int getFilterByUsernameCount(String filter);
+    List<User> sortByUsernameAscUserList(int offset, int limit);
+    List<User> filterByUsernameUserList(int offset, int limit, String filter);
+    int count();
+    int countFilterByUsername(String filter);
     void updateUserAboutInfo(HashMap<String, Object> infoForUpdate);
     void updateUserSecret(String secretQuestion, String secretAnswer, int userId);
 }

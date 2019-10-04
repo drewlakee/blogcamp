@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface CountryDao {
 
-    List<Country> getAllCountriesList();
+    List<Country> allCountriesList();
 }

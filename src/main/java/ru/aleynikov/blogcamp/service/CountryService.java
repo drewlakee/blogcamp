@@ -14,6 +14,6 @@ public class CountryService {
     private CountryDaoImpl countryDao;
 
     public List<Country> getAllCountriesList() {
-        return countryDao.getAllCountriesList();
+        return countryDao.allCountriesList();
     }
 }

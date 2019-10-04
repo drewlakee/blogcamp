@@ -24,7 +24,7 @@ public class CountryDaoImpl implements CountryDao {
     private CountryRowMapper countryRowMapper;
 
     @Override
-    public List<Country> getAllCountriesList() {
+    public List<Country> allCountriesList() {
         String query = "SELECT * FROM country";
         List<Country> countryList;
 

@@ -24,7 +24,7 @@ public class CityDaoImpl implements CityDao {
     private CityRowMapper cityRowMapper;
 
     @Override
-    public List<City> getAllCitiesList() {
+    public List<City> allCitiesList() {
         String query = "SELECT city_id, city.name as \"city_name\", country.name as \"country_name\" FROM  city, country WHERE city.country = country.country_id;";
         List<City> cityList;
 

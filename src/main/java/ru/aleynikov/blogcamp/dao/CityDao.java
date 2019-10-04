@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface CityDao {
 
-   List<City> getAllCitiesList();
+   List<City> allCitiesList();
 }

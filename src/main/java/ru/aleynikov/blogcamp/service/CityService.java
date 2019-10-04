@@ -14,7 +14,7 @@ public class CityService {
     private CityDaoImpl cityDao;
 
     public List<City> getAllCities() {
-        return cityDao.getAllCitiesList();
+        return cityDao.allCitiesList();
     }
 
 }

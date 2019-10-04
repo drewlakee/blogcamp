@@ -81,7 +81,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getSortedByUsernameAscUserList(int offset, int limit) {
+    public List<User> sortByUsernameAscUserList(int offset, int limit) {
         String query = userMainInfoQuery + " ORDER BY (username) ASC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {offset, limit};
         List<User> userList;
@@ -93,7 +93,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getFilterByUsernameUserList(int offset, int limit, String filter) {
+    public List<User> filterByUsernameUserList(int offset, int limit, String filter) {
         String query = userMainInfoQuery + " WHERE LOWER(username) LIKE LOWER(?) OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {"%"+filter+"%", offset, limit};
         List<User> userList;
@@ -105,7 +105,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public int getAllUsersCount() {
+    public int count() {
         String query = "SELECT COUNT(*) FROM usr";
         int count;
 
@@ -116,7 +116,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public int getFilterByUsernameCount(String filter) {
+    public int countFilterByUsername(String filter) {
         String query = "SELECT COUNT(*) FROM usr WHERE username LIKE ?";
         Object[] qparams = new Object[] {"%"+filter+"%"};
         int count;

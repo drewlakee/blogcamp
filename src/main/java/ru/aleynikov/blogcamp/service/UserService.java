@@ -16,19 +16,19 @@ public class UserService {
     private UserDaoImpl userDao;
 
     public List<User> getSortedByUsernameUserList(int page, int usersOnPageLimit) {
-        return userDao.getSortedByUsernameAscUserList(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit);
+        return userDao.sortByUsernameAscUserList(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit);
     }
 
     public List<User> getFilterByUsernameUsersList(int page, int usersOnPageLimit, String filter) {
-        return userDao.getFilterByUsernameUserList(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit, filter);
+        return userDao.filterByUsernameUserList(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit, filter);
     }
 
     public int getFilterUsersCount(String filter) {
-        return userDao.getFilterByUsernameCount(filter);
+        return userDao.countFilterByUsername(filter);
     }
 
     public int getAllUsersCount() {
-        return userDao.getAllUsersCount();
+        return userDao.count();
     }
 
     public User findUserByUsername(String username) {
