@@ -19,12 +19,12 @@ public class UserRowMapper implements RowMapper {
         user.setSecretQuestion(rs.getString("secret_question"));
         user.setSecretAnswer(rs.getString("secret_answer"));
         user.setActive(rs.getBoolean("active"));
-        if (rs.getDate("registered") != null)
-            user.setRegisteredDate(rs.getDate("registered"));
+        if (rs.getTimestamp("registered") != null)
+            user.setRegisteredDate(rs.getTimestamp("registered"));
         else
             user.setRegisteredDate(null);
         user.setAbout(rs.getString("about"));
-        if (rs.getDate("birthday") != null)
+        if (rs.getTimestamp("birthday") != null)
             user.setBirthday(rs.getDate("birthday"));
         else
             user.setBirthday(null);

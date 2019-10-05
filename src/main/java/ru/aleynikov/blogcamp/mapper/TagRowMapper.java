@@ -16,7 +16,7 @@ public class TagRowMapper implements RowMapper {
         tag.setName(rs.getString("name"));
         tag.setDescription(rs.getString("description"));
         tag.setPostCount(rs.getInt("post_count"));
-        tag.setCreatedDate(rs.getDate("created"));
+        tag.setCreatedDate(rs.getTimestamp("created"));
 
         return tag;
     }

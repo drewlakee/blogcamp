@@ -12,10 +12,11 @@ import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.Tag;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.TagService;
-import ru.aleynikov.blogcamp.service.UserService;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -32,9 +33,6 @@ public class PostDaoImpl implements PostDao {
     @Autowired
     private TagService tagService;
 
-    @Autowired
-    private UserService userService;
-
     @Override
     public void savePost(HashMap<String, Object> post) {
         String query = "INSERT INTO post (title, text, \"user\", intro_image, created_date) VALUES(?, ?, ?, ?, ?)";
@@ -43,7 +41,7 @@ public class PostDaoImpl implements PostDao {
                 post.get("text"),
                 post.get("user"),
                 post.get("intro_image"),
-                post.get("created_date")
+                new Timestamp(System.currentTimeMillis())
         };
 
         log.info(SecurityUtils.getPrincipal().getUsername() + query + ", {}", Arrays.toString(qparams));
@@ -87,5 +85,30 @@ public class PostDaoImpl implements PostDao {
             }
         } else
             log.error(post.toString() + " not found.");
+    }
+
+    @Override
+    public List<Post> sortNewestPostsByUserId(int id, int offset, int limit) {
+        String query = "SELECT * FROM post WHERE \"user\" = ? ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
+        Object[] qparams = new Object[] {id, offset, limit};
+        List<Post> posts = null;
+
+        try {
+            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+            posts = jdbc.query(query, qparams, postRowMapper);
+        } catch (EmptyResultDataAccessException e) {}
+
+        return posts;
+    }
+
+    @Override
+    public int countPostsByUserId(int id) {
+        String query = "SELECT COUNT(*) FROM post WHERE \"user\" = ?";
+        Object[] qparams = new Object[] {id};
+        int count;
+
+        count = jdbc.queryForObject(query, qparams, Integer.class);
+
+        return count;
     }
 }

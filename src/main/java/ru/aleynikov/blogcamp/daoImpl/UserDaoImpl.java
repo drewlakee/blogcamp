@@ -11,6 +11,7 @@ import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.mapper.UserRowMapper;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -59,13 +60,15 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void saveUser(Map<String, Object> user) {
-        String query = "INSERT INTO usr (username, password, secret_question, secret_answer, avatar) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO usr (username, password, secret_question, secret_answer, avatar, registered) VALUES (?, ?, ?, ?, ?, ?)";
         Object[] qparams = new Object[] {
                 user.get("username"),
                 user.get("password"),
                 user.get("secret_question"),
                 user.get("secret_answer"),
-                user.get("avatar")};
+                user.get("avatar"),
+                new Timestamp(System.currentTimeMillis())
+        };
 
         log.info(query + ", {}", Arrays.toString(qparams));
         jdbc.update(query, qparams);

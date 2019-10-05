@@ -3,15 +3,18 @@ package ru.aleynikov.blogcamp.component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.QueryParameters;
 import ru.aleynikov.blogcamp.service.JavaScriptUtils;
+import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
 public class PageSwitcherComponent extends HorizontalLayout {
 
     private Span dotsSpan = new Span("...");
@@ -25,16 +28,19 @@ public class PageSwitcherComponent extends HorizontalLayout {
     private Button lastPageButton = new Button();
 
     public PageSwitcherComponent(int currentPage, int lastPage, String location, Map<String, List<String>> qparams) {
+        addClassName("margin-b-16px");
         setWidth("100%");
 
         buttonsLayout.getStyle().set("margin-left", "auto");
         buttonsLayout.getStyle().set("margin-right", "50px");
 
-        firstPageButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        previousPageButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        currentPageButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        nextPageButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        lastPageButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        firstPageButton.addClassName("main-button-non-selected");
+        previousPageButton.addClassName("main-button-non-selected");
+
+        currentPageButton.addClassName("main-button");
+
+        nextPageButton.addClassName("main-button-non-selected");
+        lastPageButton.addClassName("main-button-non-selected");
 
         if (lastPage == 0) lastPage = 1;
 

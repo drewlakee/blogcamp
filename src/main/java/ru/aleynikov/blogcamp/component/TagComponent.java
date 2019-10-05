@@ -21,7 +21,8 @@ public class TagComponent extends Div {
 
     private Paragraph br = new Paragraph("");
 
-    private SimpleDateFormat createdDateFormat = new SimpleDateFormat("d MMMM yyyy", Locale.ENGLISH);
+    private SimpleDateFormat createdDateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+    private SimpleDateFormat detailCreatedDateFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
 
     private HorizontalLayout contentLayout = new HorizontalLayout();
 
@@ -52,6 +53,7 @@ public class TagComponent extends Div {
 
             createdDateSpan.addClassName("tag-date");
             createdDateSpan.setText("created " + createdDateFormat.format(tag.getCreatedDate()));
+            createdDateSpan.setTitle(detailCreatedDateFormat.format(tag.getCreatedDate()));
 
             add(createdDateSpan);
 

@@ -49,7 +49,7 @@ public class PostComponent extends Div {
         upperLayout.setWidth("100%");
         upperLayout.addClassName("padding-10px");
 
-        usernameSpan.addClassName("username");
+        usernameSpan.addClassName("post-username");
         usernameSpan.setText(post.getUser().getUsername());
 
         dotFirstSpan.addClassName("grey-light");

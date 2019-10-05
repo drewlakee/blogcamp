@@ -57,7 +57,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
     private Tabs sortBar = new Tabs();
     private Tab nameTab = new Tab("A - Z");
 
-    private Integer page = 1;
+    private int page = 1;
     private String sortTab;
     private String filter;
     private Map<String, List<String>> qparams;
@@ -133,9 +133,9 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
         }
 
         if (qparams.containsKey("search")) {
-            tagsBrowserBuilder(page, sortTab, event.getLocation().getPath(), filter);
+            tagsBrowserBuild(page, sortTab, event.getLocation().getPath(), filter);
         } else
-            tagsBrowserBuilder(page, sortTab, event.getLocation().getPath(), "");
+            tagsBrowserBuild(page, sortTab, event.getLocation().getPath(), "");
     }
 
     public void queryParametersSetter() {
@@ -152,7 +152,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
         }
     }
 
-    private void tagsBrowserBuilder(int page, String sortTab, String locationPath, String filter) {
+    private void tagsBrowserBuild(int page, String sortTab, String locationPath, String filter) {
         int rowLimit = 3;
         int pageLimit;
         int counter = 0;

@@ -79,6 +79,16 @@ body {
     font-weight: 600;
 }
 
+.main-button-non-selected {
+    font-weight: 600;
+    color: #bdc4d3;
+}
+
+.main-button-non-selected:hover {
+    background-color: #55a92f;
+    color: var(--lumo-primary-contrast-color);
+}
+
 .content-header {
     height: 140px;
     min-height: 140px;
@@ -150,6 +160,10 @@ body {
     margin-left: 5px;
 }
 
-.margin-l-16px {
-    margin-left: 16px;
+.margin-r-16px {
+    margin-right: 16px;
+}
+
+.margin-b-16px {
+    margin-bottom: 16px;
 }

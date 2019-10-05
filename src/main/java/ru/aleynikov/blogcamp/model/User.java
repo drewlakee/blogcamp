@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.sql.Timestamp;
 import java.util.*;
 import java.sql.Date;
 
@@ -20,7 +21,7 @@ public class User implements UserDetails {
     private String secretQuestion;
     private String secretAnswer;
     private boolean active;
-    private Date registeredDate;
+    private Timestamp registeredDate;
     private String about;
     private Date birthday;
     private String country;

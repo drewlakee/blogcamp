@@ -16,7 +16,6 @@ public class CustomNotFoundView extends RouteNotFoundError {
     public int setErrorParameter(BeforeEnterEvent event,
                                  ErrorParameter<NotFoundException> parameter) {
 
-        UI.getCurrent().getPage().getHistory().back();
         return HttpServletResponse.SC_NOT_FOUND;
     }
 

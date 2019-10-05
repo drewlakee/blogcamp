@@ -49,10 +49,17 @@ public class QueryParametersManager {
         param = new ArrayList<>();
         param.add(String.valueOf(page));
         qmap.put("page", param);
-        param = new ArrayList<>();
-        param.add(sortTab);
-        qmap.put("tab", param);
+
+        if (sortTab != null) {
+            param = new ArrayList<>();
+            param.add(sortTab);
+            qmap.put("tab", param);
+        }
 
         return qmap;
+    }
+
+    public static Map<String, List<String>> queryParametersBuild(int page) {
+        return queryParametersBuild(page, null);
     }
 }

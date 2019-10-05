@@ -13,6 +13,7 @@ import ru.aleynikov.blogcamp.model.Tag;
 import ru.aleynikov.blogcamp.mapper.TagRowMapper;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -103,10 +104,10 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public void saveTag(String name) {
-        String query = "INSERT INTO tag (name) VALUES (?)";
-        Object[] qparams = new Object[] {name};
+        String query = "INSERT INTO tag (name, created) VALUES (?, ?)";
+        Object[] qparams = new Object[] {name, new Timestamp(System.currentTimeMillis())};
 
-        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
         jdbc.update(query, qparams);
     }
 

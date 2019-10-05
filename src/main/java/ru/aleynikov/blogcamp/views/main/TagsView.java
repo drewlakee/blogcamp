@@ -58,7 +58,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     private Tab popularTab = new Tab("Popular");
     private Tab newestTab = new Tab("Newest");
 
-    private Integer page = 1;
+    private int page = 1;
     private String sortTab;
     private String filter;
     private Map<String, List<String>> qparams;
@@ -139,9 +139,9 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         }
 
         if (qparams.containsKey("search")) {
-            tagsBrowserBuilder(page, sortTab, event.getLocation().getPath(), filter);
+            tagsBrowserBuild(page, sortTab, event.getLocation().getPath(), filter);
         } else
-            tagsBrowserBuilder(page, sortTab, event.getLocation().getPath(), "");
+            tagsBrowserBuild(page, sortTab, event.getLocation().getPath(), "");
     }
 
     public void queryParametersSetter() {
@@ -158,7 +158,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         }
     }
 
-    private void tagsBrowserBuilder(int page, String sortTab, String locationPath, String filter) {
+    private void tagsBrowserBuild(int page, String sortTab, String locationPath, String filter) {
         int rowLimit = 4;
         int pageLimit;
         int counter = 0;
