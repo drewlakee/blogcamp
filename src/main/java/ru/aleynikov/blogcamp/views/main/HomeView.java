@@ -14,10 +14,13 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import ru.aleynikov.blogcamp.component.PostComponent;
 import ru.aleynikov.blogcamp.model.Post;
+import ru.aleynikov.blogcamp.model.Tag;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.sql.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 @Route(value = "", layout = MainLayout.class)
 @RouteAlias(value = "home", layout = MainLayout.class)
@@ -47,35 +50,18 @@ public class HomeView extends Composite<Div> implements HasComponents {
 
         homeLabel.addClassName("content-label");
 
-        headerUpLayout.add(homeLabel);
-
-        headerLowerLayout.setWidth("100%");
-
         addPostButton.addClassName("main-button");
         addPostButton.addClassName("rs-cmp");
+        addPostButton.addClassName("margin-l-16px");
 
-        headerLowerLayout.add(addPostButton);
+        headerUpLayout.add(homeLabel, addPostButton);
+
+        headerLowerLayout.setWidth("100%");
 
         headerLayout.add(headerUpLayout, headerLowerLayout);
 
         bodyLayout.setSizeFull();
         bodyLayout.addClassName("content-body");
-
-
-        // TEST
-        Post postadd = new Post();
-
-        User user = new User();
-        user.setUsername("drewlakee");
-
-        postadd.setUser(user);
-
-        postadd.setCreatedDate(new Date(System.currentTimeMillis()));
-
-        PostComponent post = new PostComponent(postadd);
-
-        bodyLayout.add(post);
-        // TEST
 
         contentLayout.add(headerLayout, bodyLayout);
 

@@ -138,6 +138,18 @@ body {
     padding-left: 2px;
 }
 
+.padding-l-10px {
+    padding-left: 10px;
+}
+
+.padding-10px {
+    padding: 10px;
+}
+
 .margin-l-5px {
     margin-left: 5px;
+}
+
+.margin-l-16px {
+    margin-left: 16px;
 }
