@@ -13,4 +13,7 @@ public interface PostDao {
     void setTagsToPost(Set<String> tags, HashMap<String, Object> post);
     List<Post> sortNewestPostsByUserId(int id, int offset, int limit);
     int countPostsByUserId(int id);
+    List<Post> sortOldestPostsByUserId(int id, int offset, int limit);
+    List<Post> filterPostsByTitleUsingUserId(int id, int offset, int limit,  String filter);
+    int countPostsByFilterUsingUserId(int id,  String filter);
 }

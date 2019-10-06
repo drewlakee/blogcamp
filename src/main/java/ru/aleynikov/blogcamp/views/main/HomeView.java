@@ -2,6 +2,7 @@ package ru.aleynikov.blogcamp.views.main;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasComponents;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
@@ -121,19 +122,21 @@ public class HomeView extends Composite<Div> implements HasComponents, HasUrlPar
                 String selectedTab = event.getSource().getSelectedTab().getLabel();
 
                 if (selectedTab.equals(newestTab.getLabel())) {
-                    UI.getCurrent().navigate("users", QueryParametersManager.queryParametersBuild(newestTab.getLabel()));
+                    UI.getCurrent().navigate("home", QueryParametersManager.queryParametersBuild(newestTab.getLabel()));
                 } else if (selectedTab.equals(oldestTab.getLabel())) {
-                    UI.getCurrent().navigate("users", QueryParametersManager.queryParametersBuild(oldestTab.getLabel()));
+                    UI.getCurrent().navigate("home", QueryParametersManager.queryParametersBuild(oldestTab.getLabel()));
                 }
             }
         });
 
         searchPostFieldIcon.addClickListener(event -> searchFieldProcess());
+
+        searchPostField.addKeyPressListener(Key.ENTER, keyEventListener -> searchFieldProcess());
     }
 
     private void searchFieldProcess() {
         sortBar.setSelectedTab(null);
-        UI.getCurrent().navigate("users", QueryParametersManager.querySearchParametersBuild(searchPostField.getValue().strip()));
+        UI.getCurrent().navigate("home", QueryParametersManager.querySearchParametersBuild(searchPostField.getValue().strip()));
     }
 
 
@@ -163,23 +166,31 @@ public class HomeView extends Composite<Div> implements HasComponents, HasUrlPar
         if (qparams.containsKey("page")) {
             page = Integer.parseInt(qparams.get("page").get(0));
         }
+
+        if (qparams.containsKey("tab")) {
+            sortTab = qparams.get("tab").get(0);
+        }
+
+        if (qparams.containsKey("search")) {
+            filter = qparams.get("search").get(0);
+        }
     }
 
     private void postsBrowserBuild(int page, String sortTab, String locationPath, String filter) {
         int pageLimit;
-        List<Post> posts;
+        List<Post> posts = null;
         float count = 0;
 
-        posts = postService.sortNewestPostsByUserId(currentUser.getId(), page, POST_ON_PAGE_LIMIT);
-        count = postService.countPostsByUserId(currentUser.getId());
-
-//        if (!filter.isEmpty()) {
-//            userList = userService.getFilterByUsernameUsersList(page, USERS_ON_PAGE_LIMIT, filter);
-//            countUsers = userService.getFilterUsersCount(filter);
-//        } else if (sortTab.equals(nameTab.getLabel())) {
-//            userList = userService.getSortedByUsernameUserList(page, USERS_ON_PAGE_LIMIT);
-//            countUsers = userService.getAllUsersCount();
-//        }
+        if (!filter.isEmpty()) {
+            posts = postService.filterPostsByTitleUsingUserId(currentUser.getId(), page, POST_ON_PAGE_LIMIT, filter);
+            count = postService.countPostsByFilterUsingUserId(currentUser.getId(), filter);
+        } else if (sortTab.equals(newestTab.getLabel())) {
+            posts = postService.sortNewestPostsByUserId(currentUser.getId(), page, POST_ON_PAGE_LIMIT);
+            count = postService.countPostsByUserId(currentUser.getId());
+        } else if (sortTab.equals(oldestTab.getLabel())) {
+            posts = postService.sortOldestPostsByUserId(currentUser.getId(), page, POST_ON_PAGE_LIMIT);
+            count = postService.countPostsByUserId(currentUser.getId());
+        }
 
         bodyLayout.removeAll();
 
@@ -193,7 +204,7 @@ public class HomeView extends Composite<Div> implements HasComponents, HasUrlPar
 
             pageLimit = FilterDataManager.pageLimit(count, POST_ON_PAGE_LIMIT);
 
-            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.queryParametersBuild(page)));
+            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.queryParametersBuild(page, sortTab)));
         } else {
             bodyLayout.add(notFoundedH2);
         }
