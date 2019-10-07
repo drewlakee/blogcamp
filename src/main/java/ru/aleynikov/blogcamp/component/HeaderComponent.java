@@ -13,6 +13,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.views.main.HomeView;
 
 
 @StyleSheet(StaticResources.HEADER_COMPONENT_STYLES)
@@ -80,7 +81,7 @@ public class HeaderComponent extends HorizontalLayout {
 
         add(mainSideLayout);
 
-        logoDiv.addClickListener(event -> UI.getCurrent().navigate(""));
+        logoDiv.addClickListener(event -> UI.getCurrent().navigate(HomeView.class));
         logoutIcon.addClickListener(clickEvent -> {
             SecurityUtils.destroySession();
         });

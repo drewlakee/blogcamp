@@ -10,6 +10,7 @@ import ru.aleynikov.blogcamp.dao.PostDao;
 import ru.aleynikov.blogcamp.mapper.PostRowMapper;
 import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.Tag;
+import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.TagService;
 
@@ -102,12 +103,36 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
+    public List<Post> sortNewestPosts(int offset, int limit) {
+        String query = "SELECT * FROM post ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
+        Object[] qparams = new Object[] {offset, limit};
+        List<Post> posts = null;
+
+        try {
+            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+            posts = jdbc.query(query, qparams, postRowMapper);
+        } catch (EmptyResultDataAccessException e) {}
+
+        return posts;
+    }
+
+    @Override
     public int countPostsByUserId(int id) {
         String query = "SELECT COUNT(*) FROM post WHERE \"user\" = ?";
         Object[] qparams = new Object[] {id};
         int count;
 
         count = jdbc.queryForObject(query, qparams, Integer.class);
+
+        return count;
+    }
+
+    @Override
+    public int count() {
+        String query = "SELECT COUNT(*) FROM post";
+        int count;
+
+        count = jdbc.queryForObject(query, Integer.class);
 
         return count;
     }
@@ -149,5 +174,19 @@ public class PostDaoImpl implements PostDao {
         count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;
+    }
+
+    @Override
+    public Post findPostById(int id) {
+        String query = "SELECT * FROM post WHERE post_id = ?";
+        Object[] qparams = new Object[] {id};
+        Post post = null;
+
+        try {
+            log.info(query + ", {}", qparams);
+            post = (Post) jdbc.queryForObject(query, qparams, postRowMapper);
+        } catch (EmptyResultDataAccessException e) {}
+
+        return post;
     }
 }

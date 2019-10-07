@@ -42,4 +42,16 @@ public class PostService {
     public int countPostsByFilterUsingUserId(int id, String filter) {
         return postDao.countPostsByFilterUsingUserId(id, filter);
     }
+
+    public Post findPostById(int id) {
+        return postDao.findPostById(id);
+    }
+
+    public List<Post> sortNewestPosts(int page, int postsLimitOnPage) {
+        return postDao.sortNewestPosts(FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage);
+    }
+
+    public int count() {
+        return postDao.count();
+    }
 }

@@ -2,7 +2,6 @@ package ru.aleynikov.blogcamp.views.main;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasComponents;
-import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
@@ -17,20 +16,21 @@ import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.JavaScriptUtils;
 import ru.aleynikov.blogcamp.service.PostService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
-import java.sql.Date;
 import java.util.*;
 
 @Route(value = "posts/add", layout = MainLayout.class)
+@RouteAlias(value = "posts/edit")
 @PageTitle("Add post - Blogcamp")
 @StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
 @StyleSheet(StaticResources.POST_STYLES)
-public class AddPostView extends Composite<Div> implements HasComponents {
+public class EditorPostView extends Composite<Div> implements HasComponents {
 
     @Autowired
     private PostService postService;
@@ -42,9 +42,6 @@ public class AddPostView extends Composite<Div> implements HasComponents {
     private TextField titleField = new TextField();
     private TextField tagsField = new TextField();
     private TextField externalLinkOnImageField = new TextField();
-
-    private MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
-    private Upload introImageUpload = new Upload(buffer);
 
     private TextArea textBody = new TextArea();
 
@@ -58,14 +55,13 @@ public class AddPostView extends Composite<Div> implements HasComponents {
     private Span textEditorSpan = new Span("Post body");
     private Span tagsSpan = new Span("Tags");
 
-    private Button uploadButton = new Button("Upload image");
     private Button createPostButton = new Button("Create post");
 
     private RadioButtonGroup<String> imageLoadGroup = new RadioButtonGroup<>();
     private static final String EXTERNAL_IMAGE = "Set external image";
-    private static final String LOAD_IMAGE = "Load image";
+    private static final String NONE_IMAGE = "Without image";
 
-    public AddPostView() {
+    public EditorPostView() {
         contentLayout.setSizeFull();
         contentLayout.addClassName("padding-none");
 
@@ -88,19 +84,16 @@ public class AddPostView extends Composite<Div> implements HasComponents {
         uploadSpan.addClassName("title");
 
         imageLoadGroup.addClassName("margin-none");
-        imageLoadGroup.setItems(EXTERNAL_IMAGE, LOAD_IMAGE);
-
-        introImageUpload.addClassName("margin-none");
-        introImageUpload.setDropAllowed(false);
-        introImageUpload.setUploadButton(uploadButton);
-        introImageUpload.setVisible(false);
+        imageLoadGroup.setItems(EXTERNAL_IMAGE, NONE_IMAGE);
+        imageLoadGroup.setRequired(true);
+        imageLoadGroup.setErrorMessage("Must choose one.");
 
         externalLinkOnImageField.setWidth("100%");
         externalLinkOnImageField.addClassName("margin-none");
         externalLinkOnImageField.setMinLength(5);
         externalLinkOnImageField.setMaxLength(500);
         externalLinkOnImageField.setPlaceholder("https://image.jpg");
-        externalLinkOnImageField.setErrorMessage("Must start with http:// or something same else.");
+        externalLinkOnImageField.setErrorMessage("Must be external link with correct format: jpg, jpeg, png, gif.");
         externalLinkOnImageField.setVisible(false);
 
         uploadedImageDiv.setId("show-image");
@@ -132,8 +125,7 @@ public class AddPostView extends Composite<Div> implements HasComponents {
 
         createPostButton.addClassName("main-button");
 
-        bodyLayout.add(titleSpan, titleField, uploadSpan, imageLoadGroup,
-                introImageUpload, externalLinkOnImageField, uploadedImageDiv,
+        bodyLayout.add(titleSpan, titleField, uploadSpan, imageLoadGroup, externalLinkOnImageField, uploadedImageDiv,
                 textEditorSpan, textBody, htmlAreaDiv,
                 tagsSpan, tagsField, createPostButton);
 
@@ -144,19 +136,17 @@ public class AddPostView extends Composite<Div> implements HasComponents {
         imageLoadGroup.addValueChangeListener(event -> {
            if (imageLoadGroup.getValue().equals(EXTERNAL_IMAGE)) {
                externalLinkOnImageField.setVisible(true);
-               introImageUpload.setVisible(false);
-               JavaScriptUtils.innerHtml("show-image", "");
-           } else if (imageLoadGroup.getValue().equals(LOAD_IMAGE)) {
-               introImageUpload.setVisible(true);
-               externalLinkOnImageField.clear();
+               externalLinkOnImageField.setRequired(true);
+           } else if (imageLoadGroup.getValue().equals(NONE_IMAGE)) {
                externalLinkOnImageField.setVisible(false);
+               externalLinkOnImageField.setRequired(false);
                JavaScriptUtils.innerHtml("show-image", "");
            }
         });
 
         externalLinkOnImageField.addValueChangeListener(event -> {
             int imgWidth = 500;
-            if (externalLinkOnImageField.getValue().strip().startsWith("http"))
+            if (isExternalSourceValid())
                 JavaScriptUtils.innerHtml("show-image", "<img style=\"width:" + imgWidth + "px\" src=" + externalLinkOnImageField.getValue().strip() + ">");
         });
 
@@ -168,7 +158,7 @@ public class AddPostView extends Composite<Div> implements HasComponents {
            if (isPostFormValid()) {
                HashMap<String, Object> newPost = new LinkedHashMap<>();
                newPost.put("title", titleField.getValue().strip());
-               if (!imageLoadGroup.isEmpty() && imageLoadGroup.getValue().equals(EXTERNAL_IMAGE))
+               if (!imageLoadGroup.isEmpty() && imageLoadGroup.getValue().equals(EXTERNAL_IMAGE) && isExternalSourceValid())
                    newPost.put("intro_image", externalLinkOnImageField.getValue().strip());
                newPost.put("text", textBody.getValue().strip());
                newPost.put("user", SecurityUtils.getPrincipal().getId());
@@ -184,6 +174,16 @@ public class AddPostView extends Composite<Div> implements HasComponents {
         });
     }
 
+    private boolean isExternalSourceValid() {
+        String sourceValue = externalLinkOnImageField.getValue().toLowerCase();
+        boolean isFieldNotEmpty = !sourceValue.isEmpty();
+        boolean isSourceExternal = sourceValue.startsWith("http") && sourceValue.contains("://");
+        boolean isSourceImage = sourceValue.endsWith("png") || sourceValue.endsWith("jpg") ||
+                sourceValue.endsWith("gif") || sourceValue.endsWith("jpeg");
+
+        return isSourceExternal && isSourceImage && isFieldNotEmpty;
+    }
+
     private boolean isPostFormValid() {
         boolean isTitleValid = !titleField.isInvalid() && !titleField.isEmpty();
         boolean isBodyValid = !textBody.isInvalid() && !textBody.isEmpty() && textBody.getValue().strip().length() > textBody.getMinLength();
@@ -191,6 +191,7 @@ public class AddPostView extends Composite<Div> implements HasComponents {
         int tagsLength = tagsField.getValue().split(" ").length;
         boolean isTagsLengthValid = tagsLength > 0 && tagsLength < 6;
         boolean isTagsValidValue = Arrays.stream(tagsField.getValue().split(" ")).allMatch((x) -> x.length() > 1);
+        boolean isImageUploadValid = !imageLoadGroup.isEmpty();
 
         if (!isTitleValid)
             titleField.setInvalid(true);
@@ -202,7 +203,11 @@ public class AddPostView extends Composite<Div> implements HasComponents {
             tagsField.setInvalid(true);
         }
 
+        if (!isImageUploadValid) {
+            imageLoadGroup.setInvalid(true);
+        }
+
         return isTitleValid && isBodyValid && isTagsValid && isTagsLengthValid
-                && isTagsValidValue;
+                && isTagsValidValue && isImageUploadValid;
     }
 }

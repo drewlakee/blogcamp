@@ -16,4 +16,7 @@ public interface PostDao {
     List<Post> sortOldestPostsByUserId(int id, int offset, int limit);
     List<Post> filterPostsByTitleUsingUserId(int id, int offset, int limit,  String filter);
     int countPostsByFilterUsingUserId(int id,  String filter);
+    Post findPostById(int id);
+    List<Post> sortNewestPosts(int offset, int limit);
+    int count();
 }

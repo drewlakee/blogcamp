@@ -32,8 +32,7 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import java.util.List;
 import java.util.Map;
 
-@Route(value = "", layout = MainLayout.class)
-@RouteAlias(value = "home", layout = MainLayout.class)
+@Route(value = "home", layout = MainLayout.class)
 @PageTitle("Blogcamp")
 @StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
 public class HomeView extends Composite<Div> implements HasComponents, HasUrlParameter<String> {
@@ -197,8 +196,6 @@ public class HomeView extends Composite<Div> implements HasComponents, HasUrlPar
         if (!posts.isEmpty()) {
             for (Post post : posts) {
                 PostComponent postComponent = new PostComponent(post);
-                postComponent.addClassName("margin-b-16px");
-
                 bodyLayout.add(postComponent);
             }
 

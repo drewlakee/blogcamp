@@ -11,6 +11,7 @@ import com.vaadin.flow.router.RouterLink;
 import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.Tag;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.views.main.PostView;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -35,7 +36,7 @@ public class PostComponent extends Div {
 
     private Image postImage = new Image();
 
-    private RouterLink readLink = new RouterLink();
+    private RouterLink readLink;
 
     private SimpleDateFormat createdDateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
     private SimpleDateFormat detailCreatedDateFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
@@ -88,7 +89,7 @@ public class PostComponent extends Div {
         lowerLayout.setWidth("100%");
         lowerLayout.addClassName("padding-10px");
 
-        readLink.setText("READ");
+        readLink = new RouterLink("READ", PostView.class, post.getId());
         readLink.addClassName("user-link");
 
         lowerLayout.add(readLink);

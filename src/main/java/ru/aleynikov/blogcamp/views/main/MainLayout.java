@@ -12,10 +12,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.QueryParameters;
-import com.vaadin.flow.router.RouterLayout;
+import com.vaadin.flow.router.*;
 import ru.aleynikov.blogcamp.component.HeaderComponent;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
@@ -42,6 +39,8 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
     private Tab usersTab = new Tab("Users");
 
     private QueryParameters qparams;
+
+    private boolean isGlobalPostView;
 
     public MainLayout() {
         getContent().setSizeFull();
@@ -87,9 +86,10 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
             String selectedTab = event.getSource().getSelectedTab().getLabel();
 
             if (selectedTab.equals(homeTab.getLabel())) {
-                UI.getCurrent().navigate("");
+                UI.getCurrent().navigate(HomeView.class);
             } else if (selectedTab.equals(postsTab.getLabel())) {
-                UI.getCurrent().navigate("posts", qparams);
+                if (!isGlobalPostView)
+                    UI.getCurrent().navigate("posts", qparams);
             } else if (selectedTab.equals(tagsTab.getLabel()) ) {
                 UI.getCurrent().navigate("tags", qparams);
             } else if (selectedTab.equals(usersTab.getLabel())) {
@@ -105,6 +105,7 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
+        isGlobalPostView = false;
         qparams = event.getLocation().getQueryParameters();
         Map<String, List<String>> emptyQParams = new HashMap<>();
 
@@ -121,6 +122,9 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
             leftSideBarLayout.setVisible(false);
         } else if (event.getLocation().getPath().equals("posts/add")) {
             leftSideBarLayout.setVisible(false);
+        } else if (event.getLocation().getPath().startsWith("posts/post")) {
+            isGlobalPostView = true;
+            navigationBar.setSelectedTab(postsTab);
         }
 
         qparams = new QueryParameters(emptyQParams);
