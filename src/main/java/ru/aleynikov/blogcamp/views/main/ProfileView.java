@@ -7,23 +7,27 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.component.upload.Upload;
-import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
+import ru.aleynikov.blogcamp.security.SessionManager;
+import ru.aleynikov.blogcamp.service.JavaScriptUtils;
+import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 @RoutePrefix(value = "profile")
@@ -32,6 +36,12 @@ import java.util.Locale;
 @StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
 @StyleSheet(StaticResources.PROFILE_VIEW_STYLES)
 public class ProfileView extends Composite<Div> implements HasComponents, RouterLayout, BeforeEnterObserver {
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private SessionManager sessionManager;
 
     private User currentUser = SecurityUtils.getPrincipal();
 
@@ -49,17 +59,20 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
     private Span userFullNameSpan = new Span();
     private Span userFromSpan = new Span();
     private Span userBirthdaySpan = new Span();
-    private Span userAboutSpan = new Span();
+    private Span userStatusSpan = new Span();
 
     private Image userAvatarImage = new Image("", "avatar");
 
-    private MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
-    private Upload avatarUpload = new Upload(buffer);
-
     private Button uploadAvatarButton = new Button("Upload avatar");
+    private Button setExternalAvatarButton = new Button("Update");
 
     private Div contentDiv = new Div();
     private Div uploadButtonDiv = new Div();
+    private Div uploadExternalImageDiv = new Div();
+
+    private Dialog externalImageSetDialog = new Dialog();
+
+    private TextField externalImageSourceField = new TextField();
 
     private Tabs switchBar = new Tabs();
     private Tab aboutTab = new Tab("About");
@@ -83,15 +96,13 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
 
         uploadAvatarButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         uploadAvatarButton.setSizeFull();
-
-        avatarUpload.setDropAllowed(false);
-        avatarUpload.setUploadButton(uploadAvatarButton);
-        avatarUpload.setSizeFull();
+        uploadAvatarButton.addClassName("margin-t-none");
 
         uploadButtonDiv.setSizeFull();
         uploadButtonDiv.addClassName("upload-btn-div");
         uploadButtonDiv.addClassName("margin-none");
-        uploadButtonDiv.add(avatarUpload);
+
+        uploadButtonDiv.add(uploadAvatarButton);
 
         avatarLayout.add(userAvatarImage, uploadButtonDiv);
 
@@ -142,6 +153,69 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
                 UI.getCurrent().navigate("profile/account");
             }
         });
+
+        uploadExternalImageDiv.setId("external-img");
+
+        externalImageSourceField.addClassName("external-img-field");
+        externalImageSourceField.setRequired(true);
+        externalImageSourceField.setPlaceholder("(https://image.png etc.)");
+        externalImageSourceField.setMinLength(4);
+        externalImageSourceField.setMaxLength(500);
+        externalImageSourceField.setErrorMessage("Must be external link with correct format: jpg, jpeg, png.");
+
+        setExternalAvatarButton.addClassName("main-button");
+        setExternalAvatarButton.addClassName("margin-l-10px");
+        setExternalAvatarButton.setVisible(false);
+
+        externalImageSetDialog.add(uploadExternalImageDiv, externalImageSourceField, setExternalAvatarButton);
+
+        uploadAvatarButton.addClickListener(event -> {
+           externalImageSetDialog.open();
+        });
+
+        externalImageSourceField.addValueChangeListener(event -> {
+            if (isExternalSourceValid()) {
+                setExternalAvatarButton.setVisible(true);
+
+                int imgWidth = 200;
+                JavaScriptUtils.innerHtml(uploadExternalImageDiv.getId().get(), "<img style=\"width:" + imgWidth + "px\" src=" + externalImageSourceField.getValue().strip() + ">");
+            } else
+                setExternalAvatarButton.setVisible(false);
+        });
+
+        setExternalAvatarButton.addClickListener(event -> {
+            userService.updateUserAvatarByUserId(externalImageSourceField.getValue().strip(), currentUser.getId());
+            externalImageSetDialog.close();
+
+            sessionManager.updateSessionUser();
+
+            userAvatarImage.setSrc(SecurityUtils.getPrincipal().getAvatar());
+
+            Notification.show("Avatar was successfully updated.");
+        });
+
+        externalImageSetDialog.addDialogCloseActionListener(event -> {
+            externalImageSetDialog.close();
+            externalImageSourceField.clear();
+            setExternalAvatarButton.setVisible(false);
+            externalImageSourceField.setInvalid(false);
+            JavaScriptUtils.innerHtml(uploadExternalImageDiv.getId().get(), "");
+        });
+    }
+
+    private boolean isExternalSourceValid() {
+        String sourceValue = externalImageSourceField.getValue().toLowerCase();
+        boolean isFieldNotEmpty = !sourceValue.isEmpty();
+        boolean isSourceExternal = sourceValue.startsWith("http") && sourceValue.contains("://");
+        boolean isSourceImage = sourceValue.endsWith("png") || sourceValue.endsWith("jpg") ||
+                sourceValue.endsWith("gif") || sourceValue.endsWith("jpeg");
+
+        if (!isFieldNotEmpty || !isSourceExternal || !isSourceImage) {
+            externalImageSourceField.setInvalid(true);
+            JavaScriptUtils.innerHtml(uploadExternalImageDiv.getId().get(), "");
+        }
+
+        return isSourceExternal && isSourceImage && isFieldNotEmpty;
     }
 
     @Override
@@ -187,9 +261,9 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
             infoLayout.add(userBirthdaySpan);
         }
 
-        if (currentUser.getAbout() != null) {
-            userAboutSpan.setText(currentUser.getAbout());
-            infoLayout.add(userAboutSpan);
+        if (currentUser.getStatus() != null) {
+            userStatusSpan.setText(currentUser.getStatus());
+            infoLayout.add(userStatusSpan);
         }
     }
 

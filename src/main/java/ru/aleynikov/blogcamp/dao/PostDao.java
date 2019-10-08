@@ -14,9 +14,11 @@ public interface PostDao {
     List<Post> sortNewestPostsByUserId(int id, int offset, int limit);
     int countPostsByUserId(int id);
     List<Post> sortOldestPostsByUserId(int id, int offset, int limit);
-    List<Post> filterPostsByTitleUsingUserId(int id, int offset, int limit,  String filter);
+    List<Post> findPostsByTitleUsingUserId(int id, int offset, int limit, String filter);
     int countPostsByFilterUsingUserId(int id,  String filter);
     Post findPostById(int id);
+    List<Post> findPostsByTitle(int offset, int limit, String filter);
+    int countByTitle(String filter);
     List<Post> sortNewestPosts(int offset, int limit);
     int count();
 }

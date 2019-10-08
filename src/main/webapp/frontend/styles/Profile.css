@@ -5,14 +5,16 @@
 
 .profile-avatar {
     border: 1px solid #d6d9dc;
-    border-radius: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
     box-shadow: 0 1px 0 rgba(12,13,14,0.1),0 1px 6px rgba(59,64,69,0.1);
 }
 
 .avatar-img {
     width: 200px;
     height: 200px;
-    border-radius: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
 }
 
 .upload-btn-div {
@@ -33,4 +35,8 @@
 
 .success {
     color: #55a92f;
+}
+
+.external-img-field {
+    width: 500px;
 }

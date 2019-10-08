@@ -152,7 +152,7 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public List<Post> filterPostsByTitleUsingUserId(int id, int offset, int limit, String filter) {
+    public List<Post> findPostsByTitleUsingUserId(int id, int offset, int limit, String filter) {
         String query = "SELECT * FROM post WHERE \"user\" = ? AND LOWER(title) LIKE LOWER(?) OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {id, "%"+filter+"%", offset, limit};
         List<Post> posts = null;
@@ -188,5 +188,30 @@ public class PostDaoImpl implements PostDao {
         } catch (EmptyResultDataAccessException e) {}
 
         return post;
+    }
+
+    @Override
+    public List<Post> findPostsByTitle(int offset, int limit, String filter) {
+        String query = "SELECT * FROM post WHERE LOWER(title) LIKE LOWER(?) OFFSET ? LIMIT ?";
+        Object[] qparams = new Object[] {"%"+filter+"%", offset, limit};
+        List<Post> posts = null;
+
+        try {
+            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+            posts = jdbc.query(query, qparams, postRowMapper);
+        } catch (EmptyResultDataAccessException e) {}
+
+        return posts;
+    }
+
+    @Override
+    public int countByTitle(String filter) {
+        String query = "SELECT COUNT(*) FROM post WHERE LOWER(title) LIKE LOWER(?)";
+        Object[] qparams = new Object[] {"%"+filter+"%"};
+        int count;
+
+        count = jdbc.queryForObject(query, qparams, Integer.class);
+
+        return count;
     }
 }

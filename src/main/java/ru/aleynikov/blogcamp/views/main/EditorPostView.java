@@ -4,19 +4,21 @@ import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.upload.Upload;
-import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.JavaScriptUtils;
@@ -25,8 +27,7 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.util.*;
 
-@Route(value = "posts/add", layout = MainLayout.class)
-@RouteAlias(value = "posts/edit")
+@Route(value = "addpost", layout = MainLayout.class)
 @PageTitle("Add post - Blogcamp")
 @StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
 @StyleSheet(StaticResources.POST_STYLES)
@@ -38,6 +39,8 @@ public class EditorPostView extends Composite<Div> implements HasComponents {
     private VerticalLayout contentLayout = new VerticalLayout();
     private VerticalLayout headerLayout = new VerticalLayout();
     private VerticalLayout bodyLayout = new VerticalLayout();
+
+    private HorizontalLayout headerUpperLayout = new HorizontalLayout();
 
     private TextField titleField = new TextField();
     private TextField tagsField = new TextField();
@@ -56,6 +59,9 @@ public class EditorPostView extends Composite<Div> implements HasComponents {
     private Span tagsSpan = new Span("Tags");
 
     private Button createPostButton = new Button("Create post");
+    private Button backButton = new Button("Back");
+
+    private Icon backIcon = new Icon(VaadinIcon.CHEVRON_LEFT_SMALL);
 
     private RadioButtonGroup<String> imageLoadGroup = new RadioButtonGroup<>();
     private static final String EXTERNAL_IMAGE = "Set external image";
@@ -67,9 +73,23 @@ public class EditorPostView extends Composite<Div> implements HasComponents {
 
         headerLayout.setSizeFull();
 
-        headerLayout.add(labelH2);
+        headerUpperLayout.setWidth("100%");
+
+        labelH2.addClassName("margin-t-none");
+
+        backButton.addClassName("rs-cmp");
+        backButton.addClassName("back-link");
+        backButton.setIcon(backIcon);
+        backButton.setIconAfterText(true);
+        backButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        headerUpperLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, backButton);
+
+        headerUpperLayout.add(labelH2, backButton);
+
+        headerLayout.add(headerUpperLayout);
 
         bodyLayout.setSizeFull();
+        bodyLayout.addClassName("margin-none");
 
         titleSpan.addClassName("title");
 
@@ -169,9 +189,11 @@ public class EditorPostView extends Composite<Div> implements HasComponents {
                selectedTags.removeIf((x) -> x.equals(""));
                postService.setTagsToPost(selectedTags, newPost);
 
-               UI.getCurrent().navigate("home");
+               UI.getCurrent().navigate(GlobeView.class);
            }
         });
+
+        backButton.addClickListener(event -> UI.getCurrent().getPage().getHistory().back());
     }
 
     private boolean isExternalSourceValid() {

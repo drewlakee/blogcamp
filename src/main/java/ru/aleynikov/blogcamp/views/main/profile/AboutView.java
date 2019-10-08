@@ -75,7 +75,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
     private Select<String> countrySelect = new Select<>();
     private Select<String> citySelect = new Select<>();
 
-    private TextArea aboutArea = new TextArea();
+    private TextArea statusArea = new TextArea();
 
     private Button updateButton = new Button("Update");
 
@@ -115,11 +115,12 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
 
         rightBodyAboutLayout.setWidth("100%");
 
-        aboutArea.setLabel("About");
-        aboutArea.addClassName("margin-none");
-        aboutArea.setSizeFull();
+        statusArea.setLabel("Status");
+        statusArea.addClassName("margin-none");
+        statusArea.setSizeFull();
+        statusArea.setMaxLength(50);
 
-        rightBodyAboutLayout.add(aboutArea);
+        rightBodyAboutLayout.add(statusArea);
 
         bodyAboutLayout.add(leftBodyAboutLayout, centerBodyAboutLayout, rightBodyAboutLayout);
 
@@ -191,7 +192,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
             }
 
             infoForUpdate.put("city", city.getId());
-            infoForUpdate.put("about", aboutArea.getValue().strip());
+            infoForUpdate.put("status", statusArea.getValue().strip());
             infoForUpdate.put("current_user_id", SecurityUtils.getPrincipal().getId());
 
             userService.updateUserAboutInfo(infoForUpdate);
@@ -253,8 +254,8 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
         cityList.stream().filter((x) -> !x.getCityName().equals(currentUser.getCity()) && x.getCountryName().equals(countrySelect.getValue())).forEach((x) -> cityNamesTree.add(x.getCityName()));
         citySelect.setItems(cityNamesTree);
 
-        if (currentUser.getAbout() != null) {
-            aboutArea.setValue(currentUser.getAbout());
+        if (currentUser.getStatus() != null) {
+            statusArea.setValue(currentUser.getStatus());
         }
     }
 }

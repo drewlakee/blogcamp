@@ -36,7 +36,7 @@ public class PostService {
     }
 
     public List<Post> filterPostsByTitleUsingUserId(int id, int page, int postsLimitOnPage, String filter) {
-        return postDao.filterPostsByTitleUsingUserId(id, FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage, filter);
+        return postDao.findPostsByTitleUsingUserId(id, FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage, filter);
     }
 
     public int countPostsByFilterUsingUserId(int id, String filter) {
@@ -53,5 +53,13 @@ public class PostService {
 
     public int count() {
         return postDao.count();
+    }
+
+    public List<Post> findPostsByTitle(int page, int postsLimitOnPage, String filter) {
+        return postDao.findPostsByTitle(FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage, filter);
+    }
+
+    public int countPostsByTitle(String filter) {
+        return postDao.countByTitle(filter);
     }
 }

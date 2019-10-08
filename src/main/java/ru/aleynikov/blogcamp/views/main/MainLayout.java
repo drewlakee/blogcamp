@@ -89,7 +89,7 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
                 UI.getCurrent().navigate(HomeView.class);
             } else if (selectedTab.equals(postsTab.getLabel())) {
                 if (!isGlobalPostView)
-                    UI.getCurrent().navigate("posts", qparams);
+                    UI.getCurrent().navigate("globe", qparams);
             } else if (selectedTab.equals(tagsTab.getLabel()) ) {
                 UI.getCurrent().navigate("tags", qparams);
             } else if (selectedTab.equals(usersTab.getLabel())) {
@@ -112,7 +112,7 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
         if (event.getNavigationTarget().getSimpleName().equals(HomeView.class.getSimpleName())) {
             navigationBar.setSelectedTab(homeTab);
             leftSideBarLayout.setVisible(true);
-        } else if (event.getNavigationTarget().getSimpleName().equals(PostsView.class.getSimpleName())) {
+        } else if (event.getNavigationTarget().getSimpleName().equals(GlobeView.class.getSimpleName())) {
             navigationBar.setSelectedTab(postsTab);
         } else if (event.getNavigationTarget().getSimpleName().equals(TagsView.class.getSimpleName())) {
             navigationBar.setSelectedTab(tagsTab);
@@ -120,11 +120,8 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
             navigationBar.setSelectedTab(usersTab);
         } else if (event.getLocation().getPath().startsWith("profile")) {
             leftSideBarLayout.setVisible(false);
-        } else if (event.getLocation().getPath().equals("posts/add")) {
-            leftSideBarLayout.setVisible(false);
-        } else if (event.getLocation().getPath().startsWith("posts/post")) {
+        } else if (event.getLocation().getPath().startsWith("globe/post")) {
             isGlobalPostView = true;
-            navigationBar.setSelectedTab(postsTab);
         }
 
         qparams = new QueryParameters(emptyQParams);

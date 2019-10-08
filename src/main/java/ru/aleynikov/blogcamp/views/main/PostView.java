@@ -4,6 +4,8 @@ package ru.aleynikov.blogcamp.views.main;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
@@ -26,7 +28,7 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-@Route(value = "posts/post", layout = MainLayout.class)
+@Route(value = "globe/post", layout = MainLayout.class)
 @StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
 @StyleSheet(StaticResources.POST_STYLES)
 public class PostView extends Composite<Div> implements HasComponents, HasUrlParameter<Integer>, HasDynamicTitle {
@@ -61,10 +63,10 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
     private Image userImage = new Image();
 
     private Span createdDateSpan = new Span();
-    private Span userAboutSpan = new Span();
+    private Span userFullNameSpan = new Span();
 
     private RouterLink userLink = new RouterLink();
-    private RouterLink backLink = new RouterLink("Back", PostsView.class );
+    private Button backButton = new Button("Back");
 
     private Icon backIcon = new Icon(VaadinIcon.CHEVRON_LEFT_SMALL);
 
@@ -82,12 +84,14 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
         headerUpperLayout.setWidth("100%");
 
-        backLink.addClassName("rs-cmp");
-        backLink.addClassName("back-link");
-        backLink.add(backIcon);
-        headerUpperLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, backLink);
+        backButton.addClassName("rs-cmp");
+        backButton.addClassName("back-link");
+        backButton.setIcon(backIcon);
+        backButton.setIconAfterText(true);
+        backButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        headerUpperLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, backButton);
 
-        headerUpperLayout.add(titleH2, backLink);
+        headerUpperLayout.add(titleH2, backButton);
 
         createdDateSpan.addClassName("margin-none");
 
@@ -126,10 +130,10 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
         userLink.addClassName("user-link");
 
-        userAboutSpan.addClassName("margin-none");
-        userAboutSpan.addClassName("grey-light");
+        userFullNameSpan.addClassName("margin-none");
+        userFullNameSpan.addClassName("grey-light");
 
-        userInfoRightSideLayout.add(userLink, userAboutSpan);
+        userInfoRightSideLayout.add(userLink, userFullNameSpan);
 
         userInfoLayout.add(userInfoLeftSideLayout, userInfoRightSideLayout);
 
@@ -144,6 +148,8 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
         contentLayout.add(headerLayout, bodyLayout);
 
         add(contentLayout);
+
+        backButton.addClickListener(event -> UI.getCurrent().getPage().getHistory().back());
     }
 
     private boolean isValidParameter(Integer parameter) {
@@ -185,7 +191,8 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
             userImage.setSrc(currentPost.getUser().getAvatar());
             userLink.setText(currentPost.getUser().getUsername());
-            userAboutSpan.setText(currentPost.getUser().getAbout());
+            userFullNameSpan.setText(currentPost.getUser().getFullName()
+            );
 
         } else {
             headerLayout.add(notExistH2);

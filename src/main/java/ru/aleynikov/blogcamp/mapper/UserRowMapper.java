@@ -23,7 +23,7 @@ public class UserRowMapper implements RowMapper {
             user.setRegisteredDate(rs.getTimestamp("registered"));
         else
             user.setRegisteredDate(null);
-        user.setAbout(rs.getString("about"));
+        user.setStatus(rs.getString("status"));
         if (rs.getTimestamp("birthday") != null)
             user.setBirthday(rs.getDate("birthday"));
         else

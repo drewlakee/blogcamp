@@ -20,7 +20,7 @@ public class UserService {
     }
 
     public List<User> getFilterByUsernameUsersList(int page, int usersOnPageLimit, String filter) {
-        return userDao.filterByUsernameUserList(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit, filter);
+        return userDao.findByUsernameUserList(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit, filter);
     }
 
     public int getFilterUsersCount(String filter) {
@@ -62,5 +62,9 @@ public class UserService {
 
     public void updateUserPassword(String username, String newPassword) {
         userDao.updateUserPassword(username, newPassword);
+    }
+
+    public void updateUserAvatarByUserId(String avatar, int id) {
+        userDao.updateUserAvatarByUserId(avatar, id);
     }
 }

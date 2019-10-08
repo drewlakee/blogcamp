@@ -22,7 +22,7 @@ public class User implements UserDetails {
     private String secretAnswer;
     private boolean active;
     private Timestamp registeredDate;
-    private String about;
+    private String status;
     private Date birthday;
     private String country;
     private String city;
@@ -40,7 +40,7 @@ public class User implements UserDetails {
         this.secretAnswer = user.getSecretAnswer();
         this.active = user.isAccountNonLocked();
         this.registeredDate = user.getRegisteredDate();
-        this.about = user.getAbout();
+        this.status = user.getStatus();
         this.birthday = user.getBirthday();
         this.country = user.getCountry();
         this.city = user.getCity();

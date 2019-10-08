@@ -28,7 +28,7 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     private UserRowMapper userRowMapper;
 
-    private static final String userMainInfoQuery = "SELECT user_id, username, password, fullname, secret_question, secret_answer, active, role, registered, about, birthday, avatar, country.name AS \"country\", city.name AS \"city\" FROM usr LEFT JOIN country ON country.country_id = usr.country LEFT JOIN city ON city.city_id = usr.city";
+    private static final String userMainInfoQuery = "SELECT user_id, username, password, fullname, secret_question, secret_answer, active, role, registered, status, birthday, avatar, country.name AS \"country\", city.name AS \"city\" FROM usr LEFT JOIN country ON country.country_id = usr.country LEFT JOIN city ON city.city_id = usr.city";
 
     @Override
     public User findUserByUsername(String username) {
@@ -96,7 +96,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> filterByUsernameUserList(int offset, int limit, String filter) {
+    public List<User> findByUsernameUserList(int offset, int limit, String filter) {
         String query = userMainInfoQuery + " WHERE LOWER(username) LIKE LOWER(?) OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {"%"+filter+"%", offset, limit};
         List<User> userList;
@@ -132,7 +132,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void updateUserAboutInfo(HashMap<String, Object> infoForUpdate) {
-        String query = "UPDATE usr SET fullname=?, birthday=?, country=?, city=?, about=? WHERE user_id=?";
+        String query = "UPDATE usr SET fullname=?, birthday=?, country=?, city=?, status=? WHERE user_id=?";
         Object[] qparams = infoForUpdate.values().toArray();
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
@@ -143,6 +143,15 @@ public class UserDaoImpl implements UserDao {
     public void updateUserSecret(String secretQuestion, String secretAnswer, int userId) {
         String query = "UPDATE usr SET secret_question=?, secret_answer=? WHERE user_id=?";
         Object[] qparams = new Object[] {secretQuestion, secretAnswer, userId};
+
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        jdbc.update(query, qparams);
+    }
+
+    @Override
+    public void updateUserAvatarByUserId(String avatar, int id) {
+        String query = "UPDATE usr SET avatar= ? WHERE user_id = ?";
+        Object[] qparams = new Object[] {avatar, id};
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
         jdbc.update(query, qparams);

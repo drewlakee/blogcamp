@@ -32,10 +32,10 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import java.util.List;
 import java.util.Map;
 
-@Route(value = "posts", layout = MainLayout.class)
+@Route(value = "globe", layout = MainLayout.class)
 @PageTitle("Posts - Blogcamp")
 @StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
-public class PostsView extends Composite<Div> implements HasComponents, HasUrlParameter<String> {
+public class GlobeView extends Composite<Div> implements HasComponents, HasUrlParameter<String> {
 
     @Autowired
     private PostService postService;
@@ -55,7 +55,7 @@ public class PostsView extends Composite<Div> implements HasComponents, HasUrlPa
 
     private Button addPostButton = new Button("Add post");
 
-    private H2 notFoundedH2 = new H2("Posts not founded. Start with \"Add post\"!");
+    private H2 notFoundedH2 = new H2("Posts not founded.");
 
     private Tabs sortBar = new Tabs();
     private Tab newestTab = new Tab("Newest");
@@ -69,7 +69,7 @@ public class PostsView extends Composite<Div> implements HasComponents, HasUrlPa
     private int page = 1;
     private Map<String, List<String>> qparams;
 
-    public PostsView() {
+    public GlobeView() {
         contentLayout.setSizeFull();
         contentLayout.addClassName("padding-none");
 
@@ -111,7 +111,7 @@ public class PostsView extends Composite<Div> implements HasComponents, HasUrlPa
         add(contentLayout);
 
         addPostButton.addClickListener(event -> {
-            UI.getCurrent().navigate("posts/add");
+            UI.getCurrent().navigate(EditorPostView.class);
         });
 
         sortBar.addSelectedChangeListener(event -> {
@@ -119,7 +119,7 @@ public class PostsView extends Composite<Div> implements HasComponents, HasUrlPa
                 String selectedTab = event.getSource().getSelectedTab().getLabel();
 
                 if (selectedTab.equals(newestTab.getLabel())) {
-                    UI.getCurrent().navigate("posts", QueryParametersManager.queryParametersBuild(newestTab.getLabel()));
+                    UI.getCurrent().navigate("globe", QueryParametersManager.queryParametersBuild(newestTab.getLabel()));
                 }
             }
         });
@@ -131,7 +131,7 @@ public class PostsView extends Composite<Div> implements HasComponents, HasUrlPa
 
     private void searchFieldProcess() {
         sortBar.setSelectedTab(null);
-        UI.getCurrent().navigate("posts", QueryParametersManager.querySearchParametersBuild(searchPostField.getValue().strip()));
+        UI.getCurrent().navigate("globe", QueryParametersManager.querySearchParametersBuild(searchPostField.getValue().strip()));
     }
 
 
@@ -175,8 +175,8 @@ public class PostsView extends Composite<Div> implements HasComponents, HasUrlPa
         float count = 0;
 
         if (!filter.isEmpty()) {
-            posts = postService.filterPostsByTitleUsingUserId(currentUser.getId(), page, POST_ON_PAGE_LIMIT, filter);
-            count = postService.countPostsByFilterUsingUserId(currentUser.getId(), filter);
+            posts = postService.findPostsByTitle(page, POST_ON_PAGE_LIMIT, filter);
+            count = postService.countPostsByTitle(filter);
         } else if (sortTab.equals(newestTab.getLabel())) {
             posts = postService.sortNewestPosts(page, POST_ON_PAGE_LIMIT);
             count = postService.count();
