@@ -23,4 +23,6 @@ public interface PostDao {
     int count();
     List<Post> findPostsByTag(int offset, int limit, String tag);
     int countByTag(String tag);
+    List<Post> findPostsByUsername(int offset, int limit, String username);
+    int countByUsername(String username);
 }

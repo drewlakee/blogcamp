@@ -23,23 +23,23 @@ public class PostService {
         postDao.setTagsToPost(tags, post);
     }
 
-    public List<Post> sortNewestPostsByUserId(int id, int page, int postsLimitOnPage) {
+    public List<Post> sortNewestByUserId(int id, int page, int postsLimitOnPage) {
         return postDao.sortNewestPostsByUserId(id, FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage);
     }
 
-    public int countPostsByUserId(int id) {
+    public int countByUserId(int id) {
         return postDao.countByUserId(id);
     }
 
-    public List<Post> sortOldestPostsByUserId(int id, int page, int postsLimitOnPage) {
+    public List<Post> sortOldestByUserId(int id, int page, int postsLimitOnPage) {
         return postDao.sortOldestPostsByUserId(id, FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage);
     }
 
-    public List<Post> filterPostsByTitleUsingUserId(int id, int page, int postsLimitOnPage, String filter) {
+    public List<Post> findByTitleUsingUserId(int id, int page, int postsLimitOnPage, String filter) {
         return postDao.findPostsByTitleUsingUserId(id, FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage, filter);
     }
 
-    public int countPostsByFilterUsingUserId(int id, String filter) {
+    public int countByFilterUsingUserId(int id, String filter) {
         return postDao.countByFilterUsingUserId(id, filter);
     }
 
@@ -59,7 +59,7 @@ public class PostService {
         return postDao.findPostsByTitle(FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage, filter);
     }
 
-    public int countPostsByTitle(String filter) {
+    public int countByTitle(String filter) {
         return postDao.countByTitle(filter);
     }
 
@@ -67,7 +67,15 @@ public class PostService {
         return postDao.findPostsByTag(FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage, tag);
     }
 
-    public int countPostsByTag(String tag) {
+    public int countByTag(String tag) {
         return postDao.countByTag(tag);
+    }
+
+    public List<Post> findByUsername(int page, int postsLimitOnPage, String username) {
+        return postDao.findPostsByUsername(FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage, username);
+    }
+
+    public int countByUsername(String username) {
+        return postDao.countByUsername(username);
     }
 }

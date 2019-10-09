@@ -1,5 +1,6 @@
 package ru.aleynikov.blogcamp.component;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
@@ -7,6 +8,7 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.RouterLink;
 import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.Tag;
@@ -14,8 +16,7 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.PostView;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @StyleSheet(StaticResources.POST_STYLES)
 @StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
@@ -51,6 +52,7 @@ public class PostComponent extends Div {
         upperLayout.addClassName("padding-10px");
 
         usernameSpan.addClassName("post-username");
+        usernameSpan.addClassName("user-link");
         usernameSpan.setText(post.getUser().getUsername());
 
         dotFirstSpan.addClassName("grey-light");
@@ -97,6 +99,19 @@ public class PostComponent extends Div {
         contentLayout.add(upperLayout, middleLayout, lowerLayout);
 
         add(contentLayout);
+
+        usernameSpan.addClickListener(event -> {
+            QueryParameters qparams;
+            Map<String, List<String>> qmap = new HashMap<>();
+
+            ArrayList<String> param = new ArrayList<>();
+            param.add(post.getUser().getUsername());
+
+            qmap.put("user", param);
+
+            qparams = new QueryParameters(qmap);
+            UI.getCurrent().navigate("globe", qparams);
+        });
     }
 
     private void addTagsToPost(List<Tag> tags) {

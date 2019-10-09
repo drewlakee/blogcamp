@@ -6,9 +6,7 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -23,13 +21,16 @@ import ru.aleynikov.blogcamp.component.PageSwitcherComponent;
 import ru.aleynikov.blogcamp.component.PostComponent;
 import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.User;
-import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.FilterDataManager;
 import ru.aleynikov.blogcamp.service.PostService;
 import ru.aleynikov.blogcamp.service.QueryParametersManager;
+import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Route(value = "globe", layout = MainLayout.class)
 @PageTitle("Posts - Blogcamp")
@@ -39,18 +40,30 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private UserService userService;
+
     private static final int POST_ON_PAGE_LIMIT = 5;
 
-    private VerticalLayout contentLayout = new VerticalLayout();
+    private VerticalLayout entryContentLayout = new VerticalLayout();
+    private VerticalLayout contentLeftLayout = new VerticalLayout();
+    private VerticalLayout contentRightLayout = new VerticalLayout();
     private VerticalLayout headerLayout = new VerticalLayout();
     private VerticalLayout bodyLayout = new VerticalLayout();
+    private VerticalLayout userInfoLayout = new VerticalLayout();
 
+    private HorizontalLayout contentHorizontalLayout = new HorizontalLayout();
     private HorizontalLayout headerUpLayout = new HorizontalLayout();
     private HorizontalLayout headerLowerLayout = new HorizontalLayout();
 
     private Label homeLabel = new Label("Home");
 
     private Button addPostButton = new Button("Add post");
+
+    private Image userAvatarImage = new Image();
+
+    private Span usernameSpan = new Span();
+    private Span statusSpan = new Span();
 
     private H2 notFoundedH2 = new H2("Posts not founded.");
 
@@ -65,14 +78,14 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
             Map.of("tab", "",
                     "search","",
                     "tag", "",
-                    "page", "1")
+                    "page", "1",
+                    "user", "")
     );
-    private static Set<String> pageParametersKeySet = Set.of("tab", "search", "tag", "page");
+    private static Set<String> pageParametersKeySet = Set.of("tab", "search", "tag", "page", "user");
     private Map<String, List<String>> qparams;
 
     public GlobeView() {
-        contentLayout.setSizeFull();
-        contentLayout.addClassName("padding-none");
+        entryContentLayout.setSizeFull();
 
         headerLayout.setSizeFull();
         headerLayout.addClassName("content-header");
@@ -102,12 +115,41 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
         headerLayout.add(headerUpLayout, headerLowerLayout);
 
+        contentHorizontalLayout.setSizeFull();
+
+        contentLeftLayout.setSizeFull();
+        contentLeftLayout.addClassName("padding-none");
+
         bodyLayout.setSizeFull();
         bodyLayout.addClassName("content-body");
 
-        contentLayout.add(headerLayout, bodyLayout);
+        contentLeftLayout.add(bodyLayout);
 
-        add(contentLayout);
+        contentRightLayout.addClassName("padding-none");
+
+        userInfoLayout.setVisible(false);
+        userInfoLayout.addClassName("padding-none");
+        userInfoLayout.addClassName("user-detail-block");
+
+        userAvatarImage.addClassName("avatar-detail");
+
+        usernameSpan.addClassName("username-detail");
+        usernameSpan.addClassName("padding-l-10px");
+
+        statusSpan.addClassName("fs-12px");
+        statusSpan.addClassName("padding-l-10px");
+        statusSpan.addClassName("padding-b-10px");
+        statusSpan.addClassName("margin-none");
+
+        userInfoLayout.add(userAvatarImage, usernameSpan, statusSpan);
+
+        contentRightLayout.add(userInfoLayout);
+
+        contentHorizontalLayout.add(contentLeftLayout, contentRightLayout);
+
+        entryContentLayout.add(headerLayout, contentHorizontalLayout);
+
+        add(entryContentLayout);
 
         addPostButton.addClickListener(event -> {
             UI.getCurrent().navigate(EditorPostView.class);
@@ -143,6 +185,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
+        userInfoLayout.setVisible(false);
         setQueryParams(qparams);
 
         if (sortBar.getSelectedTab() != null) {
@@ -150,18 +193,21 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
                 sortBar.setSelectedTab(null);
             } else if (qparams.containsKey("tag")) {
                 sortBar.setSelectedTab(null);
+            } else if (qparams.containsKey("user")) {
+                sortBar.setSelectedTab(null);
             } else {
                 sortBar.setSelectedTab(newestTab);
                 pageParametersMap.replace("tab", newestTab.getLabel().toLowerCase());
             }
         }
 
-        postsBrowserBuild(
+        buildPostsBrowser(
                 Integer.parseInt(pageParametersMap.get("page").toString()),
                 pageParametersMap.get("tab").toString(),
                 event.getLocation().getPath(),
                 pageParametersMap.get("search").toString(),
-                pageParametersMap.get("tag").toString()
+                pageParametersMap.get("tag").toString(),
+                pageParametersMap.get("user").toString()
         );
     }
 
@@ -180,7 +226,15 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
         }
     }
 
-    private void postsBrowserBuild(int page, String sortTab, String locationPath, String search, String tag) {
+    private void buildUserDetailInfo(User user) {
+        userInfoLayout.setVisible(true);
+        userAvatarImage.setAlt("avatar");
+        userAvatarImage.setSrc(user.getAvatar());
+        usernameSpan.setText(user.getUsername());
+        statusSpan.setText(user.getStatus());
+    }
+
+    private void buildPostsBrowser(int page, String sortTab, String locationPath, String search, String tag, String user) {
         int pageLimit;
         List<Post> posts;
         float count;
@@ -190,12 +244,18 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
         if (!search.isEmpty()) {
             posts = postService.findPostsByTitle(page, POST_ON_PAGE_LIMIT, search);
-            count = postService.countPostsByTitle(search);
+            count = postService.countByTitle(search);
             customQueryParams.put("search", search);
         } else if (!tag.isEmpty()) {
             posts = postService.findPostsByTag(page, POST_ON_PAGE_LIMIT, tag);
-            count = postService.countPostsByTag(tag);
+            count = postService.countByTag(tag);
             customQueryParams.put("tag", tag);
+        } else if (!user.isEmpty()) {
+            posts = postService.findByUsername(page, POST_ON_PAGE_LIMIT, user);
+            count = postService.countByUsername(user);
+            User foundedUser = userService.findUserByUsername(user);
+            buildUserDetailInfo(foundedUser);
+            customQueryParams.put("user", user);
         } else {
             posts = postService.sortNewestPosts(page, POST_ON_PAGE_LIMIT);
             count = postService.count();

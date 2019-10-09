@@ -10,7 +10,6 @@ import ru.aleynikov.blogcamp.dao.PostDao;
 import ru.aleynikov.blogcamp.mapper.PostRowMapper;
 import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.Tag;
-import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.TagService;
 
@@ -233,6 +232,31 @@ public class PostDaoImpl implements PostDao {
     public int countByTag(String tag) {
         String query = "SELECT COUNT(*) FROM (post_to_tag right join post using (post_id)) WHERE tag_id = (SELECT tag_id FROM tag WHERE name = ?)";
         Object[] qparams = new Object[] {tag};
+        int count;
+
+        count = jdbc.queryForObject(query, qparams, Integer.class);
+
+        return count;
+    }
+
+    @Override
+    public List<Post> findPostsByUsername(int offset, int limit, String username) {
+        String query = "SELECT * FROM post WHERE \"user\" = (SELECT user_id FROM usr WHERE username = ?) ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
+        Object[] qparams = new Object[] {username, offset, limit};
+        List<Post> posts = null;
+
+        try {
+            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+            posts = jdbc.query(query, qparams, postRowMapper);
+        } catch (EmptyResultDataAccessException e) {}
+
+        return posts;
+    }
+
+    @Override
+    public int countByUsername(String username) {
+        String query = "SELECT COUNT(*) FROM post WHERE \"user\" = (SELECT user_id FROM usr WHERE username = ?)";
+        Object[] qparams = new Object[] {username};
         int count;
 
         count = jdbc.queryForObject(query, qparams, Integer.class);

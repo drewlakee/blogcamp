@@ -23,6 +23,10 @@
     font-size: 16px;
 }
 
+.user-link {
+    color: #1676f3;
+}
+
 .user-link:hover {
     text-decoration: none;
     color: #4a9ef2;

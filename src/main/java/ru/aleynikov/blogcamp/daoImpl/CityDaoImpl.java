@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.dao.CityDao;
-import ru.aleynikov.blogcamp.model.City;
 import ru.aleynikov.blogcamp.mapper.CityRowMapper;
+import ru.aleynikov.blogcamp.model.City;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
 import java.util.List;

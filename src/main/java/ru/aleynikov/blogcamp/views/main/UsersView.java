@@ -143,7 +143,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
             }
         }
 
-        tagsBrowserBuild(
+        buildUsersBrowser(
                 Integer.parseInt(pageParametersMap.get("page").toString()),
                 pageParametersMap.get("tab").toString(),
                 event.getLocation().getPath(),
@@ -166,7 +166,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
         }
     }
 
-    private void tagsBrowserBuild(int page, String sortTab, String locationPath, String filter) {
+    private void buildUsersBrowser(int page, String sortTab, String locationPath, String filter) {
         int rowLimit = 3;
         int pageLimit;
         int counter = 0;

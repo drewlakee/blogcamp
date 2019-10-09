@@ -1,7 +1,6 @@
 package ru.aleynikov.blogcamp.views;
 
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.router.*;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;

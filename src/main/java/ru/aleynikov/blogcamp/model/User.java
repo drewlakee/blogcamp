@@ -6,9 +6,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.sql.Timestamp;
-import java.util.*;
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Setter
 @Getter

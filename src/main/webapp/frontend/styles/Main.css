@@ -198,3 +198,24 @@ body {
 .border-b-light-grey {
     border-bottom: 1px solid #dbdcdc;
 }
+
+.user-detail-block {
+    border: 1px solid #e1e4e8;
+    border-radius: 3px;
+}
+
+.username-detail {
+    font-weight: 700;
+    font-size: 24px;
+}
+
+.avatar-detail {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    width: 275px;
+    height: 270px;
+}
+
+.fs-12px {
+    font-size: 12px;
+}

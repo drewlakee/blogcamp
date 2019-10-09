@@ -151,7 +151,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
             }
         }
 
-        tagsBrowserBuild(
+        buildTagsBrowser(
                 Integer.parseInt(pageParametersMap.get("page").toString()),
                 pageParametersMap.get("tab").toString(),
                 event.getLocation().getPath(),
@@ -174,7 +174,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         }
     }
 
-    private void tagsBrowserBuild(int page, String sortTab, String locationPath, String search) {
+    private void buildTagsBrowser(int page, String sortTab, String locationPath, String search) {
         int rowLimit = 4;
         int pageLimit;
         int counter = 0;

@@ -7,8 +7,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.dao.UserDao;
-import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.mapper.UserRowMapper;
+import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
 import java.sql.Timestamp;

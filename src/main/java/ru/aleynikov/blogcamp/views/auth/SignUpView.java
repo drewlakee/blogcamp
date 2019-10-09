@@ -28,7 +28,6 @@ import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.RedditAvatars;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;

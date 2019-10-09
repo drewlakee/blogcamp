@@ -2,9 +2,7 @@ package ru.aleynikov.blogcamp.dao;
 
 import ru.aleynikov.blogcamp.model.Tag;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public interface TagDao {
 
