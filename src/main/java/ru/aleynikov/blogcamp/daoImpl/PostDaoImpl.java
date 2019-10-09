@@ -192,7 +192,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public List<Post> findPostsByTitle(int offset, int limit, String filter) {
-        String query = "SELECT * FROM post WHERE LOWER(title) LIKE LOWER(?) OFFSET ? LIMIT ?";
+        String query = "SELECT * FROM post WHERE LOWER(title) LIKE LOWER(?) ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {"%"+filter+"%", offset, limit};
         List<Post> posts = null;
 
@@ -217,7 +217,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public List<Post> findPostsByTag(int offset, int limit, String tag) {
-        String query = "SELECT * FROM (post_to_tag right join post using (post_id)) WHERE tag_id = (SELECT tag_id FROM tag WHERE name = ?) OFFSET ? LIMIT ?;";
+        String query = "SELECT * FROM (post_to_tag right join post using (post_id)) WHERE tag_id = (SELECT tag_id FROM tag WHERE name = ?) ORDER BY (created_date) DESC  OFFSET ? LIMIT ?;";
         Object[] qparams = new Object[] {tag, offset, limit};
         List<Post> posts = null;
 

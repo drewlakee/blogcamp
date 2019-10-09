@@ -29,8 +29,7 @@ import ru.aleynikov.blogcamp.service.PostService;
 import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Route(value = "globe", layout = MainLayout.class)
 @PageTitle("Posts - Blogcamp")
@@ -64,10 +63,13 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
     private Icon searchPostFieldIcon = new Icon(VaadinIcon.SEARCH);
 
-    private String sortTab;
-    private String filter;
-    private String tag;
-    private int page = 1;
+    private HashMap<String, Object>  pageParametersMap = new HashMap<>(
+            Map.of("tab", "",
+                    "search","",
+                    "tag", "",
+                    "page", 1)
+    );
+    private static Set<String> pageParametersKeySet = Set.of("tab", "search", "tag", "page");
     private Map<String, List<String>> qparams;
 
     public GlobeView() {
@@ -89,7 +91,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
         headerLowerLayout.setWidth("100%");
 
-        searchPostField.setPlaceholder("Filter by post title");
+        searchPostField.setPlaceholder("Search by post title");
         searchPostField.setPrefixComponent(searchPostFieldIcon);
         searchPostField.setClearButtonVisible(true);
         headerLowerLayout.setVerticalComponentAlignment(FlexComponent.Alignment.END, searchPostField);
@@ -97,8 +99,6 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
         sortBar.add(newestTab);
         sortBar.addClassName("rs-cmp");
         sortBar.addClassName("tabs-bar");
-
-        sortTab = sortBar.getSelectedTab().getLabel();
 
         headerLowerLayout.add(searchPostField, sortBar);
 
@@ -118,9 +118,11 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
         sortBar.addSelectedChangeListener(event -> {
             if (sortBar.getSelectedTab() != null) {
                 String selectedTab = event.getSource().getSelectedTab().getLabel();
+                HashMap<String, Object> qparams = new HashMap<>();
 
                 if (selectedTab.equals(newestTab.getLabel())) {
-                    UI.getCurrent().navigate("globe", QueryParametersManager.queryParametersBuild(newestTab.getLabel()));
+                    qparams.put("tab", newestTab.getLabel().toLowerCase());
+                    UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.qparamsBuild(qparams)));
                 }
             }
         });
@@ -132,66 +134,73 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
     private void searchFieldProcess() {
         sortBar.setSelectedTab(null);
-        UI.getCurrent().navigate("globe", QueryParametersManager.querySearchParametersBuild(searchPostField.getValue().strip()));
-    }
 
+        HashMap<String, Object> customQueryParams = new HashMap<>();
+        customQueryParams.put("search", searchPostField.getValue().strip());
+        UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.qparamsBuild(customQueryParams)));
+    }
 
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
         currentUser = SecurityUtils.getPrincipal();
-        queryParametersSetter();
+        setQueryParams(qparams);
 
         if (sortBar.getSelectedTab() != null) {
             if (qparams.containsKey("search")) {
                 sortBar.setSelectedTab(null);
             } else if (qparams.containsKey("tag")) {
                 sortBar.setSelectedTab(null);
-            } else if (sortTab.equals(newestTab.getLabel())) {
+            } else {
                 sortBar.setSelectedTab(newestTab);
+                pageParametersMap.replace("tab", newestTab.getLabel().toLowerCase());
             }
         }
 
-        if (qparams.containsKey("search")) {
-            postsBrowserBuild(page, sortTab, event.getLocation().getPath(), filter, "");
-        } else if (qparams.containsKey("tag"))
-            postsBrowserBuild(page, sortTab, event.getLocation().getPath(), "", tag);
-        else
-            postsBrowserBuild(page, sortTab, event.getLocation().getPath(), "", "");
+        postsBrowserBuild(
+                Integer.parseInt(pageParametersMap.get("page").toString()),
+                pageParametersMap.get("tab").toString(),
+                event.getLocation().getPath(),
+                pageParametersMap.get("search").toString(),
+                pageParametersMap.get("tag").toString()
+        );
     }
 
-    public void queryParametersSetter() {
-        if (qparams.containsKey("page")) {
-            page = Integer.parseInt(qparams.get("page").get(0));
+    private void setQueryParams(Map<String, List<String>> qparams) {
+        for (String parameter : pageParametersKeySet) {
+            if (!parameter.equals("page")) {
+                pageParametersMap.replace(parameter, "");
+            } else
+                pageParametersMap.replace(parameter, "1");
         }
 
-        if (qparams.containsKey("tab")) {
-            sortTab = qparams.get("tab").get(0);
-        }
-
-        if (qparams.containsKey("search")) {
-            filter = qparams.get("search").get(0);
-        }
-
-        if (qparams.containsKey("tag")) {
-            tag = qparams.get("tag").get(0);
+        for (String parameter : pageParametersKeySet) {
+            if (qparams.containsKey(parameter)) {
+                pageParametersMap.replace(parameter, qparams.get(parameter).get(0));
+            }
         }
     }
 
-    private void postsBrowserBuild(int page, String sortTab, String locationPath, String filter, String tag) {
+    private void postsBrowserBuild(int page, String sortTab, String locationPath, String search, String tag) {
         int pageLimit;
-        List<Post> posts = null;
-        float count = 0;
+        List<Post> posts;
+        float count;
+        HashMap<String, Object> customQueryParams = new HashMap<>();
 
-        if (!filter.isEmpty()) {
-            posts = postService.findPostsByTitle(page, POST_ON_PAGE_LIMIT, filter);
-            count = postService.countPostsByTitle(filter);
+        customQueryParams.put("page", page);
+
+        if (!search.isEmpty()) {
+            posts = postService.findPostsByTitle(page, POST_ON_PAGE_LIMIT, search);
+            count = postService.countPostsByTitle(search);
+            customQueryParams.put("search", search);
         } else if (!tag.isEmpty()) {
             posts = postService.findPostsByTag(page, POST_ON_PAGE_LIMIT, tag);
             count = postService.countPostsByTag(tag);
-        } else if (sortTab.equals(newestTab.getLabel())) {
+            customQueryParams.put("tag", tag);
+        } else {
             posts = postService.sortNewestPosts(page, POST_ON_PAGE_LIMIT);
             count = postService.count();
+            customQueryParams.put("tab", sortTab);
         }
 
         bodyLayout.removeAll();
@@ -204,7 +213,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
             pageLimit = FilterDataManager.pageLimit(count, POST_ON_PAGE_LIMIT);
 
-            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.queryParametersBuild(page, sortTab)));
+            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.qparamsBuild(customQueryParams)));
         } else {
             bodyLayout.add(notFoundedH2);
         }

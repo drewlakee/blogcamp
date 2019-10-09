@@ -59,7 +59,16 @@ public class QueryParametersManager {
         return qmap;
     }
 
-    public static Map<String, List<String>> queryParametersBuild(int page) {
-        return queryParametersBuild(page, null);
+    public static Map<String, List<String>> qparamsBuild(HashMap<String, Object> parameters) {
+        Map<String, List<String>> qmap = new HashMap<>();
+        List<String> param;
+
+        for (String key : parameters.keySet()) {
+            param = new ArrayList<>();
+            param.add(parameters.get(key).toString());
+            qmap.put(key, param);
+        }
+
+        return qmap;
     }
 }

@@ -100,8 +100,6 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
         bodyLayout.setSizeFull();
         bodyLayout.addClassName("content-body");
 
-        postImage.addClassName("post-image");
-        postImage.setAlt("post image");
         bodyLayout.setHorizontalComponentAlignment(FlexComponent.Alignment.CENTER, postImage);
 
         htmlDiv.setId("html-block");
@@ -172,7 +170,11 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
             createdDateSpan.setText("created " + createdDateFormat.format(currentPost.getCreatedDate()));
             createdDateSpan.setTitle(detailCreatedDateFormat.format(currentPost.getCreatedDate()));
 
-            postImage.setSrc(currentPost.getIntroImage());
+            if (currentPost.getIntroImage() != null) {
+                postImage.addClassName("post-image");
+                postImage.setAlt("post image");
+                postImage.setSrc(currentPost.getIntroImage());
+            }
 
             JavaScriptUtils.innerHtml(htmlDiv.getId().get(), currentPost.getText());
 
