@@ -28,7 +28,7 @@ public class PostService {
     }
 
     public int countPostsByUserId(int id) {
-        return postDao.countPostsByUserId(id);
+        return postDao.countByUserId(id);
     }
 
     public List<Post> sortOldestPostsByUserId(int id, int page, int postsLimitOnPage) {
@@ -40,7 +40,7 @@ public class PostService {
     }
 
     public int countPostsByFilterUsingUserId(int id, String filter) {
-        return postDao.countPostsByFilterUsingUserId(id, filter);
+        return postDao.countByFilterUsingUserId(id, filter);
     }
 
     public Post findPostById(int id) {
@@ -61,5 +61,13 @@ public class PostService {
 
     public int countPostsByTitle(String filter) {
         return postDao.countByTitle(filter);
+    }
+
+    public List<Post> findPostsByTag(int page, int postsLimitOnPage, String tag) {
+        return postDao.findPostsByTag(FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage, tag);
+    }
+
+    public int countPostsByTag(String tag) {
+        return postDao.countByTag(tag);
     }
 }

@@ -65,7 +65,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public List<Tag> searchByNameTagsList(int offset, int limit, String filter) {
+    public List<Tag> findByNameTagsList(int offset, int limit, String filter) {
         String query = "SELECT * FROM tag WHERE LOWER(name) LIKE LOWER(?) OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] { "%"+filter+"%", offset, limit};
         List<Tag> tagList;

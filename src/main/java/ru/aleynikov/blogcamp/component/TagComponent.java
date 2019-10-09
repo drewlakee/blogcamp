@@ -1,15 +1,18 @@
 package ru.aleynikov.blogcamp.component;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.router.QueryParameters;
 import ru.aleynikov.blogcamp.model.Tag;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.views.main.GlobeView;
 
 import java.text.SimpleDateFormat;
-import java.util.Locale;
+import java.util.*;
 
 @StyleSheet(StaticResources.TAG_COMPONENT_STYLES)
 public class TagComponent extends Div {
@@ -59,6 +62,19 @@ public class TagComponent extends Div {
 
         } else
             onlyTagBuilder(tag);
+
+        tagNameSpan.addClickListener(event -> {
+            QueryParameters qparams;
+            Map<String, List<String>> qmap = new HashMap<>();
+
+            ArrayList<String> param = new ArrayList<>();
+            param.add(tag.getName());
+
+            qmap.put("tag", param);
+
+            qparams = new QueryParameters(qmap);
+            UI.getCurrent().navigate("globe", qparams);
+        });
     }
 
     private void onlyTagBuilder(Tag tag) {

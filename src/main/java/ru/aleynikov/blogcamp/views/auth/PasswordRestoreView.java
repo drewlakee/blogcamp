@@ -14,8 +14,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.aleynikov.blogcamp.daoImpl.UserDaoImpl;
@@ -181,7 +179,7 @@ public class PasswordRestoreView extends HorizontalLayout {
         changePassButton.addClickShortcut(Key.ENTER).setEventPropagationAllowed(!continueButton.isVisible());
         changePassButton.addClickListener(clickEvent -> {
             if (isNewPasswordValid()) {
-                userDao.updateUserPassword(usernameField.getValue().strip(), encoder.encode(newPassField.getValue().strip()));
+                userDao.updatePasswordByUsername(usernameField.getValue().strip(), encoder.encode(newPassField.getValue().strip()));
                 UI.getCurrent().getUI().ifPresent(ui -> ui.navigate("login"));
             }
         });
@@ -200,7 +198,7 @@ public class PasswordRestoreView extends HorizontalLayout {
 
     private boolean isAccountExist() {
         if (existingAccount == null)
-            existingAccount = userDao.findUserByUsername(usernameField.getValue().strip());
+            existingAccount = userDao.findByUsername(usernameField.getValue().strip());
 
         if (existingAccount != null) {
             passRestoreErrorLayout.setVisible(false);

@@ -16,15 +16,15 @@ public class UserService {
     private UserDaoImpl userDao;
 
     public List<User> getSortedByUsernameUserList(int page, int usersOnPageLimit) {
-        return userDao.sortByUsernameAscUserList(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit);
+        return userDao.sortAscByUsername(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit);
     }
 
     public List<User> getFilterByUsernameUsersList(int page, int usersOnPageLimit, String filter) {
-        return userDao.findByUsernameUserList(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit, filter);
+        return userDao.findByUsername(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit, filter);
     }
 
     public int getFilterUsersCount(String filter) {
-        return userDao.countFilterByUsername(filter);
+        return userDao.countByUsername(filter);
     }
 
     public int getAllUsersCount() {
@@ -32,11 +32,11 @@ public class UserService {
     }
 
     public User findUserByUsername(String username) {
-        return userDao.findUserByUsername(username);
+        return userDao.findByUsername(username);
     }
 
     public User findUserById(int id) {
-        return userDao.findUserById(id);
+        return userDao.findById(id);
     }
 
     public void saveUser(Map<String, Object> newUser) {
@@ -53,18 +53,18 @@ public class UserService {
             infoForUpdate.put("city", null);
         }
 
-        userDao.updateUserAboutInfo(infoForUpdate);
+        userDao.updateProfile(infoForUpdate);
     }
 
     public void updateUserSecret(String secretQuestion, String secretAnswer, int userId) {
-        userDao.updateUserSecret(secretQuestion, secretAnswer, userId);
+        userDao.updateSecret(secretQuestion, secretAnswer, userId);
     }
 
     public void updateUserPassword(String username, String newPassword) {
-        userDao.updateUserPassword(username, newPassword);
+        userDao.updatePasswordByUsername(username, newPassword);
     }
 
     public void updateUserAvatarByUserId(String avatar, int id) {
-        userDao.updateUserAvatarByUserId(avatar, id);
+        userDao.updateAvatarByUserId(avatar, id);
     }
 }

@@ -117,7 +117,7 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public int countPostsByUserId(int id) {
+    public int countByUserId(int id) {
         String query = "SELECT COUNT(*) FROM post WHERE \"user\" = ?";
         Object[] qparams = new Object[] {id};
         int count;
@@ -166,7 +166,7 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public int countPostsByFilterUsingUserId(int id, String filter) {
+    public int countByFilterUsingUserId(int id, String filter) {
         String query = "SELECT COUNT(*) FROM post WHERE \"user\" = ? AND LOWER(title) LIKE LOWER(?)";
         Object[] qparams = new Object[] {id, "%"+filter+"%"};
         int count;
@@ -208,6 +208,31 @@ public class PostDaoImpl implements PostDao {
     public int countByTitle(String filter) {
         String query = "SELECT COUNT(*) FROM post WHERE LOWER(title) LIKE LOWER(?)";
         Object[] qparams = new Object[] {"%"+filter+"%"};
+        int count;
+
+        count = jdbc.queryForObject(query, qparams, Integer.class);
+
+        return count;
+    }
+
+    @Override
+    public List<Post> findPostsByTag(int offset, int limit, String tag) {
+        String query = "SELECT * FROM (post_to_tag right join post using (post_id)) WHERE tag_id = (SELECT tag_id FROM tag WHERE name = ?) OFFSET ? LIMIT ?;";
+        Object[] qparams = new Object[] {tag, offset, limit};
+        List<Post> posts = null;
+
+        try {
+            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+            posts = jdbc.query(query, qparams, postRowMapper);
+        } catch (EmptyResultDataAccessException e) {}
+
+        return posts;
+    }
+
+    @Override
+    public int countByTag(String tag) {
+        String query = "SELECT COUNT(*) FROM (post_to_tag right join post using (post_id)) WHERE tag_id = (SELECT tag_id FROM tag WHERE name = ?)";
+        Object[] qparams = new Object[] {tag};
         int count;
 
         count = jdbc.queryForObject(query, qparams, Integer.class);

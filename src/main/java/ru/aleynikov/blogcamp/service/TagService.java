@@ -22,7 +22,7 @@ public class TagService {
     }
 
     public List<Tag> getFilterTagList(int page, int tagsOnPageLimit, String filter) {
-        return tagDao.searchByNameTagsList(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit, filter);
+        return tagDao.findByNameTagsList(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit, filter);
     }
 
     public int getFilterTagsCount(String filter) {

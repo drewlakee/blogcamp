@@ -8,15 +8,15 @@ import java.util.Map;
 
 public interface UserDao {
 
-    User findUserByUsername(String username);
-    User findUserById(int id);
+    User findByUsername(String username);
+    User findById(int id);
     void saveUser(Map<String, Object> user);
-    void updateUserPassword(String username, String newPassword);
-    List<User> sortByUsernameAscUserList(int offset, int limit);
-    List<User> findByUsernameUserList(int offset, int limit, String filter);
+    void updatePasswordByUsername(String username, String newPassword);
+    List<User> sortAscByUsername(int offset, int limit);
+    List<User> findByUsername(int offset, int limit, String filter);
     int count();
-    int countFilterByUsername(String filter);
-    void updateUserAboutInfo(HashMap<String, Object> infoForUpdate);
-    void updateUserSecret(String secretQuestion, String secretAnswer, int userId);
-    void updateUserAvatarByUserId(String avatar, int id);
+    int countByUsername(String filter);
+    void updateProfile(HashMap<String, Object> infoForUpdate);
+    void updateSecret(String secretQuestion, String secretAnswer, int userId);
+    void updateAvatarByUserId(String avatar, int id);
 }

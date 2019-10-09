@@ -212,7 +212,7 @@ public class EditorPostView extends Composite<Div> implements HasComponents {
         boolean isTagsValid = !tagsField.isInvalid() && !tagsField.isEmpty();
         int tagsLength = tagsField.getValue().split(" ").length;
         boolean isTagsLengthValid = tagsLength > 0 && tagsLength < 6;
-        boolean isTagsValidValue = Arrays.stream(tagsField.getValue().split(" ")).allMatch((x) -> x.length() > 1);
+        boolean isTagsValidValue = Arrays.stream(tagsField.getValue().split(" ")).allMatch((x) -> x.length() > 1 && x.length() < 21);
         boolean isImageUploadValid = !imageLoadGroup.isEmpty();
 
         if (!isTitleValid)

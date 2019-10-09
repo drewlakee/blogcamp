@@ -13,7 +13,7 @@ public interface TagDao {
     List<Tag> sortByPostCountTagsList(int offset, int limit);
     List<Tag> sortByCreatedDateNewestTagsList(int offset, int limit);
     int count();
-    List<Tag> searchByNameTagsList(int offset, int limit, String filter);
+    List<Tag> findByNameTagsList(int offset, int limit, String filter);
     int countByName(String filter);
     List<Tag> findTagsByPostId(int id);
 }

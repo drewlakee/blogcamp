@@ -66,6 +66,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
     private String sortTab;
     private String filter;
+    private String tag;
     private int page = 1;
     private Map<String, List<String>> qparams;
 
@@ -144,15 +145,19 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
         if (sortBar.getSelectedTab() != null) {
             if (qparams.containsKey("search")) {
                 sortBar.setSelectedTab(null);
+            } else if (qparams.containsKey("tag")) {
+                sortBar.setSelectedTab(null);
             } else if (sortTab.equals(newestTab.getLabel())) {
                 sortBar.setSelectedTab(newestTab);
             }
         }
 
         if (qparams.containsKey("search")) {
-            postsBrowserBuild(page, sortTab, event.getLocation().getPath(), filter);
-        } else
-            postsBrowserBuild(page, sortTab, event.getLocation().getPath(), "");
+            postsBrowserBuild(page, sortTab, event.getLocation().getPath(), filter, "");
+        } else if (qparams.containsKey("tag"))
+            postsBrowserBuild(page, sortTab, event.getLocation().getPath(), "", tag);
+        else
+            postsBrowserBuild(page, sortTab, event.getLocation().getPath(), "", "");
     }
 
     public void queryParametersSetter() {
@@ -167,9 +172,13 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
         if (qparams.containsKey("search")) {
             filter = qparams.get("search").get(0);
         }
+
+        if (qparams.containsKey("tag")) {
+            tag = qparams.get("tag").get(0);
+        }
     }
 
-    private void postsBrowserBuild(int page, String sortTab, String locationPath, String filter) {
+    private void postsBrowserBuild(int page, String sortTab, String locationPath, String filter, String tag) {
         int pageLimit;
         List<Post> posts = null;
         float count = 0;
@@ -177,6 +186,9 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
         if (!filter.isEmpty()) {
             posts = postService.findPostsByTitle(page, POST_ON_PAGE_LIMIT, filter);
             count = postService.countPostsByTitle(filter);
+        } else if (!tag.isEmpty()) {
+            posts = postService.findPostsByTag(page, POST_ON_PAGE_LIMIT, tag);
+            count = postService.countPostsByTag(tag);
         } else if (sortTab.equals(newestTab.getLabel())) {
             posts = postService.sortNewestPosts(page, POST_ON_PAGE_LIMIT);
             count = postService.count();
