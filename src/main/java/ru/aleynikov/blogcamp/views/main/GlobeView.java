@@ -41,8 +41,6 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
     private static final int POST_ON_PAGE_LIMIT = 5;
 
-    private User currentUser;
-
     private VerticalLayout contentLayout = new VerticalLayout();
     private VerticalLayout headerLayout = new VerticalLayout();
     private VerticalLayout bodyLayout = new VerticalLayout();
@@ -59,7 +57,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
     private Tabs sortBar = new Tabs();
     private Tab newestTab = new Tab("Newest");
 
-    private TextField searchPostField = new TextField();
+    private TextField searchField = new TextField();
 
     private Icon searchPostFieldIcon = new Icon(VaadinIcon.SEARCH);
 
@@ -67,7 +65,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
             Map.of("tab", "",
                     "search","",
                     "tag", "",
-                    "page", 1)
+                    "page", "1")
     );
     private static Set<String> pageParametersKeySet = Set.of("tab", "search", "tag", "page");
     private Map<String, List<String>> qparams;
@@ -91,16 +89,16 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
         headerLowerLayout.setWidth("100%");
 
-        searchPostField.setPlaceholder("Search by post title");
-        searchPostField.setPrefixComponent(searchPostFieldIcon);
-        searchPostField.setClearButtonVisible(true);
-        headerLowerLayout.setVerticalComponentAlignment(FlexComponent.Alignment.END, searchPostField);
+        searchField.setPlaceholder("Search by post title");
+        searchField.setPrefixComponent(searchPostFieldIcon);
+        searchField.setClearButtonVisible(true);
+        headerLowerLayout.setVerticalComponentAlignment(FlexComponent.Alignment.END, searchField);
 
         sortBar.add(newestTab);
         sortBar.addClassName("rs-cmp");
         sortBar.addClassName("tabs-bar");
 
-        headerLowerLayout.add(searchPostField, sortBar);
+        headerLowerLayout.add(searchField, sortBar);
 
         headerLayout.add(headerUpLayout, headerLowerLayout);
 
@@ -118,32 +116,33 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
         sortBar.addSelectedChangeListener(event -> {
             if (sortBar.getSelectedTab() != null) {
                 String selectedTab = event.getSource().getSelectedTab().getLabel();
-                HashMap<String, Object> qparams = new HashMap<>();
+                HashMap<String, Object> customQueryParams = new HashMap<>();
 
                 if (selectedTab.equals(newestTab.getLabel())) {
-                    qparams.put("tab", newestTab.getLabel().toLowerCase());
-                    UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.qparamsBuild(qparams)));
+                    customQueryParams.put("tab", newestTab.getLabel().toLowerCase());
+                    UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.qparamsBuild(customQueryParams)));
                 }
             }
         });
 
         searchPostFieldIcon.addClickListener(event -> searchFieldProcess());
 
-        searchPostField.addKeyPressListener(Key.ENTER, keyEventListener -> searchFieldProcess());
+        searchField.addKeyPressListener(Key.ENTER, keyEventListener -> searchFieldProcess());
     }
 
     private void searchFieldProcess() {
-        sortBar.setSelectedTab(null);
-
-        HashMap<String, Object> customQueryParams = new HashMap<>();
-        customQueryParams.put("search", searchPostField.getValue().strip());
-        UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.qparamsBuild(customQueryParams)));
+        if (!searchField.isEmpty()) {
+            sortBar.setSelectedTab(null);
+            HashMap<String, Object> customQueryParams = new HashMap<>();
+            customQueryParams.put("search", searchField.getValue().strip());
+            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.qparamsBuild(customQueryParams)));
+        } else
+            UI.getCurrent().navigate("globe");
     }
 
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
-        currentUser = SecurityUtils.getPrincipal();
         setQueryParams(qparams);
 
         if (sortBar.getSelectedTab() != null) {

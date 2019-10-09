@@ -26,8 +26,10 @@ import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Route(value = "users", layout = MainLayout.class)
 @PageTitle("Users - Blogcamp")
@@ -46,7 +48,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
     private HorizontalLayout headerUpLayout = new HorizontalLayout();
     private HorizontalLayout headerLowerLayout = new HorizontalLayout();
 
-    private TextField searchUserField = new TextField();
+    private TextField searchField = new TextField();
 
     private Icon searchUserFieldIcon = new Icon(VaadinIcon.SEARCH);
 
@@ -55,11 +57,14 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
     private H2 notFoundedH2 = new H2("Users not founded.");
 
     private Tabs sortBar = new Tabs();
-    private Tab nameTab = new Tab("A - Z");
+    private Tab nameTab = new Tab("A-Z");
 
-    private int page = 1;
-    private String sortTab;
-    private String filter;
+    private HashMap<String, Object> pageParametersMap = new HashMap<>(
+            Map.of("tab", "",
+                    "search","",
+                    "page", "1")
+    );
+    private static Set<String> pageParametersKeySet = Set.of("tab", "search", "page");
     private Map<String, List<String>> qparams;
 
     public UsersView() {
@@ -76,18 +81,16 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
 
         headerLowerLayout.setSizeFull();
 
-        searchUserField.setPlaceholder("Filter by user");
-        searchUserField.setPrefixComponent(searchUserFieldIcon);
-        searchUserField.setClearButtonVisible(true);
-        headerLowerLayout.setVerticalComponentAlignment(FlexComponent.Alignment.END, searchUserField);
+        searchField.setPlaceholder("Filter by user");
+        searchField.setPrefixComponent(searchUserFieldIcon);
+        searchField.setClearButtonVisible(true);
+        headerLowerLayout.setVerticalComponentAlignment(FlexComponent.Alignment.END, searchField);
 
         sortBar.addClassName("rs-cmp");
         sortBar.addClassName("tabs-bar");
         sortBar.add(nameTab);
 
-        sortTab = sortBar.getSelectedTab().getLabel();
-
-        headerLowerLayout.add(searchUserField, sortBar);
+        headerLowerLayout.add(searchField, sortBar);
 
         headerLayout.addClassName("content-header");
         headerLayout.add(headerUpLayout, headerLowerLayout);
@@ -102,53 +105,64 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
         sortBar.addSelectedChangeListener(event -> {
             if (sortBar.getSelectedTab() != null) {
                 String selectedTab = event.getSource().getSelectedTab().getLabel();
+                HashMap<String, Object> customQueryParams = new HashMap<>();
 
                 if (selectedTab.equals(nameTab.getLabel())) {
-                    UI.getCurrent().navigate("users", QueryParametersManager.queryParametersBuild(nameTab.getLabel()));
+                    customQueryParams.put("tab", nameTab.getLabel().toLowerCase());
+                    UI.getCurrent().navigate("users", new QueryParameters(QueryParametersManager.qparamsBuild(customQueryParams)));
                 }
             }
         });
 
-        searchUserField.addKeyPressListener(Key.ENTER, keyEventListener -> searchFieldProcess());
+        searchField.addKeyPressListener(Key.ENTER, keyEventListener -> searchFieldProcess());
 
         searchUserFieldIcon.addClickListener(event -> searchFieldProcess());
     }
 
     private void searchFieldProcess() {
-        sortBar.setSelectedTab(null);
-        UI.getCurrent().navigate("users", QueryParametersManager.querySearchParametersBuild(searchUserField.getValue().strip()));
+        if (!searchField.isEmpty()) {
+            sortBar.setSelectedTab(null);
+            HashMap<String, Object> customQueryParams = new HashMap<>();
+            customQueryParams.put("search", searchField.getValue().strip());
+            UI.getCurrent().navigate("users", new QueryParameters(QueryParametersManager.qparamsBuild(customQueryParams)));
+        } else
+            UI.getCurrent().navigate("users");
     }
 
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
-        queryParametersSetter();
+        setQueryParams(qparams);
 
         if (sortBar.getSelectedTab() != null) {
             if (qparams.containsKey("search")) {
                 sortBar.setSelectedTab(null);
-            } else if (sortTab.equals(nameTab.getLabel())) {
+            } else {
                 sortBar.setSelectedTab(nameTab);
+                pageParametersMap.replace("tab", nameTab.getLabel().toLowerCase());
             }
         }
 
-        if (qparams.containsKey("search")) {
-            tagsBrowserBuild(page, sortTab, event.getLocation().getPath(), filter);
-        } else
-            tagsBrowserBuild(page, sortTab, event.getLocation().getPath(), "");
+        tagsBrowserBuild(
+                Integer.parseInt(pageParametersMap.get("page").toString()),
+                pageParametersMap.get("tab").toString(),
+                event.getLocation().getPath(),
+                pageParametersMap.get("search").toString()
+        );
     }
 
-    public void queryParametersSetter() {
-        if (qparams.containsKey("page")) {
-            page = Integer.parseInt(qparams.get("page").get(0));
+    private void setQueryParams(Map<String, List<String>> qparams) {
+        for (String parameter : pageParametersKeySet) {
+            if (!parameter.equals("page")) {
+                pageParametersMap.replace(parameter, "");
+            } else
+                pageParametersMap.replace(parameter, "1");
         }
 
-        if (qparams.containsKey("tab")) {
-            sortTab = qparams.get("tab").get(0);
-        }
-
-        if (qparams.containsKey("search")) {
-            filter = qparams.get("search").get(0);
+        for (String parameter : pageParametersKeySet) {
+            if (qparams.containsKey(parameter)) {
+                pageParametersMap.replace(parameter, qparams.get(parameter).get(0));
+            }
         }
     }
 
@@ -157,8 +171,11 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
         int pageLimit;
         int counter = 0;
         HorizontalLayout row = new HorizontalLayout();;
-        List<User> userList = null;
-        float countUsers = 0;
+        List<User> userList;
+        int countUsers;
+        HashMap<String, Object> customQueryParams = new HashMap<>();
+
+        customQueryParams.put("page", page);
 
         bodyLayout.removeAll();
 
@@ -167,9 +184,10 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
         if (!filter.isEmpty()) {
             userList = userService.getFilterByUsernameUsersList(page, USERS_ON_PAGE_LIMIT, filter);
             countUsers = userService.getFilterUsersCount(filter);
-        } else if (sortTab.equals(nameTab.getLabel())) {
+        } else {
             userList = userService.getSortedByUsernameUserList(page, USERS_ON_PAGE_LIMIT);
             countUsers = userService.getAllUsersCount();
+            customQueryParams.put("tab", sortTab);
         }
 
         if (!userList.isEmpty()) {
@@ -189,7 +207,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
 
             pageLimit = FilterDataManager.pageLimit(countUsers, USERS_ON_PAGE_LIMIT);
 
-            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.queryParametersBuild(page, sortTab)));
+            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.qparamsBuild(customQueryParams)));
         } else {
             bodyLayout.add(notFoundedH2);
         }
