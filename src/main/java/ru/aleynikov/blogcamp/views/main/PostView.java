@@ -26,7 +26,7 @@ import ru.aleynikov.blogcamp.service.PostService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.text.SimpleDateFormat;
-import java.util.Locale;
+import java.util.*;
 
 @Route(value = "globe/post", layout = MainLayout.class)
 @StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
@@ -65,7 +65,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
     private Span createdDateSpan = new Span();
     private Span userFullNameSpan = new Span();
 
-    private RouterLink userLink = new RouterLink();
+    private Span userLink = new Span();
     private Button backButton = new Button("Back");
 
     private Icon backIcon = new Icon(VaadinIcon.CHEVRON_LEFT_SMALL);
@@ -126,7 +126,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
         userInfoRightSideLayout.addClassName("user-info");
         userInfoRightSideLayout.addClassName("padding-5px");
 
-        userLink.addClassName("user-link");
+        userLink.addClassName("link");
 
         userFullNameSpan.addClassName("margin-none");
         userFullNameSpan.addClassName("grey-light");
@@ -193,8 +193,20 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
             userImage.setSrc(currentPost.getUser().getAvatar());
             userLink.setText(currentPost.getUser().getUsername());
-            userFullNameSpan.setText(currentPost.getUser().getFullName()
-            );
+            userFullNameSpan.setText(currentPost.getUser().getFullName());
+
+            userLink.addClickListener(clickEvent -> {
+                QueryParameters qparams;
+                Map<String, List<String>> qmap = new HashMap<>();
+
+                ArrayList<String> param = new ArrayList<>();
+                param.add(currentPost.getUser().getUsername());
+
+                qmap.put("user", param);
+
+                qparams = new QueryParameters(qmap);
+                UI.getCurrent().navigate("globe", qparams);
+            });
 
         } else {
             headerLayout.add(notExistH2);

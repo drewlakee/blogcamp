@@ -125,6 +125,16 @@ body {
     height: 3px;
 }
 
+.link {
+    color: #1676f3;
+}
+
+.link:hover {
+    text-decoration: none;
+    color: #4a9ef2;
+    transition: background .1s ease-in-out;
+}
+
 .padding-none {
     padding: 0;
 }
@@ -177,6 +187,10 @@ body {
 
 .margin-b-16px {
     margin-bottom: 16px;
+}
+
+.margin-t-2px {
+    margin-top: 2px;
 }
 
 .margin-l-10px {

@@ -57,7 +57,7 @@ public class UserComponent extends Div {
 
         contentBodyRightLayout.addClassName("padding-none");
 
-        userLink.addClassName("user-link");
+        userLink.addClassName("link");
         userLink.setText(currentUser.getUsername());
 
         usernameLayout.add(userLink);

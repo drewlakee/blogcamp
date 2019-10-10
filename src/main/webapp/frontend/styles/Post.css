@@ -12,7 +12,7 @@
 .post-block {
     width: 650px;
     border-radius: 4px;
-    border: 1px solid #cccccc;
+    border: 1px solid #e1e4e8;
 }
 
 .post-block:hover {
@@ -21,16 +21,6 @@
 
 .post-username {
     font-size: 16px;
-}
-
-.user-link {
-    color: #1676f3;
-}
-
-.user-link:hover {
-    text-decoration: none;
-    color: #4a9ef2;
-    transition: background .1s ease-in-out;
 }
 
 .post-image {

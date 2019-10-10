@@ -161,7 +161,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
         externalImageSourceField.setPlaceholder("(https://image.png etc.)");
         externalImageSourceField.setMinLength(4);
         externalImageSourceField.setMaxLength(500);
-        externalImageSourceField.setErrorMessage("Must be external link with correct format: jpg, jpeg, png.");
+        externalImageSourceField.setErrorMessage("Must be external link with correct format: jpg, jpeg, png, gif.");
 
         setExternalAvatarButton.addClassName("main-button");
         setExternalAvatarButton.addClassName("margin-l-10px");

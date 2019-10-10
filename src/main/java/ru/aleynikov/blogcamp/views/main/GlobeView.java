@@ -51,6 +51,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
     private VerticalLayout headerLayout = new VerticalLayout();
     private VerticalLayout bodyLayout = new VerticalLayout();
     private VerticalLayout userInfoLayout = new VerticalLayout();
+    private VerticalLayout footLayout = new VerticalLayout();
 
     private HorizontalLayout contentHorizontalLayout = new HorizontalLayout();
     private HorizontalLayout headerUpLayout = new HorizontalLayout();
@@ -86,6 +87,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
     public GlobeView() {
         entryContentLayout.setSizeFull();
+        entryContentLayout.addClassName("padding-none");
 
         headerLayout.setSizeFull();
         headerLayout.addClassName("content-header");
@@ -126,8 +128,11 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
         contentLeftLayout.add(bodyLayout);
 
         contentRightLayout.addClassName("padding-none");
+        contentRightLayout.addClassName("margin-t-2px");
 
         userInfoLayout.setVisible(false);
+        userInfoLayout.setWidth(null);
+        userInfoLayout.addClassName("rs-cmp");
         userInfoLayout.addClassName("padding-none");
         userInfoLayout.addClassName("user-detail-block");
 
@@ -145,9 +150,11 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
         contentRightLayout.add(userInfoLayout);
 
+        footLayout.setWidth("100%");
+
         contentHorizontalLayout.add(contentLeftLayout, contentRightLayout);
 
-        entryContentLayout.add(headerLayout, contentHorizontalLayout);
+        entryContentLayout.add(headerLayout, contentHorizontalLayout, footLayout);
 
         add(entryContentLayout);
 
@@ -263,6 +270,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
         }
 
         bodyLayout.removeAll();
+        footLayout.removeAll();
 
         if (!posts.isEmpty()) {
             for (Post post : posts) {
@@ -272,7 +280,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
             pageLimit = FilterDataManager.pageLimit(count, POST_ON_PAGE_LIMIT);
 
-            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.qparamsBuild(customQueryParams)));
+            footLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.qparamsBuild(customQueryParams)));
         } else {
             bodyLayout.add(notFoundedH2);
         }

@@ -52,7 +52,7 @@ public class PostComponent extends Div {
         upperLayout.addClassName("padding-10px");
 
         usernameSpan.addClassName("post-username");
-        usernameSpan.addClassName("user-link");
+        usernameSpan.addClassName("link");
         usernameSpan.setText(post.getUser().getUsername());
 
         dotFirstSpan.addClassName("grey-light");
@@ -92,7 +92,7 @@ public class PostComponent extends Div {
         lowerLayout.addClassName("padding-10px");
 
         readLink = new RouterLink("READ", PostView.class, post.getId());
-        readLink.addClassName("user-link");
+        readLink.addClassName("link");
 
         lowerLayout.add(readLink);
 

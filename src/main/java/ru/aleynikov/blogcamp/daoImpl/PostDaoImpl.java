@@ -121,6 +121,7 @@ public class PostDaoImpl implements PostDao {
         Object[] qparams = new Object[] {id};
         int count;
 
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
         count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;
@@ -131,6 +132,7 @@ public class PostDaoImpl implements PostDao {
         String query = "SELECT COUNT(*) FROM post";
         int count;
 
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query);
         count = jdbc.queryForObject(query, Integer.class);
 
         return count;
@@ -170,6 +172,7 @@ public class PostDaoImpl implements PostDao {
         Object[] qparams = new Object[] {id, "%"+filter+"%"};
         int count;
 
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
         count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;
@@ -209,6 +212,7 @@ public class PostDaoImpl implements PostDao {
         Object[] qparams = new Object[] {"%"+filter+"%"};
         int count;
 
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
         count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;
@@ -234,6 +238,7 @@ public class PostDaoImpl implements PostDao {
         Object[] qparams = new Object[] {tag};
         int count;
 
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
         count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;
@@ -259,6 +264,7 @@ public class PostDaoImpl implements PostDao {
         Object[] qparams = new Object[] {username};
         int count;
 
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
         count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;
