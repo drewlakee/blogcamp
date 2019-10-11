@@ -23,6 +23,7 @@ import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.Tag;
 import ru.aleynikov.blogcamp.service.JavaScriptUtils;
 import ru.aleynikov.blogcamp.service.PostService;
+import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.text.SimpleDateFormat;
@@ -196,16 +197,9 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
             userFullNameSpan.setText(currentPost.getUser().getFullName());
 
             userLink.addClickListener(clickEvent -> {
-                QueryParameters qparams;
-                Map<String, List<String>> qmap = new HashMap<>();
-
-                ArrayList<String> param = new ArrayList<>();
-                param.add(currentPost.getUser().getUsername());
-
-                qmap.put("user", param);
-
-                qparams = new QueryParameters(qmap);
-                UI.getCurrent().navigate("globe", qparams);
+                HashMap<String, Object> qparams = new HashMap<>();
+                qparams.put("user", currentPost.getUser().getUsername());
+                UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(qparams)));
             });
 
         } else {

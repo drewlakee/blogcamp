@@ -105,7 +105,7 @@ public class PostComponent extends Div {
         usernameSpan.addClickListener(event -> {
             HashMap<String, Object> qparam = new HashMap<>();
             qparam.put("user", post.getUser().getUsername());
-            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.qparamsBuild(qparam)));
+            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(qparam)));
             JavaScriptUtils.scrollPageTop();
         });
     }

@@ -8,7 +8,6 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.QueryParameters;
 import ru.aleynikov.blogcamp.model.Tag;
-import ru.aleynikov.blogcamp.service.JavaScriptUtils;
 import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
@@ -67,8 +66,7 @@ public class TagComponent extends Div {
         tagNameSpan.addClickListener(event -> {
             HashMap<String, Object> qparam = new HashMap<>();
             qparam.put("tag", tag.getName());
-            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.qparamsBuild(qparam)));
-            JavaScriptUtils.scrollPageTop();
+            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(qparam)));
         });
     }
 

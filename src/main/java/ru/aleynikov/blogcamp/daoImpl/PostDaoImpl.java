@@ -88,20 +88,6 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public List<Post> sortNewestPostsByUserId(int id, int offset, int limit) {
-        String query = "SELECT * FROM post WHERE \"user\" = ? ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
-        Object[] qparams = new Object[] {id, offset, limit};
-        List<Post> posts = null;
-
-        try {
-            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
-            posts = jdbc.query(query, qparams, postRowMapper);
-        } catch (EmptyResultDataAccessException e) {}
-
-        return posts;
-    }
-
-    @Override
     public List<Post> sortNewestPosts(int offset, int limit) {
         String query = "SELECT * FROM post ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {offset, limit};
@@ -116,64 +102,12 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public int countByUserId(int id) {
-        String query = "SELECT COUNT(*) FROM post WHERE \"user\" = ?";
-        Object[] qparams = new Object[] {id};
-        int count;
-
-        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
-        count = jdbc.queryForObject(query, qparams, Integer.class);
-
-        return count;
-    }
-
-    @Override
     public int count() {
         String query = "SELECT COUNT(*) FROM post";
         int count;
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query);
         count = jdbc.queryForObject(query, Integer.class);
-
-        return count;
-    }
-
-    @Override
-    public List<Post> sortOldestPostsByUserId(int id, int offset, int limit) {
-        String query = "SELECT * FROM post WHERE \"user\" = ? ORDER BY (created_date) ASC OFFSET ? LIMIT ?";
-        Object[] qparams = new Object[] {id, offset, limit};
-        List<Post> posts = null;
-
-        try {
-            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
-            posts = jdbc.query(query, qparams, postRowMapper);
-        } catch (EmptyResultDataAccessException e) {}
-
-        return posts;
-    }
-
-    @Override
-    public List<Post> findPostsByTitleUsingUserId(int id, int offset, int limit, String filter) {
-        String query = "SELECT * FROM post WHERE \"user\" = ? AND LOWER(title) LIKE LOWER(?) OFFSET ? LIMIT ?";
-        Object[] qparams = new Object[] {id, "%"+filter+"%", offset, limit};
-        List<Post> posts = null;
-
-        try {
-            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
-            posts = jdbc.query(query, qparams, postRowMapper);
-        } catch (EmptyResultDataAccessException e) {}
-
-        return posts;
-    }
-
-    @Override
-    public int countByFilterUsingUserId(int id, String filter) {
-        String query = "SELECT COUNT(*) FROM post WHERE \"user\" = ? AND LOWER(title) LIKE LOWER(?)";
-        Object[] qparams = new Object[] {id, "%"+filter+"%"};
-        int count;
-
-        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
-        count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;
     }

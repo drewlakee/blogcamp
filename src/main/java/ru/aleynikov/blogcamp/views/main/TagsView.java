@@ -111,10 +111,10 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
 
                 if (selectedTab.equals(popularTab.getLabel())) {
                     customQueryParams.put("tab", popularTab.getLabel().toLowerCase());
-                    UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersManager.qparamsBuild(customQueryParams)));
+                    UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
                 } else if (selectedTab.equals(newestTab.getLabel())) {
                     customQueryParams.put("tab", newestTab.getLabel().toLowerCase());
-                    UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersManager.qparamsBuild(customQueryParams)));
+                    UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
                 }
             }
         });
@@ -129,7 +129,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
             sortBar.setSelectedTab(null);
             HashMap<String, Object> customQueryParams = new HashMap<>();
             customQueryParams.put("search", searchField.getValue().strip());
-            UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersManager.qparamsBuild(customQueryParams)));
+            UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
         } else
             UI.getCurrent().navigate("tags");
     }
@@ -220,7 +220,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
 
             pageLimit = FilterDataManager.pageLimit(countTags, TAGS_ON_PAGE_LIMIT);
 
-            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.qparamsBuild(customQueryParams)));
+            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.buildQueryParams(customQueryParams)));
         } else {
             bodyLayout.add(notFoundedH2);
         }

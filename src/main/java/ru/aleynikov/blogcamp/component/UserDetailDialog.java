@@ -10,7 +10,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.QueryParameters;
 import ru.aleynikov.blogcamp.model.User;
-import ru.aleynikov.blogcamp.service.JavaScriptUtils;
 import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
@@ -113,8 +112,7 @@ public class UserDetailDialog extends Dialog {
         postsFindLinkSpan.addClickListener(event -> {
             HashMap<String, Object> qparams = new HashMap<>();
             qparams.put("user", user.getUsername());
-            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.qparamsBuild(qparams)));
-            JavaScriptUtils.scrollPageTop();
+            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(qparams)));
             close();
         });
     }

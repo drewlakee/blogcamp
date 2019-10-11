@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class QueryParametersManager {
 
-    public static Map<String, List<String>> qparamsBuild(HashMap<String, Object> parameters) {
+    public static Map<String, List<String>> buildQueryParams(HashMap<String, Object> parameters) {
         Map<String, List<String>> qmap = new HashMap<>();
         List<String> param;
 

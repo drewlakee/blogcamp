@@ -20,6 +20,8 @@ public class FilterDataManager {
     }
 
     public static String shieldHtml(String html) {
-        return html.replaceAll("\n", " ");
+        return html.
+                replaceAll("\n", " ").
+                replaceAll("'", "\\\\'");
     }
 }

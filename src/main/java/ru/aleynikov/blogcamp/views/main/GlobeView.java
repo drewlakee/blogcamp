@@ -169,7 +169,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
                 if (selectedTab.equals(newestTab.getLabel())) {
                     customQueryParams.put("tab", newestTab.getLabel().toLowerCase());
-                    UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.qparamsBuild(customQueryParams)));
+                    UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
                 }
             }
         });
@@ -184,7 +184,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
             sortBar.setSelectedTab(null);
             HashMap<String, Object> customQueryParams = new HashMap<>();
             customQueryParams.put("search", searchField.getValue().strip());
-            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.qparamsBuild(customQueryParams)));
+            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
         } else
             UI.getCurrent().navigate("globe");
     }
@@ -280,7 +280,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
             pageLimit = FilterDataManager.pageLimit(count, POST_ON_PAGE_LIMIT);
 
-            footLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.qparamsBuild(customQueryParams)));
+            footLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.buildQueryParams(customQueryParams)));
         } else {
             bodyLayout.add(notFoundedH2);
         }
