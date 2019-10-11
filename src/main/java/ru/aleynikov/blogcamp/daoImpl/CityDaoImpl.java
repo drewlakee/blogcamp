@@ -25,7 +25,7 @@ public class CityDaoImpl implements CityDao {
 
     @Override
     public List<City> allCitiesList() {
-        String query = "SELECT city_id, city.name as \"city_name\", country.name as \"country_name\" FROM  city, country WHERE city.country = country.country_id;";
+        String query = "SELECT * FROM city";
         List<City> cityList;
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query);

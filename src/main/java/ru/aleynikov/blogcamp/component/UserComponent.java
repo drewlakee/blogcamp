@@ -6,7 +6,6 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.RouterLink;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
@@ -23,12 +22,11 @@ public class UserComponent extends Div {
     private HorizontalLayout contentBodyLayout = new HorizontalLayout();
     private HorizontalLayout usernameLayout = new HorizontalLayout();
 
-    private RouterLink userLink = new RouterLink();
-
-    private Span userStatus = new Span();
+    private Span userStatusSpan = new Span();
     private Span itsYouSpan = new Span("It's you");
-    private Span userFullName = new Span();
+    private Span userFullNameSpan = new Span();
     private Span userFromSpan = new Span();
+    private Span usernameSpan = new Span();
 
     private Image userAvatar = new Image();
 
@@ -57,10 +55,10 @@ public class UserComponent extends Div {
 
         contentBodyRightLayout.addClassName("padding-none");
 
-        userLink.addClassName("link");
-        userLink.setText(currentUser.getUsername());
+        usernameSpan.addClassName("link");
+        usernameSpan.setText(currentUser.getUsername());
 
-        usernameLayout.add(userLink);
+        usernameLayout.add(usernameSpan);
 
         if (SecurityUtils.getPrincipal().getUsername().equals(currentUser.getUsername())) {
             itsYouSpan.addClassName("you");
@@ -70,10 +68,10 @@ public class UserComponent extends Div {
         contentBodyRightLayout.add(usernameLayout);
 
         if (currentUser.getFullName() != null) {
-            userFullName.addClassName("user-fullname");
-            userFullName.addClassName("margin-none");
-            userFullName.setText(currentUser.getFullName());
-            contentBodyRightLayout.add(userFullName);
+            userFullNameSpan.addClassName("user-fullname");
+            userFullNameSpan.addClassName("margin-none");
+            userFullNameSpan.setText(currentUser.getFullName());
+            contentBodyRightLayout.add(userFullNameSpan);
         }
 
         if (currentUser.getCity() != null & currentUser.getCountry() != null) {
@@ -92,10 +90,10 @@ public class UserComponent extends Div {
             contentFootLayout.addClassName("padding-none");
             contentFootLayout.addClassName("user-about");
 
-            userStatus.addClassName("user-about-content");
-            userStatus.setText(currentUser.getStatus());
+            userStatusSpan.addClassName("user-about-content");
+            userStatusSpan.setText(currentUser.getStatus());
 
-            contentFootLayout.add(userStatus);
+            contentFootLayout.add(userStatusSpan);
 
             contentLayout.add(contentFootLayout);
         }

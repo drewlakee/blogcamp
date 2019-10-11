@@ -152,7 +152,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
             else
                 countrySelectValue = countrySelect.getValue();
 
-            cityList.stream().filter((x) -> x.getCountryName().equals(countrySelectValue)).forEach((x) -> cityNamesTree.add(x.getCityName()));
+            cityList.stream().filter((x) -> x.getCountry().getName().equals(countrySelectValue)).forEach((x) -> cityNamesTree.add(x.getName()));
             citySelect.setEmptySelectionAllowed(false);
             citySelect.setItems(cityNamesTree);
             citySelect.setEnabled(true);
@@ -174,7 +174,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
                 countrySelectValue = countrySelect.getValue();
 
             try {
-                country = countryList.stream().filter((x) -> x.getCountryName().equals(countrySelectValue)).findAny().get();
+                country = countryList.stream().filter((x) -> x.getName().equals(countrySelectValue)).findAny().get();
             } catch (NoSuchElementException e) {
                 country.setId(-1);
             }
@@ -186,7 +186,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
                 citySelectValue = citySelect.getValue();
 
             try {
-                city = cityList.stream().filter((x) -> x.getCityName().equals(citySelectValue)).findAny().get();
+                city = cityList.stream().filter((x) -> x.getName().equals(citySelectValue)).findAny().get();
             } catch (NoSuchElementException e) {
                 city.setId(-1);
             }
@@ -241,7 +241,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
         }
 
         countryNamesTree = new TreeSet<>();
-        countryList.stream().filter((x) -> !x.getCountryName().equals(currentUser.getCountry())).forEach((x) -> countryNamesTree.add(x.getCountryName()));
+        countryList.stream().filter((x) -> !x.getName().equals(currentUser.getCountry())).forEach((x) -> countryNamesTree.add(x.getName()));
         countrySelect.setItems(countryNamesTree);
 
         if (currentUser.getCity() != null) {
@@ -251,7 +251,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
             citySelect.setEnabled(false);
 
         cityNamesTree = new TreeSet<>();
-        cityList.stream().filter((x) -> !x.getCityName().equals(currentUser.getCity()) && x.getCountryName().equals(countrySelect.getValue())).forEach((x) -> cityNamesTree.add(x.getCityName()));
+        cityList.stream().filter((x) -> !x.getName().equals(currentUser.getCity()) && x.getCountry().getName().equals(countrySelect.getValue())).forEach((x) -> cityNamesTree.add(x.getName()));
         citySelect.setItems(cityNamesTree);
 
         if (currentUser.getStatus() != null) {

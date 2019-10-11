@@ -16,4 +16,8 @@ public class CountryService {
     public List<Country> getAllCountriesList() {
         return countryDao.allCountriesList();
     }
+
+    public Country findById(int id) {
+        return countryDao.findById(id);
+    }
 }

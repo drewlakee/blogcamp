@@ -7,4 +7,5 @@ import java.util.List;
 public interface CountryDao {
 
     List<Country> allCountriesList();
+    Country findById(int id);
 }

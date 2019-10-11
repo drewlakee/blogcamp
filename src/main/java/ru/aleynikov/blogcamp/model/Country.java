@@ -8,7 +8,7 @@ import lombok.Setter;
 public class Country {
 
     int id;
-    String countryName;
+    String name;
 
     public Country() {}
 }

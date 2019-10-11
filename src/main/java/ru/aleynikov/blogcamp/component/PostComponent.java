@@ -12,6 +12,8 @@ import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.RouterLink;
 import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.Tag;
+import ru.aleynikov.blogcamp.service.JavaScriptUtils;
+import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.PostView;
 
@@ -101,16 +103,10 @@ public class PostComponent extends Div {
         add(contentLayout);
 
         usernameSpan.addClickListener(event -> {
-            QueryParameters qparams;
-            Map<String, List<String>> qmap = new HashMap<>();
-
-            ArrayList<String> param = new ArrayList<>();
-            param.add(post.getUser().getUsername());
-
-            qmap.put("user", param);
-
-            qparams = new QueryParameters(qmap);
-            UI.getCurrent().navigate("globe", qparams);
+            HashMap<String, Object> qparam = new HashMap<>();
+            qparam.put("user", post.getUser().getUsername());
+            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.qparamsBuild(qparam)));
+            JavaScriptUtils.scrollPageTop();
         });
     }
 
