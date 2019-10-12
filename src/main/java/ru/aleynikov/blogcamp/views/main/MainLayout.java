@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
+@StyleSheet(StaticResources.MAIN_STYLES)
 public class MainLayout extends Composite<VerticalLayout> implements HasComponents, RouterLayout, BeforeEnterObserver {
 
     private Div contentDiv = new Div();

@@ -8,7 +8,7 @@ import java.util.Set;
 
 public interface PostDao {
 
-    void savePost(HashMap<String, Object> post);
+    void save(HashMap<String, Object> post);
     int findPostIdByUserIdAndTitle(int userId, String title);
     void setTagsToPost(Set<String> tags, HashMap<String, Object> post);
     Post findPostById(int id);

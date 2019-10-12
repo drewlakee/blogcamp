@@ -10,7 +10,7 @@ public interface UserDao {
 
     User findByUsername(String username);
     User findById(int id);
-    void saveUser(Map<String, Object> user);
+    void save(Map<String, Object> user);
     void updatePasswordByUsername(String username, String newPassword);
     List<User> sortAscByUsername(int offset, int limit);
     List<User> findByUsername(int offset, int limit, String filter);

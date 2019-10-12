@@ -16,8 +16,8 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-@StyleSheet(StaticResources.USER_COMPONENT_STYLES)
-@StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
+@StyleSheet(StaticResources.USER_STYLES)
+@StyleSheet(StaticResources.MAIN_STYLES)
 public class UserDetailDialog extends Dialog {
 
     private VerticalLayout detailUserLayout = new VerticalLayout();

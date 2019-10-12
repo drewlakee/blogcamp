@@ -33,7 +33,7 @@ import java.util.Set;
 
 @Route(value = "tags", layout = MainLayout.class)
 @PageTitle("Tags - Blogcamp")
-@StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
+@StyleSheet(StaticResources.MAIN_STYLES)
 public class TagsView extends Composite<Div> implements HasComponents, HasUrlParameter<String> {
 
     @Autowired

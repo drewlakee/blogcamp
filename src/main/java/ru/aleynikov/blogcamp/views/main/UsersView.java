@@ -33,7 +33,7 @@ import java.util.Set;
 
 @Route(value = "users", layout = MainLayout.class)
 @PageTitle("Users - Blogcamp")
-@StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
+@StyleSheet(StaticResources.MAIN_STYLES)
 public class UsersView extends Composite<Div> implements HasComponents, HasUrlParameter<String> {
 
     @Autowired

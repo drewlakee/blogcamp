@@ -33,8 +33,8 @@ import java.util.Locale;
 @RoutePrefix(value = "profile")
 @ParentLayout(MainLayout.class)
 @PageTitle("Profile - Blogcamp")
-@StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
-@StyleSheet(StaticResources.PROFILE_VIEW_STYLES)
+@StyleSheet(StaticResources.MAIN_STYLES)
+@StyleSheet(StaticResources.PROFILE_STYLES)
 public class ProfileView extends Composite<Div> implements HasComponents, RouterLayout, BeforeEnterObserver {
 
     @Autowired
@@ -234,12 +234,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
     }
 
     public void userProfileLayoutBuild() {
-        if (currentUser.getAvatar() != null) {
-            userAvatarImage.setSrc(currentUser.getAvatar());
-        } else {
-            userAvatarImage.addClassName("padding-trl-1px");
-            userAvatarImage.setSrc(StaticResources.DEFAULT_USER_AVATAR);
-        }
+        userAvatarImage.setSrc(currentUser.getAvatar());
 
         infoLayout.removeAll();
 

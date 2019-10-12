@@ -14,7 +14,7 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@StyleSheet(StaticResources.TAG_COMPONENT_STYLES)
+@StyleSheet(StaticResources.TAG_STYLES)
 public class TagComponent extends Div {
 
     private Span tagNameSpan = new Span();

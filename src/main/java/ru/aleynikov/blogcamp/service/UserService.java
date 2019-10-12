@@ -35,12 +35,12 @@ public class UserService {
         return userDao.findByUsername(username);
     }
 
-    public User findUserById(int id) {
+    public User findById(int id) {
         return userDao.findById(id);
     }
 
     public void saveUser(Map<String, Object> newUser) {
-        userDao.saveUser(newUser);
+        userDao.save(newUser);
     }
 
     public void updateUserAboutInfo(HashMap<String, Object> infoForUpdate) {

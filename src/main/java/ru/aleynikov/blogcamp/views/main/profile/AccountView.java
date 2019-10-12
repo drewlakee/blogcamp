@@ -27,7 +27,7 @@ import java.util.Arrays;
 
 @Route(value = "account", layout = ProfileView.class)
 @PageTitle("Profile - Account")
-@StyleSheet(StaticResources.PROFILE_VIEW_STYLES)
+@StyleSheet(StaticResources.PROFILE_STYLES)
 public class AccountView extends Composite<Div> implements HasComponents, BeforeEnterObserver {
 
     @Autowired

@@ -34,7 +34,7 @@ public class PostDaoImpl implements PostDao {
     private TagService tagService;
 
     @Override
-    public void savePost(HashMap<String, Object> post) {
+    public void save(HashMap<String, Object> post) {
         String query = "INSERT INTO post (title, text, \"user\", intro_image, created_date) VALUES(?, ?, ?, ?, ?)";
         Object[] qparams = new Object[] {
                 post.get("title"),

@@ -10,8 +10,8 @@ import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
-@StyleSheet(StaticResources.USER_COMPONENT_STYLES)
-@StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
+@StyleSheet(StaticResources.USER_STYLES)
+@StyleSheet(StaticResources.MAIN_STYLES)
 public class UserComponent extends Div {
 
     private VerticalLayout contentLayout = new VerticalLayout();
@@ -44,12 +44,8 @@ public class UserComponent extends Div {
 
         userAvatar.addClassName("user-img");
         userAvatar.setAlt("avatar");
-        if (currentUser.getAvatar() != null)
-            userAvatar.setSrc(currentUser.getAvatar());
-        else {
-            userAvatar.addClassName("padding-trl-1px");
-            userAvatar.setSrc(StaticResources.DEFAULT_USER_AVATAR);
-        }
+        userAvatar.setSrc(currentUser.getAvatar());
+
 
         contentBodyLeftLayout.add(userAvatar);
 

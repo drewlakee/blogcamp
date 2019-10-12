@@ -35,7 +35,7 @@ public class TagService {
 
     public Tag findTagByName(String name) { return tagDao.findTagByName(name); }
 
-    public void saveTag(String name) { tagDao.saveTag(name); }
+    public void saveTag(String name) { tagDao.save(name); }
 
     public List<Tag> findTagsByPostId(int id) { return tagDao.findTagsByPostId(id); }
 }

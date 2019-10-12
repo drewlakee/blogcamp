@@ -99,7 +99,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public void saveTag(String name) {
+    public void save(String name) {
         String query = "INSERT INTO tag (name, created) VALUES (?, ?)";
         Object[] qparams = new Object[] {name, new Timestamp(System.currentTimeMillis())};
 

@@ -59,7 +59,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void saveUser(Map<String, Object> user) {
+    public void save(Map<String, Object> user) {
         String query = "INSERT INTO usr (username, password, secret_question, secret_answer, avatar, registered) VALUES (?, ?, ?, ?, ?, ?)";
         Object[] qparams = new Object[] {
                 user.get("username"),

@@ -29,7 +29,7 @@ public class PostRowMapper implements RowMapper {
         post.setCreatedDate(rs.getTimestamp("created_date"));
         post.setBanned(rs.getBoolean("banned"));
         post.setTags(tagService.findTagsByPostId(post.getId()));
-        post.setUser(userService.findUserById(rs.getInt("user")));
+        post.setUser(userService.findById(rs.getInt("user")));
 
         return post;
     }

@@ -16,14 +16,14 @@ public class PostService {
     private PostDaoImpl postDao;
 
     public void savePost(HashMap<String, Object> post) {
-        postDao.savePost(post);
+        postDao.save(post);
     }
 
     public void setTagsToPost(Set<String> tags, HashMap<String, Object> post) {
         postDao.setTagsToPost(tags, post);
     }
 
-    public Post findPostById(int id) {
+    public Post findById(int id) {
         return postDao.findPostById(id);
     }
 

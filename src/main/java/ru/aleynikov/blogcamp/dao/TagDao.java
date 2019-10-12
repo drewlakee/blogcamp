@@ -7,7 +7,7 @@ import java.util.List;
 public interface TagDao {
 
     Tag findTagByName(String name);
-    void saveTag(String name);
+    void save(String name);
     List<Tag> sortByPostCountTagsList(int offset, int limit);
     List<Tag> sortByCreatedDateNewestTagsList(int offset, int limit);
     int count();

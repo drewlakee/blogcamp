@@ -6,6 +6,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.QueryParameters;
@@ -21,7 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @StyleSheet(StaticResources.POST_STYLES)
-@StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
+@StyleSheet(StaticResources.MAIN_STYLES)
 public class PostComponent extends Div {
 
     private VerticalLayout contentLayout = new VerticalLayout();
@@ -59,16 +60,22 @@ public class PostComponent extends Div {
 
         dotFirstSpan.addClassName("grey-light");
         dotFirstSpan.addClassName("margin-l-5px");
+        dotFirstSpan.addClassName("fs-12px");
+        upperLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, dotFirstSpan);
 
         createdDateSpan.addClassName("grey-light");
         createdDateSpan.addClassName("margin-l-5px");
-        createdDateSpan.setText("Posted in " + createdDateFormat.format(post.getCreatedDate()));
+        createdDateSpan.addClassName("fs-12px");
+        createdDateSpan.setText(createdDateFormat.format(post.getCreatedDate()));
         createdDateSpan.setTitle(detailCreatedDateFormat.format(post.getCreatedDate()));
+        upperLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, createdDateSpan);
 
         upperLayout.add(usernameSpan, dotFirstSpan, createdDateSpan);
 
         dotSecondSpan.addClassName("grey-light");
+        dotSecondSpan.addClassName("fs-12px");
         dotSecondSpan.addClassName("margin-l-5px");
+        upperLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, dotSecondSpan);
 
         upperLayout.add(dotSecondSpan);
         addTagsToPost(post.getTags());
@@ -95,6 +102,7 @@ public class PostComponent extends Div {
 
         readLink = new RouterLink("READ", PostView.class, post.getId());
         readLink.addClassName("link");
+        readLink.addClassName("fw-600");
 
         lowerLayout.add(readLink);
 

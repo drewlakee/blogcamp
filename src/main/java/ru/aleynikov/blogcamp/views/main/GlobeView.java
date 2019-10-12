@@ -34,7 +34,7 @@ import java.util.Set;
 
 @Route(value = "globe", layout = MainLayout.class)
 @PageTitle("Posts - Blogcamp")
-@StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
+@StyleSheet(StaticResources.MAIN_STYLES)
 public class GlobeView extends Composite<Div> implements HasComponents, HasUrlParameter<String> {
 
     @Autowired

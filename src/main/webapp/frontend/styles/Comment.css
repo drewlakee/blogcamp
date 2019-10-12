@@ -1,0 +1,10 @@
+.user-comment-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 2px;
+    box-shadow: 2px 2px 4px rgba(12,13,14,0.5);
+}
+
+.comment-body {
+    width: 700px;
+}

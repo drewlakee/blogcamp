@@ -29,12 +29,14 @@ import java.util.*;
 
 @Route(value = "addpost", layout = MainLayout.class)
 @PageTitle("Add post - Blogcamp")
-@StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
+@StyleSheet(StaticResources.MAIN_STYLES)
 @StyleSheet(StaticResources.POST_STYLES)
 public class EditorPostView extends Composite<Div> implements HasComponents {
 
     @Autowired
     private PostService postService;
+
+    private int externalImageWidth = 500;
 
     private VerticalLayout contentLayout = new VerticalLayout();
     private VerticalLayout headerLayout = new VerticalLayout();
@@ -46,7 +48,7 @@ public class EditorPostView extends Composite<Div> implements HasComponents {
     private TextField tagsField = new TextField();
     private TextField externalLinkOnImageField = new TextField();
 
-    private TextArea textBody = new TextArea();
+    private TextArea textBodyArea = new TextArea();
 
     private Div htmlAreaDiv = new Div();
     private Div uploadedImageDiv = new Div();
@@ -120,15 +122,15 @@ public class EditorPostView extends Composite<Div> implements HasComponents {
 
         textEditorSpan.addClassName("title");
 
-        textBody.setWidth("100%");
-        textBody.getStyle().set("resize", "vertical");
-        textBody.addClassName("margin-none");
-        textBody.getStyle().set("overflow-y", "auto");
-        textBody.setPlaceholder("<h1>Html editor!</h1>");
-        textBody.setRequired(true);
-        textBody.setMinLength(30);
-        textBody.setMaxLength(3000);
-        textBody.setErrorMessage("Minimal " + textBody.getMinLength() + " length of body.");
+        textBodyArea.setWidth("100%");
+        textBodyArea.getStyle().set("resize", "vertical");
+        textBodyArea.addClassName("margin-none");
+        textBodyArea.getStyle().set("overflow-y", "auto");
+        textBodyArea.setPlaceholder("<h1>Html editor!</h1>");
+        textBodyArea.setRequired(true);
+        textBodyArea.setMinLength(30);
+        textBodyArea.setMaxLength(3000);
+        textBodyArea.setErrorMessage("Minimal " + textBodyArea.getMinLength() + " length of body.");
 
         htmlAreaDiv.addClassName("html-shower");
         htmlAreaDiv.addClassName("padding-10px");
@@ -146,7 +148,7 @@ public class EditorPostView extends Composite<Div> implements HasComponents {
         createPostButton.addClassName("main-button");
 
         bodyLayout.add(titleSpan, titleField, uploadSpan, imageLoadGroup, externalLinkOnImageField, uploadedImageDiv,
-                textEditorSpan, textBody, htmlAreaDiv,
+                textEditorSpan, textBodyArea, htmlAreaDiv,
                 tagsSpan, tagsField, createPostButton);
 
         contentLayout.add(headerLayout, bodyLayout);
@@ -165,13 +167,12 @@ public class EditorPostView extends Composite<Div> implements HasComponents {
         });
 
         externalLinkOnImageField.addValueChangeListener(event -> {
-            int imgWidth = 500;
             if (isExternalSourceValid())
-                JavaScriptUtils.innerHtml("show-image", "<img style=\"width:" + imgWidth + "px\" src=" + externalLinkOnImageField.getValue().strip() + ">");
+                JavaScriptUtils.innerHtml("show-image", "<img style=\"width:" + externalImageWidth + "px\" src=" + externalLinkOnImageField.getValue().strip() + ">");
         });
 
-        textBody.addValueChangeListener(event -> {
-            JavaScriptUtils.innerHtml(htmlAreaDiv.getId().get(), textBody.getValue());
+        textBodyArea.addValueChangeListener(event -> {
+            JavaScriptUtils.innerHtml(htmlAreaDiv.getId().get(), textBodyArea.getValue());
         });
 
         createPostButton.addClickListener(event -> {
@@ -180,7 +181,7 @@ public class EditorPostView extends Composite<Div> implements HasComponents {
                newPost.put("title", titleField.getValue().strip());
                if (!imageLoadGroup.isEmpty() && imageLoadGroup.getValue().equals(EXTERNAL_IMAGE) && isExternalSourceValid())
                    newPost.put("intro_image", externalLinkOnImageField.getValue().strip());
-               newPost.put("text", textBody.getValue().strip());
+               newPost.put("text", textBodyArea.getValue().strip());
                newPost.put("user", SecurityUtils.getPrincipal().getId());
                postService.savePost(newPost);
 
@@ -208,7 +209,7 @@ public class EditorPostView extends Composite<Div> implements HasComponents {
 
     private boolean isPostFormValid() {
         boolean isTitleValid = !titleField.isInvalid() && !titleField.isEmpty();
-        boolean isBodyValid = !textBody.isInvalid() && !textBody.isEmpty() && textBody.getValue().strip().length() > textBody.getMinLength();
+        boolean isBodyValid = !textBodyArea.isInvalid() && !textBodyArea.isEmpty() && textBodyArea.getValue().strip().length() > textBodyArea.getMinLength();
         boolean isTagsValid = !tagsField.isInvalid() && !tagsField.isEmpty();
         int tagsLength = tagsField.getValue().split(" ").length;
         boolean isTagsLengthValid = tagsLength > 0 && tagsLength < 6;
@@ -219,7 +220,7 @@ public class EditorPostView extends Composite<Div> implements HasComponents {
             titleField.setInvalid(true);
 
         if (!isBodyValid)
-            textBody.setInvalid(true);
+            textBodyArea.setInvalid(true);
 
         if (!isTagsValid || !isTagsLengthValid || !isTagsValidValue) {
             tagsField.setInvalid(true);

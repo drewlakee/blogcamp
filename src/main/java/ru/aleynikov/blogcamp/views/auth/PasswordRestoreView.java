@@ -22,7 +22,7 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 @PageTitle("Password restore")
 @Route("restore")
-@StyleSheet(StaticResources.PASS_RESTORE_VIEW_STYLES)
+@StyleSheet(StaticResources.PASS_RESTORE_STYLES)
 public class PasswordRestoreView extends HorizontalLayout {
 
     @Autowired

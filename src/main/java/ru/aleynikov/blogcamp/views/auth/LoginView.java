@@ -26,7 +26,7 @@ import ru.aleynikov.blogcamp.views.main.HomeView;
 
 @PageTitle("Log in")
 @Route("login")
-@StyleSheet(StaticResources.LOGIN_VIEW_STYLES)
+@StyleSheet(StaticResources.LOGIN_STYLES)
 public class LoginView extends HorizontalLayout {
 
     private static Logger log = LoggerFactory.getLogger(LoginView.class);

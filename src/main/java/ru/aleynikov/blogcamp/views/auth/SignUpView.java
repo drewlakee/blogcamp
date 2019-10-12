@@ -35,7 +35,7 @@ import java.util.Map;
 
 @PageTitle("Sign up")
 @Route("registration")
-@StyleSheet(StaticResources.SIGN_UP_VIEW_STYLES)
+@StyleSheet(StaticResources.SIGN_UP_STYLES)
 public class SignUpView extends HorizontalLayout {
 
     private static Logger log = LoggerFactory.getLogger(SignUpView.class);

@@ -16,7 +16,7 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.HomeView;
 
 
-@StyleSheet(StaticResources.HEADER_COMPONENT_STYLES)
+@StyleSheet(StaticResources.HEADER_STYLES)
 public class HeaderComponent extends HorizontalLayout {
 
     private User currentUser = SecurityUtils.getPrincipal();
@@ -60,10 +60,7 @@ public class HeaderComponent extends HorizontalLayout {
         setVerticalComponentAlignment(Alignment.CENTER, searchField);
 
         userAvatarImage.addClassName("user-avatar");
-        if (currentUser.getAvatar() != null)
-            userAvatarImage.setSrc(currentUser.getAvatar());
-        else
-            userAvatarImage.setSrc(StaticResources.DEFAULT_USER_AVATAR);
+        userAvatarImage.setSrc(currentUser.getAvatar());
         userAvatarImage.setTitle(currentUser.getUsername());
 
 

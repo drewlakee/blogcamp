@@ -35,7 +35,7 @@ import java.util.*;
 
 @Route(value = "about", layout = ProfileView.class)
 @PageTitle("Profile - About")
-@StyleSheet(StaticResources.PROFILE_VIEW_STYLES)
+@StyleSheet(StaticResources.PROFILE_STYLES)
 public class AboutView extends Composite<Div> implements HasComponents, BeforeEnterObserver {
 
     @Autowired

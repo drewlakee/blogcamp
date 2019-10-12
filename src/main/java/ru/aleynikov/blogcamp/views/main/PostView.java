@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Route(value = "globe/post", layout = MainLayout.class)
-@StyleSheet(StaticResources.MAIN_LAYOUT_STYLES)
+@StyleSheet(StaticResources.MAIN_STYLES)
 @StyleSheet(StaticResources.POST_STYLES)
 public class PostView extends Composite<Div> implements HasComponents, HasUrlParameter<Integer>, HasDynamicTitle {
 
@@ -152,7 +152,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
     }
 
     private boolean isValidParameter(Integer parameter) {
-        Post post = postService.findPostById(parameter);
+        Post post = postService.findById(parameter);
 
         if (post != null) {
             currentPost = post;
