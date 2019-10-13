@@ -36,8 +36,10 @@ public class CommentComponent extends Div {
 
     private SimpleDateFormat createdDateFormat = new SimpleDateFormat("MMMM d, yyyy HH:mm:ss", Locale.ENGLISH);
 
+    private UserDetailDialog userDetailDialog;
+
     public CommentComponent(Comment comment) {
-        contentLayout.addClassName("padding-b-none");
+        contentLayout.addClassName("padding-none");
 
         contentHorizontalLayout.setSizeFull();
 
@@ -54,8 +56,6 @@ public class CommentComponent extends Div {
         rightSideLayout.addClassName("margin-l-none");
         rightSideLayout.addClassName("padding-b-none");
         rightSideLayout.setWidth(null);
-
-        headerLayout.addClassName("border-b-light-grey");
 
         usernameSpan.addClassName("link");
         usernameSpan.setText(comment.getUser().getUsername());
@@ -88,5 +88,11 @@ public class CommentComponent extends Div {
         contentLayout.add(contentHorizontalLayout);
 
         add(contentLayout);
+
+        userDetailDialog = new UserDetailDialog(comment.getUser());
+
+        usernameSpan.addClickListener(event -> {
+            userDetailDialog.open();
+        });
     }
 }

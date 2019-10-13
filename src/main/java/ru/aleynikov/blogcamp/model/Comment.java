@@ -14,4 +14,12 @@ public class Comment {
     private Timestamp createdDate;
     private User user;
     private Post post;
+
+    public Comment(String text, Timestamp createdDate, User user) {
+        this.text = text;
+        this.createdDate = createdDate;
+        this.user = user;
+    }
+
+    public Comment() {}
 }

@@ -13,21 +13,30 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.aleynikov.blogcamp.component.CommentComponent;
 import ru.aleynikov.blogcamp.component.TagComponent;
+import ru.aleynikov.blogcamp.model.Comment;
 import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.Tag;
+import ru.aleynikov.blogcamp.security.SecurityUtils;
+import ru.aleynikov.blogcamp.service.CommentService;
 import ru.aleynikov.blogcamp.service.JavaScriptUtils;
 import ru.aleynikov.blogcamp.service.PostService;
 import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 @Route(value = "globe/post", layout = MainLayout.class)
 @StyleSheet(StaticResources.MAIN_STYLES)
@@ -37,7 +46,15 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private CommentService commentService;
+
     private Post currentPost;
+
+    private int commentsCount;
+
+    private int commentsOffset = 0;
+    private static final int commentsLimitOfLoad = 10;
 
     private String dynamicTitle;
 
@@ -47,6 +64,8 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
     private VerticalLayout bodyFootLayout = new VerticalLayout();
     private VerticalLayout userInfoLeftSideLayout = new VerticalLayout();
     private VerticalLayout userInfoRightSideLayout = new VerticalLayout();
+    private VerticalLayout footLayout = new VerticalLayout();
+    private VerticalLayout footCommentsLayout = new VerticalLayout();
 
 
     private HorizontalLayout headerUpperLayout = new HorizontalLayout();
@@ -65,8 +84,15 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
     private Span createdDateSpan = new Span();
     private Span userFullNameSpan = new Span();
-
     private Span userLink = new Span();
+    private Span updateComments = new Span("Update comments");
+    private Span loadMoreCommentsSpan = new Span("More");
+
+    private Icon commentIcon = new Icon(VaadinIcon.COMMENT);
+
+    private TextArea commentArea = new TextArea();
+
+    private Button addCommentButton = new Button("Comment");
     private Button backButton = new Button("Back");
 
     private Icon backIcon = new Icon(VaadinIcon.CHEVRON_LEFT_SMALL);
@@ -144,11 +170,81 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
         bodyLayout.add(postImage, htmlDiv, bodyFootLayout);
 
-        contentLayout.add(headerLayout, bodyLayout);
+        footLayout.setWidth("100%");
+        footLayout.addClassName("content-foot");
+
+        commentArea.setWidth("100%");
+        commentArea.setPlaceholder("Type comment here...");
+        commentArea.setMaxLength(500);
+        commentArea.setMinLength(1);
+        commentArea.setErrorMessage("Must be not empty.");
+
+        addCommentButton.addClassName("main-button");
+        addCommentButton.addClassName("rs-cmp");
+
+        commentIcon.addClassName("margin-l-5px");
+
+        updateComments.add(commentIcon);
+        updateComments.addClassName("link");
+
+        footCommentsLayout.addClassName("padding-none");
+
+        loadMoreCommentsSpan.addClassName("fw-600");
+        loadMoreCommentsSpan.addClassName("link");
+        loadMoreCommentsSpan.setVisible(false);
+
+        footLayout.setHorizontalComponentAlignment(FlexComponent.Alignment.CENTER, loadMoreCommentsSpan);
+
+        footLayout.add(commentArea, addCommentButton, updateComments, footCommentsLayout, loadMoreCommentsSpan);
+
+        contentLayout.add(headerLayout, bodyLayout, footLayout);
 
         add(contentLayout);
 
         backButton.addClickListener(event -> UI.getCurrent().getPage().getHistory().back());
+
+        addCommentButton.addClickListener(event -> {
+            if (isCommentValid()) {
+                HashMap<String, Object> comment = new HashMap<>();
+                comment.put("text", commentArea.getValue().strip());
+                comment.put("created_date", new Timestamp(System.currentTimeMillis()));
+                comment.put("post_id", currentPost.getId());
+                comment.put("user_id", SecurityUtils.getPrincipal().getId());
+                commentService.save(comment);
+
+                Comment newComment = new Comment(commentArea.getValue().strip(), ((Timestamp) comment.get("created_date")), SecurityUtils.getPrincipal());
+                footCommentsLayout.addComponentAsFirst(new CommentComponent(newComment));
+                commentArea.clear();
+
+                Notification.show("Comment was posted.");
+            }
+        });
+
+        updateComments.addClickListener(event -> {
+            commentsOffset = 0;
+
+            updateComments();
+        });
+
+        loadMoreCommentsSpan.addClickListener(event -> {
+            commentsOffset += commentsLimitOfLoad;
+            commentsCount = commentService.countByPostId(currentPost.getId());
+
+            if (commentsOffset + commentsLimitOfLoad >= commentsCount) {
+                loadMoreCommentsSpan.setVisible(false);
+            }
+
+            loadComments(commentsOffset, commentsLimitOfLoad);
+        });
+    }
+
+    private boolean isCommentValid() {
+        boolean isValidForm = !commentArea.isInvalid() && !commentArea.isEmpty();
+
+        if (!isValidForm)
+            commentArea.setInvalid(true);
+
+        return isValidForm;
     }
 
     private boolean isValidParameter(Integer parameter) {
@@ -202,9 +298,31 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
                 UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(qparams)));
             });
 
+            loadComments(commentsOffset, commentsLimitOfLoad);
         } else {
             headerLayout.add(notExistH2);
         }
+    }
+
+    private void loadComments(int offset, int limitLoadComments) {
+        List<Comment> comments;
+        comments = commentService.findNewestByPostIdWithOffsetAndLimit(offset, limitLoadComments, currentPost.getId());
+        commentsCount = commentService.countByPostId(currentPost.getId());
+
+        for (Comment comment : comments) {
+            CommentComponent commentComponent = new CommentComponent(comment);
+            commentComponent.addClassName("padding-none");
+            footCommentsLayout.add(commentComponent);
+        }
+
+        if (offset + limitLoadComments < commentsCount) {
+            loadMoreCommentsSpan.setVisible(true);
+        }
+    }
+
+    private void updateComments() {
+        footCommentsLayout.removeAll();
+        loadComments(commentsOffset, commentsLimitOfLoad);
     }
 
     @Override

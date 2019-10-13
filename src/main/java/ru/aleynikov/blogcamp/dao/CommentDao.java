@@ -9,4 +9,5 @@ public interface CommentDao {
 
     List<Comment> findNewestByPostIdWithOffsetAndLimit(int offset, int limit, int id);
     void save(HashMap<String, Object> comment);
+    int countByPostId(int id);
 }

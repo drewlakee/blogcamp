@@ -28,7 +28,7 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public List<Comment> findNewestByPostIdWithOffsetAndLimit(int offset, int limit, int id) {
-        String query = "SELECT * FROM comment WHERE post = ? ORDER BY (created_date) OFFSET ? LIMIT ?";
+        String query = "SELECT * FROM comment WHERE post = ? ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {id, offset, limit};
         List<Comment> comments;
 
@@ -37,19 +37,30 @@ public class CommentDaoImpl implements CommentDao {
 
         return comments;
     }
-
+    
     @Override
     public void save(HashMap<String, Object> comment) {
-        String query = "INSERT INTO comment (comment_id, text, created_date, \"user\", post) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO comment (text, created_date, \"user\", post) VALUES (?, ?, ?, ?)";
         Object[] qparams = new Object[] {
-                comment.get("comment_id"),
                 comment.get("text"),
-                new Timestamp(System.currentTimeMillis()),
+                comment.get("created_date"),
                 comment.get("user_id"),
                 comment.get("post_id")
         };
 
-        log.info(SecurityUtils.getPrincipal().getUsername() + query + ", {}", Arrays.toString(qparams));
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
         jdbc.update(query, qparams);
+    }
+
+    @Override
+    public int countByPostId(int id) {
+        String query = "SELECT COUNT(*) FROM comment WHERE post = ?";
+        Object[] qparams = new Object[] {id};
+        int count;
+
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
+        count = jdbc.queryForObject(query, qparams, Integer.class);
+
+        return count;
     }
 }

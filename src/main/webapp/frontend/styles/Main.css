@@ -95,9 +95,12 @@ body {
 }
 
 .content-body {
-    height: 100%;
     padding: 18px 0 0 24px;
     margin-top: 0;
+}
+
+.content-foot {
+    padding: 18px 0 50px 24px;
 }
 
 .content-label {
@@ -183,6 +186,10 @@ body {
 
 .margin-l-5px {
     margin-left: 5px;
+}
+
+.padding-l-none {
+    padding-left: 0;
 }
 
 .margin-l-none {
