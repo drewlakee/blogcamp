@@ -10,10 +10,14 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.QueryParameters;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
+import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.HomeView;
+
+import java.util.HashMap;
 
 
 @StyleSheet(StaticResources.HEADER_STYLES)
@@ -90,6 +94,14 @@ public class HeaderComponent extends HorizontalLayout {
     }
 
     private void searchFieldProcess() {
-        Notification.show(searchField.getValue());
+        if (!searchField.isEmpty()) {
+            HashMap<String, Object> qparams = new HashMap<>();
+            qparams.put("search", searchField.getValue().strip());
+            qparams.put("global", "yes");
+
+            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(qparams)));
+        } else {
+            UI.getCurrent().navigate("globe");
+        }
     }
 }

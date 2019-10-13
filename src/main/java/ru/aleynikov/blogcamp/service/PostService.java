@@ -58,4 +58,12 @@ public class PostService {
     public int countByUsername(String username) {
         return postDao.countByUsername(username);
     }
+
+    public List<Post> findPostsGlobal(int page, int postsLimitOnPage, String search) {
+        return postDao.findPostsGlobal(FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage, search);
+    }
+
+    public int countGlobal(String search) {
+        return postDao.countGlobal(search);
+    }
 }

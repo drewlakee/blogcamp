@@ -80,9 +80,10 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
                     "search","",
                     "tag", "",
                     "page", "1",
-                    "user", "")
+                    "user", "",
+                    "global", "")
     );
-    private static Set<String> pageParametersKeySet = Set.of("tab", "search", "tag", "page", "user");
+    private static Set<String> pageParametersKeySet = Set.of("tab", "search", "tag", "page", "user", "global");
     private Map<String, List<String>> qparams;
 
     public GlobeView() {
@@ -214,7 +215,8 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
                 event.getLocation().getPath(),
                 pageParametersMap.get("search").toString(),
                 pageParametersMap.get("tag").toString(),
-                pageParametersMap.get("user").toString()
+                pageParametersMap.get("user").toString(),
+                pageParametersMap.get("global").toString()
         );
     }
 
@@ -241,7 +243,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
         statusSpan.setText(user.getStatus());
     }
 
-    private void buildPostsBrowser(int page, String sortTab, String locationPath, String search, String tag, String user) {
+    private void buildPostsBrowser(int page, String sortTab, String locationPath, String search, String tag, String user, String globalSearch) {
         int pageLimit;
         List<Post> posts;
         float count;
@@ -249,10 +251,15 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
         customQueryParams.put("page", page);
 
-        if (!search.isEmpty()) {
+        if (!search.isEmpty() && globalSearch.isEmpty()) {
             posts = postService.findPostsByTitle(page, POST_ON_PAGE_LIMIT, search);
             count = postService.countByTitle(search);
             customQueryParams.put("search", search);
+        } else if (!globalSearch.isEmpty() && globalSearch.strip().equals("yes")) {
+            posts = postService.findPostsGlobal(page, POST_ON_PAGE_LIMIT, search);
+            count = postService.countGlobal(search);
+            customQueryParams.put("search", search);
+            customQueryParams.put("global", globalSearch);
         } else if (!tag.isEmpty()) {
             posts = postService.findPostsByTag(page, POST_ON_PAGE_LIMIT, tag);
             count = postService.countByTag(tag);

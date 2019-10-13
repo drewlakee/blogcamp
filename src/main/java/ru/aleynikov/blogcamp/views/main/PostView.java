@@ -3,6 +3,7 @@ package ru.aleynikov.blogcamp.views.main;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasComponents;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -87,6 +88,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
     private Span userLink = new Span();
     private Span updateComments = new Span("Update comments");
     private Span loadMoreCommentsSpan = new Span("More");
+    private Span commentsCountSpan = new Span();
 
     private Icon commentIcon = new Icon(VaadinIcon.COMMENT);
 
@@ -184,7 +186,11 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
         commentIcon.addClassName("margin-l-5px");
 
-        updateComments.add(commentIcon);
+        commentsCountSpan.addClassName("link");
+        commentsCountSpan.addClassName("margin-l-5px");
+        commentsCountSpan.setText("(" + commentsCount + ")");
+
+        updateComments.add(commentsCountSpan, commentIcon);
         updateComments.addClassName("link");
 
         footCommentsLayout.addClassName("padding-none");
@@ -214,6 +220,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
                 Comment newComment = new Comment(commentArea.getValue().strip(), ((Timestamp) comment.get("created_date")), SecurityUtils.getPrincipal());
                 footCommentsLayout.addComponentAsFirst(new CommentComponent(newComment));
+                commentsCountSpan.setText("(" + (commentsCount + 1) + ")");
                 commentArea.clear();
 
                 Notification.show("Comment was posted.");
@@ -308,6 +315,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
         List<Comment> comments;
         comments = commentService.findNewestByPostIdWithOffsetAndLimit(offset, limitLoadComments, currentPost.getId());
         commentsCount = commentService.countByPostId(currentPost.getId());
+        commentsCountSpan.setText("(" + commentsCount + ")");
 
         for (Comment comment : comments) {
             CommentComponent commentComponent = new CommentComponent(comment);

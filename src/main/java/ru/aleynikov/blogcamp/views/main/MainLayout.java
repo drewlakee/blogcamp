@@ -117,6 +117,7 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
             leftSideBarLayout.setVisible(true);
         } else if (event.getNavigationTarget().getSimpleName().equals(GlobeView.class.getSimpleName())) {
             navigationBar.setSelectedTab(postsTab);
+            leftSideBarLayout.setVisible(true);
         } else if (event.getNavigationTarget().getSimpleName().equals(TagsView.class.getSimpleName())) {
             navigationBar.setSelectedTab(tagsTab);
         } else if (event.getNavigationTarget().getSimpleName().equals(UsersView.class.getSimpleName())) {

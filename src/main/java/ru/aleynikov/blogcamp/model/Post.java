@@ -18,4 +18,5 @@ public class Post {
     private Timestamp createdDate;
     private boolean isBanned;
     private List<Tag> tags;
+    private int commentCount;
 }

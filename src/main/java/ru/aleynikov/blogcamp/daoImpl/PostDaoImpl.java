@@ -203,4 +203,44 @@ public class PostDaoImpl implements PostDao {
 
         return count;
     }
+
+    @Override
+    public List<Post> findPostsGlobal(int offset, int limit, String search) {
+        String query = "SELECT post.post_id, title, text, \"user\", intro_image, created_date, banned, comments_count FROM post " +
+                "JOIN post_to_tag USING (post_id) " +
+                "JOIN tag USING (tag_id) " +
+                "WHERE LOWER(tag.name) LIKE LOWER(?) " +
+                "OR LOWER(post.title) LIKE LOWER(?) " +
+                "OR LOWER(post.text) LIKE LOWER(?) " +
+                "GROUP BY post.post_id " +
+                "ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
+        String searchValue = "%" + search + "%";
+        Object[] qparams = new Object[] {searchValue, searchValue, searchValue, offset, limit};
+        List<Post> posts = null;
+
+        try {
+            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+            posts = jdbc.query(query, qparams, postRowMapper);
+        } catch (EmptyResultDataAccessException e) {}
+
+        return posts;
+    }
+
+    @Override
+    public int countGlobal(String search) {
+        String query = "SELECT COUNT(DISTINCT post_to_tag.post_id) " +
+                "FROM post JOIN post_to_tag USING (post_id) " +
+                "    JOIN tag USING (tag_id) " +
+                "WHERE LOWER(tag.name) LIKE LOWER(?) " +
+                "   OR LOWER(post.title) LIKE LOWER(?) " +
+                "   OR LOWER(post.text) LIKE LOWER(?) ";
+        String searchValue = "%" + search + "%";
+        Object[] qparams = new Object[] {searchValue, searchValue, searchValue};
+        int count;
+
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
+        count = jdbc.queryForObject(query, qparams, Integer.class);
+
+        return count;
+    }
 }

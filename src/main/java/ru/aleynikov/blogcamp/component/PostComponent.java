@@ -6,13 +6,17 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.RouterLink;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.Tag;
+import ru.aleynikov.blogcamp.service.CommentService;
 import ru.aleynikov.blogcamp.service.JavaScriptUtils;
 import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
@@ -25,6 +29,9 @@ import java.util.*;
 @StyleSheet(StaticResources.MAIN_STYLES)
 public class PostComponent extends Div {
 
+    @Autowired
+    private CommentService commentService;
+
     private VerticalLayout contentLayout = new VerticalLayout();
     private VerticalLayout middleLayout = new VerticalLayout();
 
@@ -35,6 +42,9 @@ public class PostComponent extends Div {
     private Span dotFirstSpan = new Span("•");
     private Span dotSecondSpan = new Span("•");
     private Span createdDateSpan = new Span();
+    private Span commentsCountSpan = new Span();
+
+    private Icon commentIcon = new Icon(VaadinIcon.COMMENT);
 
     private H2 postTitleH2 = new H2();
 
@@ -104,7 +114,12 @@ public class PostComponent extends Div {
         readLink.addClassName("link");
         readLink.addClassName("fw-600");
 
-        lowerLayout.add(readLink);
+        commentsCountSpan.addClassName("rs-cmp");
+        commentsCountSpan.setText(String.valueOf(post.getCommentCount()));
+        commentIcon.addClassName("margin-l-5px");
+        commentsCountSpan.add(commentIcon);
+
+        lowerLayout.add(readLink, commentsCountSpan);
 
         contentLayout.add(upperLayout, middleLayout, lowerLayout);
 
