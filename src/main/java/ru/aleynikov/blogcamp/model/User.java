@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Setter
 @Getter
-public class User implements UserDetails {
+public class User implements UserDetails, RoleProver {
 
     private int id;
     private String username;
@@ -28,8 +28,9 @@ public class User implements UserDetails {
     private Date birthday;
     private String country;
     private String city;
-    private String role;
+    private Role role;
     private String avatar;
+    private boolean isBanned;
 
     public User() {}
 
@@ -48,12 +49,13 @@ public class User implements UserDetails {
         this.city = user.getCity();
         this.role = user.getRole();
         this.avatar = user.getAvatar();
+        this.isBanned = user.isBanned();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new LinkedHashSet<>();
-        authorities.add(new SimpleGrantedAuthority(role));
+        authorities.add(new SimpleGrantedAuthority(role.name()));
 
         return authorities;
     }
@@ -75,5 +77,15 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() { return active;
+    }
+
+    @Override
+    public boolean isAdmin() {
+        return role.equals(Role.ADMIN);
+    }
+
+    @Override
+    public boolean isAnonymous() {
+        return role.equals(Role.UNKNOWN);
     }
 }

@@ -1,6 +1,5 @@
 package ru.aleynikov.blogcamp.component;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
@@ -11,26 +10,19 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.RouterLink;
-import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.Tag;
-import ru.aleynikov.blogcamp.service.CommentService;
-import ru.aleynikov.blogcamp.service.JavaScriptUtils;
-import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.PostView;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
 
 @StyleSheet(StaticResources.POST_STYLES)
 @StyleSheet(StaticResources.MAIN_STYLES)
 public class PostComponent extends Div {
-
-    @Autowired
-    private CommentService commentService;
 
     private VerticalLayout contentLayout = new VerticalLayout();
     private VerticalLayout middleLayout = new VerticalLayout();
@@ -54,6 +46,8 @@ public class PostComponent extends Div {
 
     private SimpleDateFormat createdDateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
     private SimpleDateFormat detailCreatedDateFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+
+    private UserDetailDialog userDetailDialog;
 
     public PostComponent(Post post) {
         addClassName("post-block");
@@ -125,11 +119,10 @@ public class PostComponent extends Div {
 
         add(contentLayout);
 
+        userDetailDialog = new UserDetailDialog(post.getUser());
+
         usernameSpan.addClickListener(event -> {
-            HashMap<String, Object> qparam = new HashMap<>();
-            qparam.put("user", post.getUser().getUsername());
-            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(qparam)));
-            JavaScriptUtils.scrollPageTop();
+            userDetailDialog.open();
         });
     }
 

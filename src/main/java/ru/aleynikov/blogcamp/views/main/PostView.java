@@ -3,7 +3,6 @@ package ru.aleynikov.blogcamp.views.main;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasComponents;
-import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -19,10 +18,14 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.router.*;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasDynamicTitle;
+import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.component.CommentComponent;
 import ru.aleynikov.blogcamp.component.TagComponent;
+import ru.aleynikov.blogcamp.component.UserDetailDialog;
 import ru.aleynikov.blogcamp.model.Comment;
 import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.Tag;
@@ -30,7 +33,6 @@ import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.CommentService;
 import ru.aleynikov.blogcamp.service.JavaScriptUtils;
 import ru.aleynikov.blogcamp.service.PostService;
-import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.sql.Timestamp;
@@ -57,7 +59,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
     private int commentsOffset = 0;
     private static final int commentsLimitOfLoad = 10;
 
-    private String dynamicTitle;
+    private String dynamicTitle = "Post not exist";
 
     private VerticalLayout contentLayout = new VerticalLayout();
     private VerticalLayout headerLayout = new VerticalLayout();
@@ -67,7 +69,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
     private VerticalLayout userInfoRightSideLayout = new VerticalLayout();
     private VerticalLayout footLayout = new VerticalLayout();
     private VerticalLayout footCommentsLayout = new VerticalLayout();
-
+    private VerticalLayout notPostExistLayout = new VerticalLayout();
 
     private HorizontalLayout headerUpperLayout = new HorizontalLayout();
     private HorizontalLayout bodyFootUpperLayout = new HorizontalLayout();
@@ -102,7 +104,12 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
     private SimpleDateFormat createdDateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
     private SimpleDateFormat detailCreatedDateFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
 
+    private UserDetailDialog userDetailDialog;
+
     public PostView() {
+        notPostExistLayout.setSizeFull();
+        notPostExistLayout.setVisible(false);
+
         contentLayout.setSizeFull();
         contentLayout.addClassName("padding-none");
 
@@ -205,7 +212,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
         contentLayout.add(headerLayout, bodyLayout, footLayout);
 
-        add(contentLayout);
+        add(notPostExistLayout, contentLayout);
 
         backButton.addClickListener(event -> UI.getCurrent().getPage().getHistory().back());
 
@@ -218,11 +225,8 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
                 comment.put("user_id", SecurityUtils.getPrincipal().getId());
                 commentService.save(comment);
 
-                Comment newComment = new Comment(commentArea.getValue().strip(), ((Timestamp) comment.get("created_date")), SecurityUtils.getPrincipal());
-                footCommentsLayout.addComponentAsFirst(new CommentComponent(newComment));
-                commentsCountSpan.setText("(" + (commentsCount + 1) + ")");
+                updateComments();
                 commentArea.clear();
-
                 Notification.show("Comment was posted.");
             }
         });
@@ -299,15 +303,16 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
             userLink.setText(currentPost.getUser().getUsername());
             userFullNameSpan.setText(currentPost.getUser().getFullName());
 
+            userDetailDialog = new UserDetailDialog(currentPost.getUser());
             userLink.addClickListener(clickEvent -> {
-                HashMap<String, Object> qparams = new HashMap<>();
-                qparams.put("user", currentPost.getUser().getUsername());
-                UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(qparams)));
+                userDetailDialog.open();
             });
 
             loadComments(commentsOffset, commentsLimitOfLoad);
         } else {
-            headerLayout.add(notExistH2);
+            contentLayout.setVisible(false);
+            notPostExistLayout.setVisible(true);
+            notPostExistLayout.add(notExistH2);
         }
     }
 

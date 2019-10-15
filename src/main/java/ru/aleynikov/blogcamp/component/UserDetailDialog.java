@@ -5,20 +5,34 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.QueryParameters;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.model.User;
+import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.QueryParametersManager;
+import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
+import javax.annotation.PostConstruct;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Locale;
+
 
 @StyleSheet(StaticResources.USER_STYLES)
 @StyleSheet(StaticResources.MAIN_STYLES)
 public class UserDetailDialog extends Dialog {
+
+    @Autowired
+    private UserService userService;
 
     private VerticalLayout detailUserLayout = new VerticalLayout();
     private VerticalLayout leftSideLayout = new VerticalLayout();
@@ -35,12 +49,15 @@ public class UserDetailDialog extends Dialog {
     private Span detailUserBirthdaySpan = new Span();
     private Span detailUserStatusSpan = new Span();
     private Span postsFindLinkSpan = new Span("Find posts");
+    private Span banUserSpan = new Span("Ban user");
+    private Span unBunUserSpan = new Span("Unban user");
 
     private Image userAvatar = new Image();
 
-    public UserDetailDialog(User user) {
+    private User userInSession = SecurityUtils.getPrincipal();
+
+    public UserDetailDialog(User postUser) {
         detailUserLayout.setWidth("100%");
-        detailUserLayout.setHeight("286px");
 
         detailUserHorizontalLayout.setSizeFull();
 
@@ -55,7 +72,7 @@ public class UserDetailDialog extends Dialog {
 
         userAvatar.addClassName("detail-avatar-img");
         userAvatar.setAlt("user avatar");
-        userAvatar.setSrc(user.getAvatar());
+        userAvatar.setSrc(postUser.getAvatar());
 
         avatarLayout.add(userAvatar);
 
@@ -64,42 +81,65 @@ public class UserDetailDialog extends Dialog {
 
         leftSideLayout.setHorizontalComponentAlignment(FlexComponent.Alignment.CENTER, userAvatar);
         leftSideLayout.setHorizontalComponentAlignment(FlexComponent.Alignment.CENTER, postsFindLinkSpan);
+        leftSideLayout.setHorizontalComponentAlignment(FlexComponent.Alignment.CENTER, banUserSpan);
+        leftSideLayout.setHorizontalComponentAlignment(FlexComponent.Alignment.CENTER, unBunUserSpan);
 
-        leftSideLayout.add(userAvatar, postsFindLinkSpan);
+        banUserSpan.addClassName("fs-30px");
+        banUserSpan.addClassName("attention");
+        banUserSpan.addClassName("fw-600");
+        banUserSpan.addClassName("margin-none");
+        banUserSpan.setVisible(false);
+
+        unBunUserSpan.addClassName("fs-30px");
+        unBunUserSpan.addClassName("warning");
+        unBunUserSpan.addClassName("fw-600");
+        unBunUserSpan.addClassName("margin-none");
+        unBunUserSpan.setVisible(false);
+
+        if (!userInSession.getUsername().equals(postUser.getUsername())) {
+            if (userInSession.isAdmin() && !postUser.isBanned() && !postUser.isAdmin()) {
+                banUserSpan.setVisible(true);
+            } else if (userInSession.isAdmin() && postUser.isBanned() && !postUser.isAdmin()) {
+                unBunUserSpan.setVisible(true);
+                postsFindLinkSpan.setVisible(false);
+            }
+        }
+
+        leftSideLayout.add(userAvatar, postsFindLinkSpan, banUserSpan, unBunUserSpan);
 
         rightSideLayout.setSizeFull();
         rightSideLayout.addClassName("margin-none");
 
         detailUserUsername.addClassName("username");
-        detailUserUsername.setText(user.getUsername());
+        detailUserUsername.setText(postUser.getUsername());
         rightSideLayout.add(detailUserUsername);
 
-        if (user.getFullName() != null) {
+        if (postUser.getFullName() != null) {
             detailUserFullNameSpan.addClassName("grey-light");
             detailUserFullNameSpan.addClassName("margin-none");
             detailUserFullNameSpan.addClassName("padding-l-2px");
-            detailUserFullNameSpan.setText(user.getFullName());
+            detailUserFullNameSpan.setText(postUser.getFullName());
             rightSideLayout.add(detailUserFullNameSpan);
         }
 
-        if (user.getCity() != null & user.getCountry() != null) {
+        if (postUser.getCity() != null & postUser.getCountry() != null) {
             detailUserFromSpan.addClassName("grey-light");
             detailUserFromSpan.addClassName("margin-none");
             detailUserFromSpan.addClassName("padding-l-2px");
-            detailUserFromSpan.setText(user.getCity() + ", " + user.getCountry());
+            detailUserFromSpan.setText(postUser.getCity() + ", " + postUser.getCountry());
             rightSideLayout.add(detailUserFromSpan);
         }
 
-        if (user.getBirthday() != null) {
+        if (postUser.getBirthday() != null) {
             detailUserBirthdaySpan.addClassName("grey-light");
             detailUserBirthdaySpan.addClassName("margin-none");
             detailUserBirthdaySpan.addClassName("padding-l-2px");
-            detailUserBirthdaySpan.setText(user.getBirthday().toLocalDate().format(DateTimeFormatter.ofPattern("d MMMM YYYY", Locale.ENGLISH)) + " (" + (currYear - user.getBirthday().toLocalDate().getYear()) + " years old)");
+            detailUserBirthdaySpan.setText(postUser.getBirthday().toLocalDate().format(DateTimeFormatter.ofPattern("d MMMM YYYY", Locale.ENGLISH)) + " (" + (currYear - postUser.getBirthday().toLocalDate().getYear()) + " years old)");
             rightSideLayout.add(detailUserBirthdaySpan);
         }
 
-        if (user.getStatus() != null) {
-            detailUserStatusSpan.setText(user.getStatus());
+        if (postUser.getStatus() != null) {
+            detailUserStatusSpan.setText(postUser.getStatus());
             rightSideLayout.add(detailUserStatusSpan);
         }
 
@@ -111,9 +151,32 @@ public class UserDetailDialog extends Dialog {
 
         postsFindLinkSpan.addClickListener(event -> {
             HashMap<String, Object> qparams = new HashMap<>();
-            qparams.put("user", user.getUsername());
+            qparams.put("user", postUser.getUsername());
             UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(qparams)));
             close();
         });
+
+        banUserSpan.addClickListener(event -> {
+            banUserSpan.setVisible(false);
+            postsFindLinkSpan.setVisible(false);
+            unBunUserSpan.setVisible(true);
+
+     //       userService.banById(postUser.getId());
+            Notification.show(postUser.getUsername() + " was banned.");
+        });
+
+        unBunUserSpan.addClickListener(event -> {
+            unBunUserSpan.setVisible(false);
+            banUserSpan.setVisible(true);
+            postsFindLinkSpan.setVisible(true);
+
+    //        userService.unBanById(postUser.getId());
+            Notification.show(postUser.getUsername() + " was unbanned.");
+        });
+    }
+
+    @PostConstruct
+    void Init() {
+        System.out.println("INIIIIIIIIIIIIIT");
     }
 }

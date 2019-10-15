@@ -2,6 +2,7 @@ package ru.aleynikov.blogcamp.mapper;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import ru.aleynikov.blogcamp.model.Role;
 import ru.aleynikov.blogcamp.model.User;
 
 import java.sql.ResultSet;
@@ -35,8 +36,9 @@ public class UserRowMapper implements RowMapper {
         user.setCountry(rs.getString("country"));
         user.setCity(rs.getString("city"));
         user.setFullName(rs.getString("fullname"));
-        user.setRole(rs.getString("role"));
+        user.setRole(Role.getRoleEnum(rs.getString("role")));
         user.setAvatar(rs.getString("avatar"));
+        user.setBanned(rs.getBoolean("banned"));
 
         return user;
     }

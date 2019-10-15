@@ -19,4 +19,6 @@ public interface UserDao {
     void updateProfile(HashMap<String, Object> infoForUpdate);
     void updateSecret(String secretQuestion, String secretAnswer, int userId);
     void updateAvatarByUserId(String avatar, int id);
+    void banById(int id);
+    void unBanById(int id);
 }

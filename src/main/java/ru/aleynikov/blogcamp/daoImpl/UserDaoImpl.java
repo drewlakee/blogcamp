@@ -28,7 +28,7 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     private UserRowMapper userRowMapper;
 
-    private static final String userMainInfoQuery = "SELECT user_id, username, password, fullname, secret_question, secret_answer, active, role, registered, status, birthday, avatar, country.name AS \"country\", city.name AS \"city\" FROM usr LEFT JOIN country ON country.country_id = usr.country LEFT JOIN city ON city.city_id = usr.city";
+    private static final String userMainInfoQuery = "SELECT user_id, username, password, fullname, secret_question, secret_answer, active, role, registered, status, birthday, avatar, banned, country.name AS \"country\", city.name AS \"city\" FROM usr LEFT JOIN country ON country.country_id = usr.country LEFT JOIN city ON city.city_id = usr.city";
 
     @Override
     public User findByUsername(String username) {
@@ -154,6 +154,24 @@ public class UserDaoImpl implements UserDao {
         Object[] qparams = new Object[] {avatar, id};
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        jdbc.update(query, qparams);
+    }
+
+    @Override
+    public void banById(int id) {
+        String query = "UPDATE usr SET banned = true WHERE user_id = ?";
+        Object[] qparams = new Object[] {id};
+
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
+        jdbc.update(query, qparams);
+    }
+
+    @Override
+    public void unBanById(int id) {
+        String query = "UPDATE usr SET banned = false WHERE user_id = ?";
+        Object[] qparams = new Object[] {id};
+
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
         jdbc.update(query, qparams);
     }
 }

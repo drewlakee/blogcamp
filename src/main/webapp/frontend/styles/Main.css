@@ -249,6 +249,29 @@ body {
     font-size: 12px;
 }
 
+.fs-30px {
+    font-size: 30px;
+}
+
+.attention {
+    color: #ff002ec9;
+}
+
+.attention:hover {
+    color: rgba(255, 0, 46, 0.68);
+    transition: background .1s ease-in-out;
+}
+
+.warning {
+    color: #e49121;
+}
+
+.warning:hover {
+    color: #f29b22;
+    transition: background .1s ease-in-out;
+}
+
 .fw-600 {
     font-weight: 600;
 }
+

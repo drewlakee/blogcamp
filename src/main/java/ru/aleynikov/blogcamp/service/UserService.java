@@ -67,4 +67,12 @@ public class UserService {
     public void updateUserAvatarByUserId(String avatar, int id) {
         userDao.updateAvatarByUserId(avatar, id);
     }
+
+    public void banById(int id) {
+        userDao.banById(id);
+    }
+
+    public void unBanById(int id) {
+        userDao.unBanById(id);
+    }
 }
