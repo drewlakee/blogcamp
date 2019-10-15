@@ -281,7 +281,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
         if (!posts.isEmpty()) {
             for (Post post : posts) {
-                PostComponent postComponent = new PostComponent(post);
+                PostComponent postComponent = new PostComponent(post, userService);
                 bodyLayout.add(postComponent);
             }
 

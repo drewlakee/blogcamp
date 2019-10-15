@@ -13,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.Tag;
+import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.PostView;
 
@@ -49,7 +50,7 @@ public class PostComponent extends Div {
 
     private UserDetailDialog userDetailDialog;
 
-    public PostComponent(Post post) {
+    public PostComponent(Post post, UserService userService) {
         addClassName("post-block");
 
         contentLayout.setSizeFull();
@@ -119,7 +120,7 @@ public class PostComponent extends Div {
 
         add(contentLayout);
 
-        userDetailDialog = new UserDetailDialog(post.getUser());
+        userDetailDialog = new UserDetailDialog(post.getUser(), userService);
 
         usernameSpan.addClickListener(event -> {
             userDetailDialog.open();

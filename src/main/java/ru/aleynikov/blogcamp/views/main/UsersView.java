@@ -193,7 +193,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
         if (!userList.isEmpty()) {
             for (User user : userList) {
                 counter += 1;
-                row.add(new UserComponent(user));
+                row.add(new UserComponent(user, userService));
 
                 if (counter == rowLimit || userList.indexOf(user) == userList.size() - 1) {
                     bodyLayout.add(row);

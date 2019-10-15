@@ -16,11 +16,14 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import ru.aleynikov.blogcamp.model.User;
+import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.HomeView;
 
@@ -28,6 +31,9 @@ import ru.aleynikov.blogcamp.views.main.HomeView;
 @Route("login")
 @StyleSheet(StaticResources.LOGIN_STYLES)
 public class LoginView extends HorizontalLayout {
+
+    @Autowired
+    private UserService userService;
 
     private static Logger log = LoggerFactory.getLogger(LoginView.class);
 
@@ -104,27 +110,38 @@ public class LoginView extends HorizontalLayout {
 
         loginButton.addClickShortcut(Key.ENTER);
         loginButton.addClickListener(clickEvent -> {
-            if (isLoginFormValid()) {
+            if (isLoginFormValid() && !isUserBanned()) {
                 try {
                     final Authentication authentication = authenticationManager
                             .authenticate(new UsernamePasswordAuthenticationToken(usernameField.getValue().strip(), passwordField.getValue().strip()));
-
-                    /**
-                     *   if authentication was successful we will update the security context and redirect to the page requested first
-                     */
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     log.info("User was authenticated [{}] with authorities {}",
                             SecurityContextHolder.getContext().getAuthentication().getName(),
                             SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 
-                    UI.getCurrent().navigate(HomeView.class
-                    );
+                    UI.getCurrent().navigate(HomeView.class);
                 } catch (AuthenticationException ex) {
                     loginErrorLayout.setVisible(true);
                 }
             }
         });
+    }
+
+    private boolean isUserBanned() {
+        boolean isUserBanned = false;
+        User user = userService.findUserByUsername(usernameField.getValue().strip());
+
+        if (user != null) {
+            isUserBanned = user.isBanned();
+        }
+
+        if (isUserBanned) {
+            errorLoginLabel.setText("You are was banned.");
+            loginErrorLayout.setVisible(true);
+        }
+
+        return isUserBanned;
     }
 
     private boolean isLoginFormValid() {

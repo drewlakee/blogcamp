@@ -33,6 +33,7 @@ import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.CommentService;
 import ru.aleynikov.blogcamp.service.JavaScriptUtils;
 import ru.aleynikov.blogcamp.service.PostService;
+import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.sql.Timestamp;
@@ -51,6 +52,9 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private UserService userService;
 
     private Post currentPost;
 
@@ -303,7 +307,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
             userLink.setText(currentPost.getUser().getUsername());
             userFullNameSpan.setText(currentPost.getUser().getFullName());
 
-            userDetailDialog = new UserDetailDialog(currentPost.getUser());
+            userDetailDialog = new UserDetailDialog(currentPost.getUser(), userService);
             userLink.addClickListener(clickEvent -> {
                 userDetailDialog.open();
             });
@@ -323,7 +327,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
         commentsCountSpan.setText("(" + commentsCount + ")");
 
         for (Comment comment : comments) {
-            CommentComponent commentComponent = new CommentComponent(comment);
+            CommentComponent commentComponent = new CommentComponent(comment, userService);
             commentComponent.addClassName("padding-none");
             footCommentsLayout.add(commentComponent);
         }

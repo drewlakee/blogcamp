@@ -159,7 +159,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void banById(int id) {
-        String query = "UPDATE usr SET banned = true WHERE user_id = ?";
+        String query = "UPDATE usr SET banned = true, active = false WHERE user_id = ?";
         Object[] qparams = new Object[] {id};
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
@@ -168,7 +168,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void unBanById(int id) {
-        String query = "UPDATE usr SET banned = false WHERE user_id = ?";
+        String query = "UPDATE usr SET banned = false, active = true WHERE user_id = ?";
         Object[] qparams = new Object[] {id};
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);

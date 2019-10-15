@@ -6,8 +6,10 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
+import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 @StyleSheet(StaticResources.USER_STYLES)
@@ -32,7 +34,7 @@ public class UserComponent extends Div {
 
     private UserDetailDialog userDetailDialog;
 
-    public UserComponent(User currentUser) {
+    public UserComponent(User currentUser, UserService userService) {
         addClassName("user-block");
 
         contentLayout.addClassName("padding-none");
@@ -96,7 +98,7 @@ public class UserComponent extends Div {
 
         add(contentLayout);
 
-        userDetailDialog = new UserDetailDialog(currentUser);
+        userDetailDialog = new UserDetailDialog(currentUser, userService);
 
         addClickListener(event -> {
             userDetailDialog.open();

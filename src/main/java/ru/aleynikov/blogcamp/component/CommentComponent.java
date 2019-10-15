@@ -9,6 +9,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import ru.aleynikov.blogcamp.model.Comment;
+import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.text.SimpleDateFormat;
@@ -38,7 +39,7 @@ public class CommentComponent extends Div {
 
     private UserDetailDialog userDetailDialog;
 
-    public CommentComponent(Comment comment) {
+    public CommentComponent(Comment comment, UserService userService) {
         contentLayout.addClassName("padding-none");
 
         contentHorizontalLayout.setSizeFull();
@@ -89,7 +90,7 @@ public class CommentComponent extends Div {
 
         add(contentLayout);
 
-        userDetailDialog = new UserDetailDialog(comment.getUser());
+        userDetailDialog = new UserDetailDialog(comment.getUser(), userService);
 
         usernameSpan.addClickListener(event -> {
             userDetailDialog.open();

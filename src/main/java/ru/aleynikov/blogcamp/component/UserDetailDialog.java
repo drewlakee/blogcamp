@@ -10,17 +10,12 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.QueryParameters;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
-import javax.annotation.PostConstruct;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -30,9 +25,6 @@ import java.util.Locale;
 @StyleSheet(StaticResources.USER_STYLES)
 @StyleSheet(StaticResources.MAIN_STYLES)
 public class UserDetailDialog extends Dialog {
-
-    @Autowired
-    private UserService userService;
 
     private VerticalLayout detailUserLayout = new VerticalLayout();
     private VerticalLayout leftSideLayout = new VerticalLayout();
@@ -56,7 +48,7 @@ public class UserDetailDialog extends Dialog {
 
     private User userInSession = SecurityUtils.getPrincipal();
 
-    public UserDetailDialog(User postUser) {
+    public UserDetailDialog(User postUser, UserService userService) {
         detailUserLayout.setWidth("100%");
 
         detailUserHorizontalLayout.setSizeFull();
@@ -161,7 +153,7 @@ public class UserDetailDialog extends Dialog {
             postsFindLinkSpan.setVisible(false);
             unBunUserSpan.setVisible(true);
 
-     //       userService.banById(postUser.getId());
+            userService.banById(postUser.getId());
             Notification.show(postUser.getUsername() + " was banned.");
         });
 
@@ -170,13 +162,8 @@ public class UserDetailDialog extends Dialog {
             banUserSpan.setVisible(true);
             postsFindLinkSpan.setVisible(true);
 
-    //        userService.unBanById(postUser.getId());
+            userService.unBanById(postUser.getId());
             Notification.show(postUser.getUsername() + " was unbanned.");
         });
-    }
-
-    @PostConstruct
-    void Init() {
-        System.out.println("INIIIIIIIIIIIIIT");
     }
 }
