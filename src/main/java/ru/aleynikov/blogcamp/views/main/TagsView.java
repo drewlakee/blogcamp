@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.component.PageSwitcherComponent;
 import ru.aleynikov.blogcamp.component.TagComponent;
 import ru.aleynikov.blogcamp.model.Tag;
+import ru.aleynikov.blogcamp.model.User;
+import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.FilterDataManager;
 import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.service.TagService;
@@ -40,6 +42,8 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     private TagService tagService;
 
     private static final int TAGS_ON_PAGE_LIMIT = 24;
+
+    private User userInSession = SecurityUtils.getPrincipal();
 
     private VerticalLayout contentLayout = new VerticalLayout();
     private VerticalLayout headerLayout = new VerticalLayout();
@@ -71,7 +75,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     public TagsView() {
         getContent().setSizeFull();
 
-        contentLayout.setSizeFull();
+        contentLayout.setHeight(null);
         contentLayout.getStyle().set("padding", "0");
 
         headerUpLayout.setSizeFull();
@@ -190,8 +194,8 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         row.setWidth("100%");
 
         if (!search.isEmpty()) {
-            tagList = tagService.getFilterTagList(page, TAGS_ON_PAGE_LIMIT, search);
-            countTags = tagService.getFilterTagsCount(search);
+            tagList = tagService.getTagListBySearch(page, TAGS_ON_PAGE_LIMIT, search);
+            countTags = tagService.getTagsCountBySearch(search);
             customQueryParams.put("search", search);
         } else if (sortTab.equals(newestTab.getLabel().toLowerCase())) {
             tagList = tagService.getNewestTagList(page, TAGS_ON_PAGE_LIMIT);
@@ -206,7 +210,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         if (!tagList.isEmpty()) {
             for (Tag tag : tagList) {
                 counter += 1;
-                row.add(new TagComponent(tag, false));
+                row.add(new TagComponent(tag, tagService));
 
                 if (counter == rowLimit || tagList.indexOf(tag) == tagList.size() - 1) {
                     bodyLayout.add(row);

@@ -29,7 +29,7 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public List<Comment> findNewestByPostIdWithOffsetAndLimit(int offset, int limit, int id) {
-        String query = "SELECT * FROM comment WHERE post = ? ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
+        String query = "SELECT * FROM comment WHERE post = ? AND deleted = false ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {id, offset, limit};
         List<Comment> comments;
 
@@ -55,7 +55,7 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public int countByPostId(int id) {
-        String query = "SELECT COUNT(*) FROM comment WHERE post = ?";
+        String query = "SELECT COUNT(*) FROM comment WHERE post = ? AND deleted = false";
         Object[] qparams = new Object[] {id};
         int count;
 
@@ -63,5 +63,14 @@ public class CommentDaoImpl implements CommentDao {
         count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;
+    }
+
+    @Override
+    public void deleteById(int id) {
+        String query = "UPDATE comment SET deleted = true WHERE comment_id = ? AND deleted = false";
+        Object[] qparams = new Object[] {id};
+
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
+        jdbc.update(query, qparams);
     }
 }

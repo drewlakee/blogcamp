@@ -7,7 +7,9 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import ru.aleynikov.blogcamp.component.CommentComponent;
+import ru.aleynikov.blogcamp.component.PostCutComponent;
 import ru.aleynikov.blogcamp.model.Comment;
+import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
@@ -20,5 +22,8 @@ public class HomeView extends Composite<Div> implements HasComponents{
 
 
     public HomeView() {
+
+
+
     }
 }

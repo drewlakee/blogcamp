@@ -90,7 +90,7 @@ public class HeaderComponent extends HorizontalLayout {
         searchIcon.addClickListener(iconClickEvent -> searchFieldProcess());
         searchField.addKeyPressListener(Key.ENTER, keyEventListener -> searchFieldProcess());
 
-        userAvatarDiv.addClickListener(event -> UI.getCurrent().navigate("profile/about"));
+        userAvatarDiv.addClickListener(event -> UI.getCurrent().navigate("profile/posts"));
     }
 
     private void searchFieldProcess() {

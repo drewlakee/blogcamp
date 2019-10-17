@@ -21,11 +21,11 @@ public class TagService {
         return tagDao.sortByCreatedDateNewestTagsList(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit);
     }
 
-    public List<Tag> getFilterTagList(int page, int tagsOnPageLimit, String filter) {
+    public List<Tag> getTagListBySearch(int page, int tagsOnPageLimit, String filter) {
         return tagDao.findByNameTagsList(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit, filter);
     }
 
-    public int getFilterTagsCount(String filter) {
+    public int getTagsCountBySearch(String filter) {
         return tagDao.countByName(filter);
     }
 
@@ -38,4 +38,11 @@ public class TagService {
     public void saveTag(String name) { tagDao.save(name); }
 
     public List<Tag> findTagsByPostId(int id) { return tagDao.findTagsByPostId(id); }
+
+    public void updateDescriptionById(String description, int id) {
+        if (description.isEmpty())
+            description = null;
+
+        tagDao.updateDescriptionById(description, id);
+    }
 }

@@ -75,6 +75,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
     private TextField externalImageSourceField = new TextField();
 
     private Tabs switchBar = new Tabs();
+    private Tab postsTab = new Tab("Posts");
     private Tab aboutTab = new Tab("About");
     private Tab accountTab = new Tab("Account settings");
 
@@ -133,7 +134,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
         switchLayout.addClassName("padding-none");
 
         switchBar.addClassName("tabs-bar");
-        switchBar.add(aboutTab, accountTab);
+        switchBar.add(postsTab, aboutTab, accountTab);
 
         switchLayout.add(switchBar);
 
@@ -147,7 +148,9 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
         switchBar.addSelectedChangeListener(event -> {
             String selectedTab = event.getSource().getSelectedTab().getLabel();
 
-            if (aboutTab.getLabel().equals(selectedTab)) {
+            if (postsTab.getLabel().equals(selectedTab)) {
+                UI.getCurrent().navigate("profile/posts");
+            } else if (aboutTab.getLabel().equals(selectedTab)) {
                 UI.getCurrent().navigate("profile/about");
             } else if (accountTab.getLabel().equals(selectedTab)) {
                 UI.getCurrent().navigate("profile/account");

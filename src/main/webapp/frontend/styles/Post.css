@@ -60,3 +60,13 @@
     padding-right: 0;
     padding-top: 0;
 }
+
+
+.post-cut-block {
+    border: 1px solid #e1e4e8;
+    border-radius: 3px;
+}
+
+.post-cut-block:hover {
+    border: 1px solid #878a8c;
+}

@@ -243,4 +243,44 @@ public class PostDaoImpl implements PostDao {
 
         return count;
     }
+
+    @Override
+    public List<Post> findNewestPostsByUserId(int offset, int limit, int userId) {
+        String query = "SELECT * FROM post WHERE \"user\" = ? AND deleted = false ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
+        Object[] qparams = new Object[] {userId, offset, limit};
+        List<Post> posts = null;
+
+        try {
+            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+            posts = jdbc.query(query, qparams, postRowMapper);
+        } catch (EmptyResultDataAccessException e) {}
+
+        return posts;
+    }
+
+    @Override
+    public List<Post> findNewestPostsByUserIdAndSearchByTitle(int offset, int limit, int userId, String search) {
+        String query = "SELECT * FROM post WHERE \"user\" = ? AND deleted = false AND LOWER(title) LIKE LOWER(?) ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
+        Object[] qparams = new Object[] {userId, "%" + search + "%" , offset, limit};
+        List<Post> posts = null;
+
+        try {
+            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+            posts = jdbc.query(query, qparams, postRowMapper);
+        } catch (EmptyResultDataAccessException e) {}
+
+        return posts;
+    }
+
+    @Override
+    public int countByUserIdAndSearchByTitle(int userId, String search) {
+        String query = "SELECT COUNT(*) FROM post WHERE \"user\" = ? AND deleted = false AND LOWER(title) LIKE (?)";
+        Object[] qparams = new Object[] {userId, "%" + search + "%"};
+        int count;
+
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        count = jdbc.queryForObject(query, qparams, Integer.class);
+
+        return count;
+    }
 }

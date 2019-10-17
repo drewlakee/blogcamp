@@ -129,7 +129,7 @@ public class PostComponent extends Div {
 
     private void addTagsToPost(List<Tag> tags) {
         for (Tag tag : tags) {
-            TagComponent tagComponent = new TagComponent(tag, true);
+            TagComponent tagComponent = new TagComponent(tag);
             tagComponent.addClassName("margin-l-5px");
             upperLayout.add(tagComponent);
         }

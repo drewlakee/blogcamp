@@ -22,4 +22,7 @@ public interface PostDao {
     int countByUsername(String username);
     List<Post> findPostsGlobal(int offset, int limit, String search);
     int countGlobal(String search);
+    List<Post> findNewestPostsByUserId(int offset, int limit, int userId);
+    List<Post> findNewestPostsByUserIdAndSearchByTitle(int offset, int limit, int userId, String search);
+    int countByUserIdAndSearchByTitle(int userId, String search);
 }

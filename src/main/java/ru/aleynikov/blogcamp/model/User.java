@@ -35,7 +35,7 @@ public class User implements UserDetails, RoleProver {
 
     public User() {}
 
-    public void updateUserByNewUser(User user) {
+    public void refreshUser(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.fullName = user.getFullName();

@@ -11,6 +11,6 @@ public class SessionManager {
     private UserService userService;
 
     public void updateSessionUser() {
-        SecurityUtils.getPrincipal().updateUserByNewUser(userService.findUserByUsername(SecurityUtils.getPrincipal().getUsername()));
+        SecurityUtils.getPrincipal().refreshUser(userService.findUserByUsername(SecurityUtils.getPrincipal().getUsername()));
     }
 }

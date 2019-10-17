@@ -30,4 +30,8 @@ public class CommentService {
     public int countByPostId(int id) {
         return commentDao.countByPostId(id);
     }
+
+    public void deleteById(int id) {
+        commentDao.deleteById(id);
+    }
 }

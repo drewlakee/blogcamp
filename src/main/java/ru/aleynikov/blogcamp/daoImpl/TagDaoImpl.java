@@ -118,4 +118,13 @@ public class TagDaoImpl implements TagDao {
 
         return tagList;
     }
+
+    @Override
+    public void updateDescriptionById(String description, int id) {
+        String query = "UPDATE tag SET description = ? WHERE tag_id = ?";
+        Object[] qparams = new Object[] {description, id};
+
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        jdbc.update(query, qparams);
+    }
 }

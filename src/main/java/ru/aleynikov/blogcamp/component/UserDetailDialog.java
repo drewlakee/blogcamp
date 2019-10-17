@@ -12,6 +12,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.QueryParameters;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
+import ru.aleynikov.blogcamp.service.JavaScriptUtils;
 import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
@@ -145,6 +146,7 @@ public class UserDetailDialog extends Dialog {
             HashMap<String, Object> qparams = new HashMap<>();
             qparams.put("user", postUser.getUsername());
             UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(qparams)));
+            JavaScriptUtils.scrollPageTop();
             close();
         });
 

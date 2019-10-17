@@ -5,10 +5,14 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import ru.aleynikov.blogcamp.model.Comment;
+import ru.aleynikov.blogcamp.model.User;
+import ru.aleynikov.blogcamp.security.SecurityUtils;
+import ru.aleynikov.blogcamp.service.CommentService;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
@@ -18,6 +22,8 @@ import java.util.Locale;
 @StyleSheet(StaticResources.COMMENT_STYLES)
 @StyleSheet(StaticResources.MAIN_STYLES)
 public class CommentComponent extends Div {
+
+    private User userInSession = SecurityUtils.getPrincipal();
 
     private VerticalLayout contentLayout = new VerticalLayout();
     private VerticalLayout leftSideLayout = new VerticalLayout();
@@ -32,6 +38,7 @@ public class CommentComponent extends Div {
     private Span usernameSpan = new Span();
     private Span createdDateSpan = new Span();
     private Span dotSpan = new Span("•");
+    private Span deleteSpan = new Span("Delete");
 
     private Paragraph commentTextParagraph = new Paragraph();
 
@@ -39,7 +46,7 @@ public class CommentComponent extends Div {
 
     private UserDetailDialog userDetailDialog;
 
-    public CommentComponent(Comment comment, UserService userService) {
+    public CommentComponent(Comment comment, UserService userService, CommentService commentService) {
         contentLayout.addClassName("padding-none");
 
         contentHorizontalLayout.setSizeFull();
@@ -72,7 +79,17 @@ public class CommentComponent extends Div {
         createdDateSpan.setText(createdDateFormat.format(comment.getCreatedDate()));
         headerLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, createdDateSpan);
 
-        headerLayout.add(usernameSpan, dotSpan, createdDateSpan);
+        deleteSpan.addClassName("attention");
+        deleteSpan.addClassName("grey-light");
+        deleteSpan.addClassName("fs-12px");
+        headerLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, deleteSpan);
+        deleteSpan.setVisible(false);
+
+        if (userInSession.isAdmin() || userInSession.getUsername().equals(comment.getUser().getUsername())) {
+            deleteSpan.setVisible(true);
+        }
+
+        headerLayout.add(usernameSpan, dotSpan, createdDateSpan, deleteSpan);
 
         bodyLayout.addClassName("padding-none");
         bodyLayout.addClassName("comment-body");
@@ -94,6 +111,13 @@ public class CommentComponent extends Div {
 
         usernameSpan.addClickListener(event -> {
             userDetailDialog.open();
+        });
+
+        deleteSpan.addClickListener(event -> {
+            this.setVisible(false);
+            commentService.deleteById(comment.getId());
+
+            Notification.show("Comment was deleted.");
         });
     }
 }

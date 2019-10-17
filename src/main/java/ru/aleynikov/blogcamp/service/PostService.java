@@ -66,4 +66,16 @@ public class PostService {
     public int countGlobal(String search) {
         return postDao.countGlobal(search);
     }
+
+    public List<Post> findNewestPostsByUserId(int offset, int postsLimitOnPage, int id) {
+        return postDao.findNewestPostsByUserId(offset, postsLimitOnPage, id);
+    }
+
+    public List<Post> findNewestPostsByUserIdAndSearchByTitle(int offset, int postsLimitOnPage, int id, String search) {
+        return postDao.findNewestPostsByUserIdAndSearchByTitle(offset, postsLimitOnPage, id, search);
+    }
+
+    public int countByUserIdAndSearchByTitle(int id, String search) {
+        return postDao.countByUserIdAndSearchByTitle(id, search);
+    }
 }

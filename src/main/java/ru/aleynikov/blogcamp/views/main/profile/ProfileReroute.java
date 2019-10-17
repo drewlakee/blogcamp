@@ -10,6 +10,6 @@ import com.vaadin.flow.router.Route;
 public class ProfileReroute extends Div implements HasComponents, BeforeEnterObserver {
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        event.forwardTo("profile/about");
+        event.forwardTo("profile/posts");
     }
 }

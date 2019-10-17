@@ -14,4 +14,5 @@ public interface TagDao {
     List<Tag> findByNameTagsList(int offset, int limit, String filter);
     int countByName(String filter);
     List<Tag> findTagsByPostId(int id);
+    void updateDescriptionById(String description, int id);
 }

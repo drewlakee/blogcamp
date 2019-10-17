@@ -293,11 +293,11 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
             boolean firstTag = true;
             for (Tag tag : currentPost.getTags()) {
                 if (firstTag) {
-                    TagComponent tagComponent = new TagComponent(tag, true);
+                    TagComponent tagComponent = new TagComponent(tag);
                     bodyFootUpperLayout.add(tagComponent);
                     firstTag = false;
                 } else {
-                    TagComponent tagComponent = new TagComponent(tag, true);
+                    TagComponent tagComponent = new TagComponent(tag);
                     tagComponent.addClassName("margin-l-5px");
                     bodyFootUpperLayout.add(tagComponent);
                 }
@@ -327,7 +327,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
         commentsCountSpan.setText("(" + commentsCount + ")");
 
         for (Comment comment : comments) {
-            CommentComponent commentComponent = new CommentComponent(comment, userService);
+            CommentComponent commentComponent = new CommentComponent(comment, userService, commentService);
             commentComponent.addClassName("padding-none");
             footCommentsLayout.add(commentComponent);
         }
