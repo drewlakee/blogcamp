@@ -155,7 +155,7 @@ public class PostsView extends Composite<Div> implements HasComponents, HasUrlPa
             postsCount = postService.countByUsername(userInSession.getUsername());
         }
 
-        if (postsOffset + LIMIT_OF_POSTS <= postsCount)
+        if (postsOffset + LIMIT_OF_POSTS < postsCount)
             moreSpan.setVisible(true);
         else
             moreSpan.setVisible(false);
@@ -166,7 +166,7 @@ public class PostsView extends Composite<Div> implements HasComponents, HasUrlPa
         postsOffset += LIMIT_OF_POSTS;
 
         for(Post post : posts) {
-            bodyLayout.add(new PostCutComponent(post));
+            bodyLayout.add(new PostCutComponent(post, postService));
         }
     }
 }

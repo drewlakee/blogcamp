@@ -25,4 +25,5 @@ public interface PostDao {
     List<Post> findNewestPostsByUserId(int offset, int limit, int userId);
     List<Post> findNewestPostsByUserIdAndSearchByTitle(int offset, int limit, int userId, String search);
     int countByUserIdAndSearchByTitle(int userId, String search);
+    void deleteById(int id);
 }

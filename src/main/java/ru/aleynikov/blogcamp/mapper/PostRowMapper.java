@@ -27,7 +27,7 @@ public class PostRowMapper implements RowMapper {
         post.setText(rs.getString("text"));
         post.setIntroImage(rs.getString("intro_image"));
         post.setCreatedDate(rs.getTimestamp("created_date"));
-        post.setBanned(rs.getBoolean("banned"));
+        post.setDeleted(rs.getBoolean("deleted"));
         post.setCommentCount(rs.getInt("comments_count"));
         post.setTags(tagService.findTagsByPostId(post.getId()));
         post.setUser(userService.findById(rs.getInt("user")));

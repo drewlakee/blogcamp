@@ -50,7 +50,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public int findPostIdByUserIdAndTitle(int userId, String title) {
-        String query = "SELECT post_id FROM post WHERE \"user\" = ? AND LOWER(title) = LOWER(?)";
+        String query = "SELECT post_id FROM post WHERE \"user\" = ? AND LOWER(title) = LOWER(?) AND deleted = false";
         Object[] qparams = new Object[] {userId, title.toLowerCase()};
         int postIdFromDb = -1;
 
@@ -89,7 +89,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public List<Post> sortNewestPosts(int offset, int limit) {
-        String query = "SELECT * FROM post ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
+        String query = "SELECT * FROM post WHERE deleted = false ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {offset, limit};
         List<Post> posts = null;
 
@@ -103,7 +103,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public int count() {
-        String query = "SELECT COUNT(*) FROM post";
+        String query = "SELECT COUNT(*) FROM post WHERE deleted = false";
         int count;
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query);
@@ -114,7 +114,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public Post findPostById(int id) {
-        String query = "SELECT * FROM post WHERE post_id = ?";
+        String query = "SELECT * FROM post WHERE post_id = ? AND deleted = false";
         Object[] qparams = new Object[] {id};
         Post post = null;
 
@@ -128,7 +128,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public List<Post> findPostsByTitle(int offset, int limit, String filter) {
-        String query = "SELECT * FROM post WHERE LOWER(title) LIKE LOWER(?) ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
+        String query = "SELECT * FROM post WHERE LOWER(title) LIKE LOWER(?) AND deleted = false ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {"%"+filter+"%", offset, limit};
         List<Post> posts = null;
 
@@ -142,7 +142,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public int countByTitle(String filter) {
-        String query = "SELECT COUNT(*) FROM post WHERE LOWER(title) LIKE LOWER(?)";
+        String query = "SELECT COUNT(*) FROM post WHERE LOWER(title) LIKE LOWER(?) AND deleted = false";
         Object[] qparams = new Object[] {"%"+filter+"%"};
         int count;
 
@@ -154,7 +154,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public List<Post> findPostsByTag(int offset, int limit, String tag) {
-        String query = "SELECT * FROM (post_to_tag right join post using (post_id)) WHERE tag_id = (SELECT tag_id FROM tag WHERE name = ?) ORDER BY (created_date) DESC  OFFSET ? LIMIT ?;";
+        String query = "SELECT * FROM (post_to_tag right join post using (post_id)) WHERE tag_id = (SELECT tag_id FROM tag WHERE name = ?) AND deleted = false ORDER BY (created_date) DESC  OFFSET ? LIMIT ?;";
         Object[] qparams = new Object[] {tag, offset, limit};
         List<Post> posts = null;
 
@@ -168,7 +168,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public int countByTag(String tag) {
-        String query = "SELECT COUNT(*) FROM (post_to_tag right join post using (post_id)) WHERE tag_id = (SELECT tag_id FROM tag WHERE name = ?)";
+        String query = "SELECT COUNT(*) FROM (post_to_tag right join post using (post_id)) WHERE tag_id = (SELECT tag_id FROM tag WHERE name = ?) AND deleted = false";
         Object[] qparams = new Object[] {tag};
         int count;
 
@@ -180,7 +180,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public List<Post> findPostsByUsername(int offset, int limit, String username) {
-        String query = "SELECT * FROM post WHERE \"user\" = (SELECT user_id FROM usr WHERE username = ?) ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
+        String query = "SELECT * FROM post WHERE \"user\" = (SELECT user_id FROM usr WHERE username = ?) AND deleted = false ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {username, offset, limit};
         List<Post> posts = null;
 
@@ -194,7 +194,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public int countByUsername(String username) {
-        String query = "SELECT COUNT(*) FROM post WHERE \"user\" = (SELECT user_id FROM usr WHERE username = ?)";
+        String query = "SELECT COUNT(*) FROM post WHERE \"user\" = (SELECT user_id FROM usr WHERE username = ?) AND deleted = false";
         Object[] qparams = new Object[] {username};
         int count;
 
@@ -206,14 +206,15 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public List<Post> findPostsGlobal(int offset, int limit, String search) {
-        String query = "SELECT post.post_id, title, text, \"user\", intro_image, created_date, banned, comments_count FROM post " +
-                "JOIN post_to_tag USING (post_id) " +
-                "JOIN tag USING (tag_id) " +
-                "WHERE LOWER(tag.name) LIKE LOWER(?) " +
-                "OR LOWER(post.title) LIKE LOWER(?) " +
-                "OR LOWER(post.text) LIKE LOWER(?) " +
-                "GROUP BY post.post_id " +
-                "ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
+        String query = "SELECT post.post_id, title, text, \"user\", intro_image, created_date, comments_count, deleted FROM post\n" +
+                "    JOIN post_to_tag USING (post_id)" +
+                "    JOIN tag USING (tag_id)" +
+                "    WHERE (LOWER(tag.name) LIKE LOWER(?)" +
+                "    OR LOWER(post.title) LIKE LOWER(?)" +
+                "    OR LOWER(post.text) LIKE LOWER(?))" +
+                "    AND deleted = false" +
+                "    GROUP BY post.post_id" +
+                "    ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
         String searchValue = "%" + search + "%";
         Object[] qparams = new Object[] {searchValue, searchValue, searchValue, offset, limit};
         List<Post> posts = null;
@@ -231,9 +232,10 @@ public class PostDaoImpl implements PostDao {
         String query = "SELECT COUNT(DISTINCT post_to_tag.post_id) " +
                 "FROM post JOIN post_to_tag USING (post_id) " +
                 "    JOIN tag USING (tag_id) " +
-                "WHERE LOWER(tag.name) LIKE LOWER(?) " +
+                "WHERE (LOWER(tag.name) LIKE LOWER(?) " +
                 "   OR LOWER(post.title) LIKE LOWER(?) " +
-                "   OR LOWER(post.text) LIKE LOWER(?) ";
+                "   OR LOWER(post.text) LIKE LOWER(?)) " +
+                "AND deleted = false ";
         String searchValue = "%" + search + "%";
         Object[] qparams = new Object[] {searchValue, searchValue, searchValue};
         int count;
@@ -282,5 +284,14 @@ public class PostDaoImpl implements PostDao {
         count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;
+    }
+
+    @Override
+    public void deleteById(int id) {
+        String query = "UPDATE post SET deleted = true WHERE post_id = ?";
+        Object[] qparams = new Object[] {id};
+
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
+        jdbc.update(query, qparams);
     }
 }

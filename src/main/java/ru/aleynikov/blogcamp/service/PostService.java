@@ -78,4 +78,8 @@ public class PostService {
     public int countByUserIdAndSearchByTitle(int id, String search) {
         return postDao.countByUserIdAndSearchByTitle(id, search);
     }
+
+    public void deleteById(int id) {
+        postDao.deleteById(id);
+    }
 }

@@ -125,6 +125,7 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
         } else if (event.getLocation().getPath().startsWith("profile")) {
             leftSideBarLayout.setVisible(false);
         } else if (event.getLocation().getPath().startsWith("globe/post")) {
+            leftSideBarLayout.setVisible(true);
             isGlobalPostView = true;
         }
 

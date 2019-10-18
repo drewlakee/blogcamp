@@ -1,5 +1,6 @@
 package ru.aleynikov.blogcamp.component;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
@@ -7,11 +8,14 @@ import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import ru.aleynikov.blogcamp.model.Post;
+import ru.aleynikov.blogcamp.service.PostService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.views.main.PostView;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -39,7 +43,7 @@ public class PostCutComponent extends Div {
 
     private SimpleDateFormat createdDateFormat = new SimpleDateFormat("MMMM d, yyyy HH:mm:ss", Locale.ENGLISH);
 
-    public PostCutComponent(Post post) {
+    public PostCutComponent(Post post, PostService postService) {
         setWidth("100%");
 
         contentLayout.setWidth("100%");
@@ -90,5 +94,14 @@ public class PostCutComponent extends Div {
         contentLayout.add(contentHorizontalLayout);
 
         add(contentLayout);
+
+        readLinkSpan.addClickListener(event -> UI.getCurrent().navigate(PostView.class, post.getId()));
+
+        deleteSpan.addClickListener(event -> {
+            postService.deleteById(post.getId());
+
+            this.setVisible(false);
+            Notification.show("Post was deleted.");
+        });
     }
 }

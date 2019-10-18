@@ -246,7 +246,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
     private void buildPostsBrowser(int page, String sortTab, String locationPath, String search, String tag, String user, String globalSearch) {
         int pageLimit;
         List<Post> posts;
-        float count;
+        int count;
         HashMap<String, Object> customQueryParams = new HashMap<>();
 
         customQueryParams.put("page", page);

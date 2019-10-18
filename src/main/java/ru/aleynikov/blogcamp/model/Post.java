@@ -16,7 +16,7 @@ public class Post {
     private String text;
     private String introImage;
     private Timestamp createdDate;
-    private boolean isBanned;
+    private boolean isDeleted;
     private List<Tag> tags;
     private int commentCount;
 }
