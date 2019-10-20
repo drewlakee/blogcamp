@@ -13,7 +13,6 @@ public class Tag {
     private int id;
     private String name;
     private String description;
-    private int postCount;
     private Timestamp createdDate;
 
     public Tag() {}

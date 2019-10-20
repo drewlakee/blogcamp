@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.service.PostService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.views.main.EditorPostView;
 import ru.aleynikov.blogcamp.views.main.PostView;
 
 import java.text.SimpleDateFormat;
@@ -65,15 +66,15 @@ public class PostCutComponent extends Div {
         contentHorLeftSideLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, createdDateSpan);
 
         readLinkSpan.addClassName("link");
-        readLinkSpan.addClassName("fw-600");
+        readLinkSpan.addClassName("opacity-07");
         contentHorLeftSideLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, readLinkSpan);
 
         editLinkSpan.addClassName("warning");
-        editLinkSpan.addClassName("fw-600");
+        editLinkSpan.addClassName("opacity-07");
         contentHorLeftSideLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, editLinkSpan);
 
         deleteSpan.addClassName("attention");
-        deleteSpan.addClassName("fw-600");
+        deleteSpan.addClassName("opacity-07");
         contentHorLeftSideLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, deleteSpan);
 
         contentHorLeftSideLayout.setWidth("100%");
@@ -96,6 +97,8 @@ public class PostCutComponent extends Div {
         add(contentLayout);
 
         readLinkSpan.addClickListener(event -> UI.getCurrent().navigate(PostView.class, post.getId()));
+
+        editLinkSpan.addClickListener(event -> UI.getCurrent().navigate("editpost/" + post.getId()));
 
         deleteSpan.addClickListener(event -> {
             postService.deleteById(post.getId());

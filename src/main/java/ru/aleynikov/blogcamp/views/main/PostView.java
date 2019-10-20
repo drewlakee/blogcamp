@@ -29,6 +29,7 @@ import ru.aleynikov.blogcamp.component.UserDetailDialog;
 import ru.aleynikov.blogcamp.model.Comment;
 import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.Tag;
+import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.CommentService;
 import ru.aleynikov.blogcamp.service.JavaScriptUtils;
@@ -55,6 +56,8 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
     @Autowired
     private UserService userService;
+
+    private User userInSession = SecurityUtils.getPrincipal();
 
     private Post currentPost;
 
@@ -95,6 +98,8 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
     private Span updateComments = new Span("Update comments");
     private Span loadMoreCommentsSpan = new Span("More");
     private Span commentsCountSpan = new Span();
+    private Span editSpan = new Span("EDIT");
+    private Span deleteSpan = new Span("DELETE");
 
     private Icon commentIcon = new Icon(VaadinIcon.COMMENT);
 
@@ -152,6 +157,14 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
         bodyFootLowerLayout.setWidth("100%");
 
+        editSpan.addClassName("warning");
+        editSpan.addClassName("opacity-07");
+        editSpan.setVisible(false);
+
+        deleteSpan.addClassName("attention");
+        deleteSpan.addClassName("opacity-07");
+        deleteSpan.setVisible(false);
+
         userInfoDiv.addClassName("user-small-block");
         userInfoDiv.addClassName("rs-cmp");
 
@@ -177,7 +190,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
         userInfoDiv.add(userInfoLayout);
 
-        bodyFootLowerLayout.add(userInfoDiv);
+        bodyFootLowerLayout.add(editSpan, deleteSpan, userInfoDiv);
 
         bodyFootLayout.add(bodyFootUpperLayout, bodyFootLowerLayout);
 
@@ -251,6 +264,17 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
             loadComments(commentsOffset, commentsLimitOfLoad);
         });
+
+        deleteSpan.addClickListener(event -> {
+            postService.deleteById(currentPost.getId());
+
+            Notification.show("Post was deleted.");
+            UI.getCurrent().navigate(GlobeView.class);
+        });
+
+        editSpan.addClickListener(event -> {
+           UI.getCurrent().navigate("editpost/" + currentPost.getId());
+        });
     }
 
     private boolean isCommentValid() {
@@ -306,6 +330,11 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
             userImage.setSrc(currentPost.getUser().getAvatar());
             userLink.setText(currentPost.getUser().getUsername());
             userFullNameSpan.setText(currentPost.getUser().getFullName());
+
+            if (userInSession.isAdmin() || currentPost.getUser().getUsername().equals(userInSession.getUsername())) {
+                editSpan.setVisible(true);
+                deleteSpan.setVisible(true);
+            }
 
             userDetailDialog = new UserDetailDialog(currentPost.getUser(), userService);
             userLink.addClickListener(clickEvent -> {

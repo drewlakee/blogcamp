@@ -29,7 +29,6 @@ public class TagComponent extends Div {
     private User userInSession = SecurityUtils.getPrincipal();
 
     private Span tagNameSpan = new Span();
-    private Span tagPostCountSpan = new Span();
     private Span tagDescSpan = new Span();
     private Span createdDateSpan = new Span();
 
@@ -77,12 +76,6 @@ public class TagComponent extends Div {
 
         if (userInSession.isAdmin())
             contentLayout.add(editSpan);
-
-        if (tag.getPostCount() > 0) {
-            tagPostCountSpan.setText(String.valueOf(tag.getPostCount()));
-            tagPostCountSpan.addClassName("tag-post-count");
-            contentLayout.add(tagPostCountSpan);
-        }
 
         upperLayout.add(contentLayout);
 

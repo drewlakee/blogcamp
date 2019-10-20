@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.dao.TagDao;
 import ru.aleynikov.blogcamp.mapper.TagRowMapper;
+import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.Tag;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
@@ -25,18 +26,6 @@ public class TagDaoImpl implements TagDao {
 
     @Autowired
     private TagRowMapper tagRowMapper;
-
-    @Override
-    public List<Tag> sortByPostCountTagsList(int offset, int limit) {
-        String query = "SELECT * FROM tag ORDER BY post_count DESC OFFSET ? LIMIT ?";
-        Object[] qparams = new Object[] {offset, limit};
-        List<Tag> tagList;
-
-        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
-        tagList = jdbc.query(query, qparams, tagRowMapper);
-
-        return tagList;
-    }
 
     @Override
     public List<Tag> sortByCreatedDateNewestTagsList(int offset, int limit) {
@@ -126,5 +115,17 @@ public class TagDaoImpl implements TagDao {
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
         jdbc.update(query, qparams);
+    }
+
+    @Override
+    public void updateTagsCountsOfPostByPostId(Post post) {
+        String queryInsert = "UPDATE post_to_tag SET tag_id = ? WHERE tag_id = ? AND post_id = ?";
+        Object[] qparams;
+
+        for(Tag tag : post.getTags()) {
+            qparams = new Object[] {tag.getId(), tag.getId(), post.getId()};
+
+            jdbc.update(queryInsert, qparams);
+        }
     }
 }

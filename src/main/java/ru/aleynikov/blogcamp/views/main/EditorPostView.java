@@ -17,24 +17,33 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.aleynikov.blogcamp.model.Post;
+import ru.aleynikov.blogcamp.model.Tag;
+import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.JavaScriptUtils;
 import ru.aleynikov.blogcamp.service.PostService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @Route(value = "addpost", layout = MainLayout.class)
-@PageTitle("Add post - Blogcamp")
+@RouteAlias(value = "editpost", layout = MainLayout.class)
 @StyleSheet(StaticResources.MAIN_STYLES)
 @StyleSheet(StaticResources.POST_STYLES)
-public class EditorPostView extends Composite<Div> implements HasComponents {
+public class EditorPostView extends Composite<Div> implements HasComponents, HasUrlParameter<Integer>, HasDynamicTitle {
 
     @Autowired
     private PostService postService;
+
+    private String dynamicTitle = "Add post - Blogcamp";
+
+    private User userInSession = SecurityUtils.getPrincipal();
+
+    private Post postForEdit;
 
     private int externalImageWidth = 500;
 
@@ -61,6 +70,7 @@ public class EditorPostView extends Composite<Div> implements HasComponents {
     private Span tagsSpan = new Span("Tags");
 
     private Button createPostButton = new Button("Create post");
+    private Button updatePostButton = new Button("Update");
     private Button backButton = new Button("Back");
 
     private Icon backIcon = new Icon(VaadinIcon.CHEVRON_LEFT_SMALL);
@@ -147,9 +157,12 @@ public class EditorPostView extends Composite<Div> implements HasComponents {
 
         createPostButton.addClassName("main-button");
 
+        updatePostButton.addClassName("main-button");
+        updatePostButton.setVisible(false);
+
         bodyLayout.add(titleSpan, titleField, uploadSpan, imageLoadGroup, externalLinkOnImageField, uploadedImageDiv,
                 textEditorSpan, textBodyArea, htmlAreaDiv,
-                tagsSpan, tagsField, createPostButton);
+                tagsSpan, tagsField, createPostButton, updatePostButton);
 
         contentLayout.add(headerLayout, bodyLayout);
 
@@ -194,7 +207,91 @@ public class EditorPostView extends Composite<Div> implements HasComponents {
            }
         });
 
+        updatePostButton.addClickListener(event -> {
+            if (isPostFormValid()) {
+                HashMap<String, Object> updatedPost = new LinkedHashMap<>();
+                updatedPost.put("post_id", postForEdit.getId());
+                updatedPost.put("title", titleField.getValue().strip());
+                updatedPost.put("text", textBodyArea.getValue().strip());
+                updatedPost.put("user", postForEdit.getUser().getId());
+                if (imageLoadGroup.getValue().equals(EXTERNAL_IMAGE))
+                    updatedPost.put("intro_image", externalLinkOnImageField.getValue().strip());
+                else
+                    updatedPost.put("intro_image", null);
+                updatedPost.put("created_date", new Timestamp(System.currentTimeMillis()));
+                postService.updatePost(updatedPost);
+
+                Set<String> newTags = new LinkedHashSet<>();
+                Arrays.stream(tagsField.getValue().split(" ")).filter(tag -> !tag.strip().isEmpty()).forEach((x) -> newTags.add(x.toLowerCase().replaceAll(",", "")));
+
+                Set<String> oldTags = new LinkedHashSet<>();
+                postForEdit.getTags().stream().forEach(tag -> oldTags.add(tag.getName()));
+
+                Set<String> intersectionOfNewAndOldTags = new HashSet<>();
+                intersectionOfNewAndOldTags.addAll(newTags);
+                intersectionOfNewAndOldTags.retainAll(oldTags);
+
+                newTags.removeAll(intersectionOfNewAndOldTags);
+                oldTags.removeAll(intersectionOfNewAndOldTags);
+
+                postService.setTagsToPost(newTags, updatedPost);
+                postService.removeTagsFromPost(oldTags, updatedPost);
+
+                UI.getCurrent().navigate(PostView.class, postForEdit.getId());
+            }
+        });
+
         backButton.addClickListener(event -> UI.getCurrent().getPage().getHistory().back());
+    }
+
+    @Override
+    public String getPageTitle() {
+        return dynamicTitle;
+    }
+
+    private boolean isPermissionsAvailable(Integer parameter) {
+        postForEdit = postService.findById(parameter);
+
+        if (postForEdit != null && postForEdit.getUser().getUsername().equals(userInSession.getUsername()))
+            return true;
+        else {
+            return false;
+        }
+    }
+
+    private boolean isValidParameter(Integer parameter) {
+        boolean isNotNull = parameter != null;
+        boolean isCorrect = false;
+
+        if (isNotNull)
+            isCorrect = parameter > 0;
+
+        return isNotNull && isCorrect;
+    }
+
+    @Override
+    public void setParameter(BeforeEvent event, @OptionalParameter Integer parameter) {
+        if (event.getLocation().getPath().startsWith("editpost") && isValidParameter(parameter) && isPermissionsAvailable(parameter)) {
+            titleField.setValue(postForEdit.getTitle());
+
+            if (postForEdit.getIntroImage() != null) {
+                imageLoadGroup.setValue(EXTERNAL_IMAGE);
+                externalLinkOnImageField.setValue(postForEdit.getIntroImage());
+            } else
+                imageLoadGroup.setValue(NONE_IMAGE);
+
+            textBodyArea.setValue(postForEdit.getText());
+
+            for (Tag tag : postForEdit.getTags()) {
+                tagsField.setValue(tagsField.getValue() + " " + tag.getName());
+            }
+
+            createPostButton.setVisible(false);
+            updatePostButton.setVisible(true);
+
+            dynamicTitle = "Edit post - Blogcamp";
+        } else
+            UI.getCurrent().getPage().getHistory().back();
     }
 
     private boolean isExternalSourceValid() {
@@ -211,9 +308,9 @@ public class EditorPostView extends Composite<Div> implements HasComponents {
         boolean isTitleValid = !titleField.isInvalid() && !titleField.isEmpty();
         boolean isBodyValid = !textBodyArea.isInvalid() && !textBodyArea.isEmpty() && textBodyArea.getValue().strip().length() > textBodyArea.getMinLength();
         boolean isTagsValid = !tagsField.isInvalid() && !tagsField.isEmpty();
-        int tagsLength = tagsField.getValue().split(" ").length;
+        long tagsLength = Arrays.stream(tagsField.getValue().split(" ")).filter(tag -> !tag.strip().isEmpty()).count();
         boolean isTagsLengthValid = tagsLength > 0 && tagsLength < 6;
-        boolean isTagsValidValue = Arrays.stream(tagsField.getValue().split(" ")).allMatch((x) -> x.length() > 1 && x.length() < 21);
+        boolean isTagsValidValue = Arrays.stream(tagsField.getValue().split(" ")).filter(tag -> !tag.strip().isEmpty()).allMatch((tag) -> tag.length() > 1 && tag.length() < 21);
         boolean isImageUploadValid = !imageLoadGroup.isEmpty();
 
         if (!isTitleValid)

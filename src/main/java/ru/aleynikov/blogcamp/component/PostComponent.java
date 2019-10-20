@@ -131,6 +131,7 @@ public class PostComponent extends Div {
         for (Tag tag : tags) {
             TagComponent tagComponent = new TagComponent(tag);
             tagComponent.addClassName("margin-l-5px");
+            upperLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, tagComponent);
             upperLayout.add(tagComponent);
         }
     }

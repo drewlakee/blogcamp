@@ -3,6 +3,7 @@ package ru.aleynikov.blogcamp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.aleynikov.blogcamp.daoImpl.TagDaoImpl;
+import ru.aleynikov.blogcamp.model.Post;
 import ru.aleynikov.blogcamp.model.Tag;
 
 import java.util.List;
@@ -12,10 +13,6 @@ public class TagService {
 
     @Autowired
     private TagDaoImpl tagDao;
-
-    public List<Tag> getPopularTagList(int page,  int tagsOnPageLimit) {
-        return tagDao.sortByPostCountTagsList(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit);
-    }
 
     public List<Tag> getNewestTagList(int page,  int tagsOnPageLimit) {
         return tagDao.sortByCreatedDateNewestTagsList(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit);
@@ -44,5 +41,9 @@ public class TagService {
             description = null;
 
         tagDao.updateDescriptionById(description, id);
+    }
+
+    public void updateTagsCountsOfPostByPostId(Post post) {
+        tagDao.updateTagsCountsOfPostByPostId(post);
     }
 }

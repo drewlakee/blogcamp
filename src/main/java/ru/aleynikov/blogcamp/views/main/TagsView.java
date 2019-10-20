@@ -24,6 +24,7 @@ import ru.aleynikov.blogcamp.model.Tag;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.FilterDataManager;
+import ru.aleynikov.blogcamp.service.PostService;
 import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.service.TagService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
@@ -41,9 +42,10 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     @Autowired
     private TagService tagService;
 
-    private static final int TAGS_ON_PAGE_LIMIT = 24;
+    @Autowired
+    private PostService postService;
 
-    private User userInSession = SecurityUtils.getPrincipal();
+    private static final int TAGS_ON_PAGE_LIMIT = 24;
 
     private VerticalLayout contentLayout = new VerticalLayout();
     private VerticalLayout headerLayout = new VerticalLayout();
@@ -61,7 +63,6 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     private H2 notFoundedH2 = new H2("Tags not founded.");
 
     private Tabs sortBar = new Tabs();
-    private Tab popularTab = new Tab("Popular");
     private Tab newestTab = new Tab("Newest");
 
     private HashMap<String, Object> pageParametersMap = new HashMap<>(
@@ -91,7 +92,6 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         searchField.setClearButtonVisible(true);
         headerLowerLayout.setVerticalComponentAlignment(FlexComponent.Alignment.END, searchField);
 
-        sortBar.add(popularTab);
         sortBar.add(newestTab);
         sortBar.addClassName("rs-cmp");
         sortBar.addClassName("tabs-bar");
@@ -113,13 +113,10 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
                 String selectedTab = event.getSource().getSelectedTab().getLabel();
                 HashMap<String, Object> customQueryParams = new HashMap<>();
 
-                if (selectedTab.equals(popularTab.getLabel())) {
-                    customQueryParams.put("tab", popularTab.getLabel().toLowerCase());
-                    UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
-                } else if (selectedTab.equals(newestTab.getLabel())) {
-                    customQueryParams.put("tab", newestTab.getLabel().toLowerCase());
-                    UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
-                }
+               if (selectedTab.equals(newestTab.getLabel())) {
+                        customQueryParams.put("tab", newestTab.getLabel().toLowerCase());
+                        UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
+               }
             }
         });
 
@@ -146,12 +143,9 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         if (sortBar.getSelectedTab() != null) {
             if (qparams.containsKey("search")) {
                 sortBar.setSelectedTab(null);
-            } else if (pageParametersMap.get("tab").equals(newestTab.getLabel().toLowerCase())) {
+            } else {
                 sortBar.setSelectedTab(newestTab);
                 pageParametersMap.replace("tab", newestTab.getLabel().toLowerCase());
-            } else {
-                sortBar.setSelectedTab(popularTab);
-                pageParametersMap.replace("tab", popularTab.getLabel().toLowerCase());
             }
         }
 
@@ -197,16 +191,12 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
             tagList = tagService.getTagListBySearch(page, TAGS_ON_PAGE_LIMIT, search);
             countTags = tagService.getTagsCountBySearch(search);
             customQueryParams.put("search", search);
-        } else if (sortTab.equals(newestTab.getLabel().toLowerCase())) {
+        } else {
             tagList = tagService.getNewestTagList(page, TAGS_ON_PAGE_LIMIT);
             countTags = tagService.getAllTagsCount();
             customQueryParams.put("tab", sortTab);
-        } else {
-            tagList = tagService.getPopularTagList(page, TAGS_ON_PAGE_LIMIT);
-            countTags = tagService.getAllTagsCount();
-            customQueryParams.put("tab", sortTab);
         }
-
+        
         if (!tagList.isEmpty()) {
             for (Tag tag : tagList) {
                 counter += 1;

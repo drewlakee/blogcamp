@@ -32,7 +32,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findByUsername(String username) {
-        String query = userMainInfoQuery + " WHERE LOWER(usr.username) = LOWER(?)";
+        String query = userMainInfoQuery + " WHERE LOWER(usr.username) = LOWER(?) AND banned = false";
         Object[] qparams = new Object[] { username };
         User user = null;
 

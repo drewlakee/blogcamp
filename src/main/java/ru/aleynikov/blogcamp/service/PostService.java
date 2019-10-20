@@ -51,11 +51,11 @@ public class PostService {
         return postDao.countByTag(tag);
     }
 
-    public List<Post> findByUsername(int page, int postsLimitOnPage, String username) {
+    public List<Post> findPostsByUsername(int page, int postsLimitOnPage, String username) {
         return postDao.findPostsByUsername(FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage, username);
     }
 
-    public int countByUsername(String username) {
+    public int countPostsByUsername(String username) {
         return postDao.countByUsername(username);
     }
 
@@ -81,5 +81,13 @@ public class PostService {
 
     public void deleteById(int id) {
         postDao.deleteById(id);
+    }
+
+    public void removeTagsFromPost(Set<String> tags, HashMap<String, Object> post) {
+        postDao.removeTagsFromPost(tags, post);
+    }
+
+    public void updatePost(HashMap<String, Object> post) {
+        postDao.updatePost(post);
     }
 }

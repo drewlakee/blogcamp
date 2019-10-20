@@ -11,6 +11,7 @@ public interface PostDao {
     void save(HashMap<String, Object> post);
     int findPostIdByUserIdAndTitle(int userId, String title);
     void setTagsToPost(Set<String> tags, HashMap<String, Object> post);
+    void removeTagsFromPost(Set<String> tags, HashMap<String, Object> post);
     Post findPostById(int id);
     List<Post> findPostsByTitle(int offset, int limit, String filter);
     int countByTitle(String filter);
@@ -26,4 +27,5 @@ public interface PostDao {
     List<Post> findNewestPostsByUserIdAndSearchByTitle(int offset, int limit, int userId, String search);
     int countByUserIdAndSearchByTitle(int userId, String search);
     void deleteById(int id);
+    void updatePost(HashMap<String, Object> post);
 }
