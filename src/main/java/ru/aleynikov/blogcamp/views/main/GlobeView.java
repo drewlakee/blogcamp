@@ -57,7 +57,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
     private HorizontalLayout headerUpLayout = new HorizontalLayout();
     private HorizontalLayout headerLowerLayout = new HorizontalLayout();
 
-    private Label homeLabel = new Label("Home");
+    private Label homeLabel = new Label("Posts");
 
     private Button addPostButton = new Button("Add post");
 
@@ -70,6 +70,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
     private Tabs sortBar = new Tabs();
     private Tab newestTab = new Tab("Newest");
+    private Tab interestingTab = new Tab("Interesting");
 
     private TextField searchField = new TextField();
 
@@ -110,7 +111,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
         searchField.setClearButtonVisible(true);
         headerLowerLayout.setVerticalComponentAlignment(FlexComponent.Alignment.END, searchField);
 
-        sortBar.add(newestTab);
+        sortBar.add(newestTab, interestingTab);
         sortBar.addClassName("rs-cmp");
         sortBar.addClassName("tabs-bar");
 
@@ -171,6 +172,9 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
                 if (selectedTab.equals(newestTab.getLabel())) {
                     customQueryParams.put("tab", newestTab.getLabel().toLowerCase());
                     UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
+                } else if (selectedTab.equals(interestingTab.getLabel())){
+                    customQueryParams.put("tab", interestingTab.getLabel().toLowerCase());
+                    UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
                 }
             }
         });
@@ -203,7 +207,10 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
                 sortBar.setSelectedTab(null);
             } else if (qparams.containsKey("user")) {
                 sortBar.setSelectedTab(null);
-            } else {
+            } else if (pageParametersMap.get("tab").equals(interestingTab.getLabel().toLowerCase())) {
+                sortBar.setSelectedTab(interestingTab);
+                pageParametersMap.replace("tab", interestingTab.getLabel().toLowerCase());
+            }else {
                 sortBar.setSelectedTab(newestTab);
                 pageParametersMap.replace("tab", newestTab.getLabel().toLowerCase());
             }
@@ -271,6 +278,10 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
             if (foundedUser != null)
                 buildUserDetailInfo(foundedUser);
             customQueryParams.put("user", user);
+        } else if (sortTab.equals(interestingTab.getLabel().toLowerCase())) {
+            posts = postService.findInterestingPosts(page, POST_ON_PAGE_LIMIT);
+            count = postService.count();
+            customQueryParams.put("tab", sortTab);
         } else {
             posts = postService.sortNewestPosts(page, POST_ON_PAGE_LIMIT);
             count = postService.count();

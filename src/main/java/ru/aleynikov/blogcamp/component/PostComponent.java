@@ -45,8 +45,7 @@ public class PostComponent extends Div {
 
     private RouterLink readLink;
 
-    private SimpleDateFormat createdDateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
-    private SimpleDateFormat detailCreatedDateFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+    private SimpleDateFormat detailCreatedDateFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss", Locale.ENGLISH);
 
     private UserDetailDialog userDetailDialog;
 
@@ -71,8 +70,7 @@ public class PostComponent extends Div {
         createdDateSpan.addClassName("grey-light");
         createdDateSpan.addClassName("margin-l-5px");
         createdDateSpan.addClassName("fs-12px");
-        createdDateSpan.setText(createdDateFormat.format(post.getCreatedDate()));
-        createdDateSpan.setTitle(detailCreatedDateFormat.format(post.getCreatedDate()));
+        createdDateSpan.setText(detailCreatedDateFormat.format(post.getCreatedDate()));
         upperLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, createdDateSpan);
 
         upperLayout.add(usernameSpan, dotFirstSpan, createdDateSpan);

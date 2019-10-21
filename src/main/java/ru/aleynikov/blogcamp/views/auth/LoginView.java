@@ -25,7 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
-import ru.aleynikov.blogcamp.views.main.HomeView;
+import ru.aleynikov.blogcamp.views.main.GlobeView;
 
 @PageTitle("Log in")
 @Route("login")
@@ -120,7 +120,7 @@ public class LoginView extends HorizontalLayout {
                             SecurityContextHolder.getContext().getAuthentication().getName(),
                             SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 
-                    UI.getCurrent().navigate(HomeView.class);
+                    UI.getCurrent().navigate(GlobeView.class);
                 } catch (AuthenticationException ex) {
                     loginErrorLayout.setVisible(true);
                 }

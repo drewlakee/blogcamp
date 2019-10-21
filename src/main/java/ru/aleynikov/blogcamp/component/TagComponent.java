@@ -9,7 +9,6 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.QueryParameters;
 import ru.aleynikov.blogcamp.model.Tag;
 import ru.aleynikov.blogcamp.model.User;
@@ -36,7 +35,7 @@ public class TagComponent extends Div {
 
     private Paragraph br = new Paragraph("");
 
-    private TextField descriptionField = new TextField();
+    private TextArea descriptionArea = new TextArea();
 
     private SimpleDateFormat createdDateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
     private SimpleDateFormat detailCreatedDateFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
@@ -93,11 +92,11 @@ public class TagComponent extends Div {
 
         tagDescSpan.addClassName("tag-desc");
 
-        descriptionField.setWidth("100%");
-        descriptionField.setMaxLength(100);
-        descriptionField.setVisible(false);
+        descriptionArea.setWidth("100%");
+        descriptionArea.setMaxLength(100);
+        descriptionArea.setVisible(false);
 
-        add(upperLayout, tagDescSpan, br, descriptionField);
+        add(upperLayout, tagDescSpan, br, descriptionArea);
 
         createdDateSpan.addClassName("tag-date");
         createdDateSpan.setText("created " + createdDateFormat.format(tag.getCreatedDate()));
@@ -106,18 +105,20 @@ public class TagComponent extends Div {
         add(createdDateSpan);
 
         editSpan.addClickListener(event -> {
-            descriptionField.setValue(tagDescSpan.getText());
-            descriptionField.setVisible(true);
+            descriptionArea.setValue(tagDescSpan.getText());
+            descriptionArea.setVisible(true);
             tagDescSpan.setVisible(false);
         });
 
-        descriptionField.addKeyDownListener(Key.ENTER, event -> {
-            String value = descriptionField.getValue().strip();
+        descriptionArea.addValueChangeListener(event -> {
+            String value = descriptionArea.getValue().strip();
             tagService.updateDescriptionById(value, tag.getId());
             tagDescSpan.setText(value);
-            descriptionField.setVisible(false);
+            descriptionArea.setVisible(false);
             tagDescSpan.setVisible(true);
         });
+
+        descriptionArea.addKeyDownListener(Key.ENTER, event -> descriptionArea.setValue(descriptionArea.getValue()));
 
         tagNameSpan.addClickListener(event -> {
             HashMap<String, Object> qparam = new HashMap<>();

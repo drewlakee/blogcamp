@@ -35,7 +35,6 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
     private VerticalLayout leftSideBarLayout = new VerticalLayout();
 
     private Tabs navigationBar = new Tabs();
-    private Tab homeTab = new Tab("Home");
     private Tab publicTabTitle = new Tab("Public");
     private Tab postsTab = new Tab("Blogcamp");
     private Tab tagsTab = new Tab("Tags");
@@ -55,9 +54,6 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
         leftSideBarLayout.setSizeFull();
         leftSideBarLayout.addClassName("left-sidebar");
 
-        homeTab.addClassName("navigation-tab");
-        homeTab.addClassName("home-tab");
-
         publicTabTitle.setEnabled(false);
         publicTabTitle.addClassName("title-tab");
 
@@ -73,7 +69,7 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
         usersTab.addClassName("child-tab");
         usersTab.addClassName("under-icon-tab");
 
-        navigationBar.add(homeTab, publicTabTitle, postsTab, tagsTab, usersTab);
+        navigationBar.add(publicTabTitle, postsTab, tagsTab, usersTab);
         navigationBar.addClassName("navigation-bar");
         navigationBar.setOrientation(Tabs.Orientation.VERTICAL);
 
@@ -88,9 +84,7 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
         navigationBar.addSelectedChangeListener(event -> {
             String selectedTab = event.getSource().getSelectedTab().getLabel();
 
-            if (selectedTab.equals(homeTab.getLabel())) {
-                UI.getCurrent().navigate(HomeView.class);
-            } else if (selectedTab.equals(postsTab.getLabel())) {
+            if (selectedTab.equals(postsTab.getLabel())) {
                 if (!isGlobalPostView)
                     UI.getCurrent().navigate("globe", qparams);
             } else if (selectedTab.equals(tagsTab.getLabel()) ) {
@@ -112,10 +106,7 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
         qparams = event.getLocation().getQueryParameters();
         Map<String, List<String>> emptyQParams = new HashMap<>();
 
-        if (event.getNavigationTarget().getSimpleName().equals(HomeView.class.getSimpleName())) {
-            navigationBar.setSelectedTab(homeTab);
-            leftSideBarLayout.setVisible(true);
-        } else if (event.getNavigationTarget().getSimpleName().equals(GlobeView.class.getSimpleName())) {
+       if (event.getNavigationTarget().getSimpleName().equals(GlobeView.class.getSimpleName())) {
             navigationBar.setSelectedTab(postsTab);
             leftSideBarLayout.setVisible(true);
         } else if (event.getNavigationTarget().getSimpleName().equals(TagsView.class.getSimpleName())) {

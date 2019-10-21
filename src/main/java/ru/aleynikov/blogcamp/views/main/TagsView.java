@@ -42,9 +42,6 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     @Autowired
     private TagService tagService;
 
-    @Autowired
-    private PostService postService;
-
     private static final int TAGS_ON_PAGE_LIMIT = 24;
 
     private VerticalLayout contentLayout = new VerticalLayout();

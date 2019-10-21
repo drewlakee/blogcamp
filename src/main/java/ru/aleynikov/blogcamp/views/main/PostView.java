@@ -110,8 +110,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
     private Icon backIcon = new Icon(VaadinIcon.CHEVRON_LEFT_SMALL);
 
-    private SimpleDateFormat createdDateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
-    private SimpleDateFormat detailCreatedDateFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+    private SimpleDateFormat detailCreatedDateFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss", Locale.ENGLISH);
 
     private UserDetailDialog userDetailDialog;
 
@@ -303,8 +302,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
             titleH2.setText(currentPost.getTitle());
 
-            createdDateSpan.setText("created " + createdDateFormat.format(currentPost.getCreatedDate()));
-            createdDateSpan.setTitle(detailCreatedDateFormat.format(currentPost.getCreatedDate()));
+            createdDateSpan.setText("created " + detailCreatedDateFormat.format(currentPost.getCreatedDate()));
 
             if (currentPost.getIntroImage() != null) {
                 postImage.addClassName("post-image");
@@ -332,9 +330,11 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
             userFullNameSpan.setText(currentPost.getUser().getFullName());
 
             if (userInSession.isAdmin() || currentPost.getUser().getUsername().equals(userInSession.getUsername())) {
-                editSpan.setVisible(true);
                 deleteSpan.setVisible(true);
             }
+
+            if (currentPost.getUser().getUsername().equals(userInSession.getUsername()))
+                editSpan.setVisible(true);
 
             userDetailDialog = new UserDetailDialog(currentPost.getUser(), userService);
             userLink.addClickListener(clickEvent -> {

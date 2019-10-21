@@ -29,7 +29,11 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public List<Tag> sortByCreatedDateNewestTagsList(int offset, int limit) {
-        String query = "SELECT * FROM tag ORDER BY created DESC OFFSET ? LIMIT ?";
+        String query = "SELECT tag.tag_id, tag.name, tag.description, tag.created FROM tag " +
+                "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
+                "JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
+                "JOIN usr ON post.\"user\" = usr.user_id AND usr.banned = false " +
+                "ORDER BY created DESC OFFSET ? LIMIT ? ";
         Object[] qparams = new Object[] {offset, limit};
         List<Tag> tagList;
 
@@ -41,7 +45,10 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public int count() {
-        String query = "SELECT COUNT(*) FROM tag";
+        String query = "SELECT COUNT(*) FROM tag " +
+                "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
+                "JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
+                "JOIN usr ON post.\"user\" = usr.user_id AND usr.banned = false ";
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query);
         int count = jdbc.queryForObject(query, Integer.class);
@@ -51,7 +58,13 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public List<Tag> findByNameTagsList(int offset, int limit, String filter) {
-        String query = "SELECT * FROM tag WHERE LOWER(name) LIKE LOWER(?) OFFSET ? LIMIT ?";
+        String query = "SELECT tag.tag_id, tag.name, tag.description, tag.created FROM tag " +
+                "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
+                "JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
+                "JOIN usr ON post.\"user\" = usr.user_id AND usr.banned = false " +
+                "WHERE LOWER(tag.name) LIKE LOWER(?) " +
+                "ORDER BY (created) DESC " +
+                "OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] { "%"+filter+"%", offset, limit};
         List<Tag> tagList;
 
@@ -63,11 +76,15 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public int countByName(String filter) {
-        String query = "SELECT COUNT(*) FROM tag WHERE name LIKE ?";
+        String query = "SELECT COUNT(*) FROM tag " +
+                "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
+                "JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
+                "JOIN usr ON post.\"user\" = usr.user_id AND usr.banned = false " +
+                "WHERE tag.name LIKE ?";
         Object[] qparams = new Object[] {"%"+filter+"%"};
         int count;
 
-        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query);
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
         count = jdbc.queryForObject(query, qparams, Integer.class);
 
         return count;

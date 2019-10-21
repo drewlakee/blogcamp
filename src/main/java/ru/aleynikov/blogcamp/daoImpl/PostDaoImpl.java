@@ -332,4 +332,23 @@ public class PostDaoImpl implements PostDao {
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
         jdbc.update(query, qparams);
     }
+
+    @Override
+    public List<Post> findInterestingPosts(int offset, int limit) {
+        String query = "SELECT " + mainPostQueryParams + " FROM post, usr " +
+                "WHERE user_id = \"user\" " +
+                "AND usr.banned = false " +
+                "AND deleted = false " +
+                "ORDER BY (comments_count) DESC " +
+                "OFFSET ? LIMIT ? ";
+        Object[] qparams = new Object[] {offset, limit};
+        List<Post> posts = null;
+
+        try {
+            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+            posts = jdbc.query(query, qparams, postRowMapper);
+        } catch (EmptyResultDataAccessException e) {}
+
+        return posts;
+    }
 }

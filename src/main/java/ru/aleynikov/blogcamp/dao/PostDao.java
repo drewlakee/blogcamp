@@ -28,4 +28,5 @@ public interface PostDao {
     int countByUserIdAndSearchByTitle(int userId, String search);
     void deleteById(int id);
     void updatePost(HashMap<String, Object> post);
+    List<Post> findInterestingPosts(int offset, int limit);
 }

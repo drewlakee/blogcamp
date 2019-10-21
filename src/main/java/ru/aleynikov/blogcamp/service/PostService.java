@@ -27,52 +27,52 @@ public class PostService {
         return postDao.findPostById(id);
     }
 
-    public List<Post> sortNewestPosts(int page, int postsLimitOnPage) {
-        return postDao.sortNewestPosts(FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage);
+    public List<Post> sortNewestPosts(int page, int componentLimit) {
+        return postDao.sortNewestPosts(FilterDataManager.filterOffset(page, componentLimit), componentLimit);
     }
 
     public int count() {
         return postDao.count();
     }
 
-    public List<Post> findPostsByTitle(int page, int postsLimitOnPage, String filter) {
-        return postDao.findPostsByTitle(FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage, filter);
+    public List<Post> findPostsByTitle(int page, int componentLimit, String filter) {
+        return postDao.findPostsByTitle(FilterDataManager.filterOffset(page, componentLimit), componentLimit, filter);
     }
 
     public int countByTitle(String filter) {
         return postDao.countByTitle(filter);
     }
 
-    public List<Post> findPostsByTag(int page, int postsLimitOnPage, String tag) {
-        return postDao.findPostsByTag(FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage, tag);
+    public List<Post> findPostsByTag(int page, int componentLimit, String tag) {
+        return postDao.findPostsByTag(FilterDataManager.filterOffset(page, componentLimit), componentLimit, tag);
     }
 
     public int countByTag(String tag) {
         return postDao.countByTag(tag);
     }
 
-    public List<Post> findPostsByUsername(int page, int postsLimitOnPage, String username) {
-        return postDao.findPostsByUsername(FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage, username);
+    public List<Post> findPostsByUsername(int page, int componentLimit, String username) {
+        return postDao.findPostsByUsername(FilterDataManager.filterOffset(page, componentLimit), componentLimit, username);
     }
 
     public int countPostsByUsername(String username) {
         return postDao.countByUsername(username);
     }
 
-    public List<Post> findPostsGlobal(int page, int postsLimitOnPage, String search) {
-        return postDao.findPostsGlobal(FilterDataManager.filterOffset(page, postsLimitOnPage), postsLimitOnPage, search);
+    public List<Post> findPostsGlobal(int page, int componentLimit, String search) {
+        return postDao.findPostsGlobal(FilterDataManager.filterOffset(page, componentLimit), componentLimit, search);
     }
 
     public int countGlobal(String search) {
         return postDao.countGlobal(search);
     }
 
-    public List<Post> findNewestPostsByUserId(int offset, int postsLimitOnPage, int id) {
-        return postDao.findNewestPostsByUserId(offset, postsLimitOnPage, id);
+    public List<Post> findNewestPostsByUserId(int offset, int componentLimit, int id) {
+        return postDao.findNewestPostsByUserId(offset, componentLimit, id);
     }
 
-    public List<Post> findNewestPostsByUserIdAndSearchByTitle(int offset, int postsLimitOnPage, int id, String search) {
-        return postDao.findNewestPostsByUserIdAndSearchByTitle(offset, postsLimitOnPage, id, search);
+    public List<Post> findNewestPostsByUserIdAndSearchByTitle(int page, int componentLimit, int id, String search) {
+        return postDao.findNewestPostsByUserIdAndSearchByTitle(page, componentLimit, id, search);
     }
 
     public int countByUserIdAndSearchByTitle(int id, String search) {
@@ -89,5 +89,9 @@ public class PostService {
 
     public void updatePost(HashMap<String, Object> post) {
         postDao.updatePost(post);
+    }
+
+    public List<Post> findInterestingPosts(int page, int componentLimit) {
+        return postDao.findInterestingPosts(FilterDataManager.filterOffset(page, componentLimit), componentLimit);
     }
 }
