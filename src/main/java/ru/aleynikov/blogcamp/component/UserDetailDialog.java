@@ -119,7 +119,7 @@ public class UserDetailDialog extends Dialog {
             detailUserFromSpan.addClassName("grey-light");
             detailUserFromSpan.addClassName("margin-none");
             detailUserFromSpan.addClassName("padding-l-2px");
-            detailUserFromSpan.setText(postUser.getCity() + ", " + postUser.getCountry());
+            detailUserFromSpan.setText(postUser.getCity().getName() + ", " + postUser.getCountry().getName());
             rightSideLayout.add(detailUserFromSpan);
         }
 

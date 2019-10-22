@@ -1,15 +1,25 @@
 package ru.aleynikov.blogcamp.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import ru.aleynikov.blogcamp.model.Country;
 import ru.aleynikov.blogcamp.model.Role;
 import ru.aleynikov.blogcamp.model.User;
+import ru.aleynikov.blogcamp.service.CityService;
+import ru.aleynikov.blogcamp.service.CountryService;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
 public class UserRowMapper implements RowMapper {
+
+    @Autowired
+    private CityService cityService;
+
+    @Autowired
+    private CountryService countryService;
 
     @Override
     public User mapRow(ResultSet rs, int i) throws SQLException {
@@ -33,8 +43,8 @@ public class UserRowMapper implements RowMapper {
         else
             user.setBirthday(null);
 
-        user.setCountry(rs.getString("country"));
-        user.setCity(rs.getString("city"));
+        user.setCountry(countryService.findById(rs.getInt("country")));
+        user.setCity(cityService.findCityById(rs.getInt("city")));
         user.setFullName(rs.getString("fullname"));
         user.setRole(Role.getRoleEnum(rs.getString("role")));
         user.setAvatar(rs.getString("avatar"));

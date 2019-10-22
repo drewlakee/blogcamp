@@ -13,8 +13,9 @@ public class CityService {
     @Autowired
     private CityDaoImpl cityDao;
 
-    public List<City> getAllCities() {
-        return cityDao.allCitiesList();
+    public List<City> findAllCities() {
+        return cityDao.findAllCities();
     }
+    public City findCityById(int id) { return cityDao.findCityById(id); }
 
 }

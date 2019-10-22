@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface CityDao {
 
-   List<City> allCitiesList();
+   List<City> findAllCities();
+   City findCityById(int id);
 }

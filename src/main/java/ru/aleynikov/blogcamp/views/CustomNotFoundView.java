@@ -17,8 +17,6 @@ public class CustomNotFoundView extends RouteNotFoundError {
 
         return HttpServletResponse.SC_NOT_FOUND;
     }
-
-
 }
 
 

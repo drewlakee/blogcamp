@@ -28,11 +28,9 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     private UserRowMapper userRowMapper;
 
-    private static final String userMainInfoQuery = "SELECT user_id, username, password, fullname, secret_question, secret_answer, active, role, registered, status, birthday, avatar, banned, country.name AS \"country\", city.name AS \"city\" FROM usr LEFT JOIN country ON country.country_id = usr.country LEFT JOIN city ON city.city_id = usr.city";
-
     @Override
     public User findByUsername(String username) {
-        String query = userMainInfoQuery + " WHERE LOWER(usr.username) = LOWER(?) AND banned = false";
+        String query = "SELECT * FROM usr WHERE LOWER(usr.username) = LOWER(?) AND banned = false";
         Object[] qparams = new Object[] { username };
         User user = null;
 
@@ -46,7 +44,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findById(int id) {
-        String query = userMainInfoQuery + " WHERE user_id = ?";
+        String query = "SELECT * FROM usr WHERE user_id = ?";
         Object[] qparams = new Object[] {id};
         User user = null;
 
@@ -84,8 +82,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> sortAscByUsername(int offset, int limit) {
-        String query = userMainInfoQuery + " ORDER BY (username) ASC OFFSET ? LIMIT ?";
+    public List<User> findAscByUsername(int offset, int limit) {
+        String query = "SELECT * FROM usr ORDER BY (username) ASC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {offset, limit};
         List<User> userList;
 
@@ -97,7 +95,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> findByUsername(int offset, int limit, String filter) {
-        String query = userMainInfoQuery + " WHERE LOWER(username) LIKE LOWER(?) OFFSET ? LIMIT ?";
+        String query = "SELECT * FROM usr WHERE LOWER(username) LIKE LOWER(?) OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {"%"+filter+"%", offset, limit};
         List<User> userList;
 
@@ -173,5 +171,21 @@ public class UserDaoImpl implements UserDao {
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
         jdbc.update(query, qparams);
+    }
+
+    @Override
+    public List<User> findActiveUsersWithLimit(int limit) {
+        String query = "SELECT *, (SELECT COUNT(*) FROM post " +
+                " WHERE deleted = false AND usr.user_id = \"user\") as count FROM usr" +
+                " WHERE banned = false" +
+                " ORDER BY count DESC" +
+                " OFFSET 0 LIMIT ?";
+        Object[] qparams = new Object[] {limit};
+        List<User> userList;
+
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
+        userList = jdbc.query(query, qparams, userRowMapper);
+
+        return userList;
     }
 }

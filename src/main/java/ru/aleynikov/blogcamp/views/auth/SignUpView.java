@@ -28,6 +28,7 @@ import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.RedditAvatars;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.GlobeView;
+import ru.aleynikov.blogcamp.views.main.HomeView;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -185,7 +186,7 @@ public class SignUpView extends HorizontalLayout {
                        SecurityContextHolder.getContext().getAuthentication().getName(),
                        SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 
-               UI.getCurrent().navigate(GlobeView.class);
+               UI.getCurrent().navigate(HomeView.class);
            }
         });
     }

@@ -103,7 +103,7 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public List<Post> sortNewestPosts(int offset, int limit) {
+    public List<Post> findNewestPosts(int offset, int limit) {
         String query = "SELECT " + mainPostQueryParams + " FROM post, usr WHERE deleted = false AND \"user\" = user_id AND usr.banned = false ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {offset, limit};
         List<Post> posts = null;
@@ -195,7 +195,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public List<Post> findPostsByUsername(int offset, int limit, String username) {
-        String query = "SELECT " + mainPostQueryParams + " FROM post WHERE \"user\" = (SELECT user_id FROM usr WHERE username = ? AND usr.banned = false) AND deleted = false ORDER BY (created_date) OFFSET ? LIMIT ?";
+        String query = "SELECT " + mainPostQueryParams + " FROM post WHERE \"user\" = (SELECT user_id FROM usr WHERE username = ? AND usr.banned = false) AND deleted = false ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {username, offset, limit};
         List<Post> posts = null;
 
@@ -228,12 +228,13 @@ public class PostDaoImpl implements PostDao {
                 "                WHERE (LOWER(tag.name) LIKE LOWER(?)" +
                 "                OR LOWER(post.title) LIKE LOWER(?)" +
                 "                OR LOWER(post.text) LIKE LOWER(?))" +
+                "                OR LOWER(username) LIKE LOWER(?)" +
                 "                AND deleted = false" +
                 "                AND usr.banned = false" +
                 "                GROUP BY post.post_id" +
                 "                ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
         String searchValue = "%" + search + "%";
-        Object[] qparams = new Object[] {searchValue, searchValue, searchValue, offset, limit};
+        Object[] qparams = new Object[] {searchValue, searchValue, searchValue, searchValue, offset, limit};
         List<Post> posts = null;
 
         try {
@@ -253,10 +254,11 @@ public class PostDaoImpl implements PostDao {
                 "                WHERE (LOWER(tag.name) LIKE LOWER(?)" +
                 "                OR LOWER(post.title) LIKE LOWER(?)" +
                 "                OR LOWER(post.text) LIKE LOWER(?))" +
+                "                OR LOWER(username) LIKE LOWER(?)" +
                 "                AND deleted = false" +
                 "                AND usr.banned = false";
         String searchValue = "%" + search + "%";
-        Object[] qparams = new Object[] {searchValue, searchValue, searchValue};
+        Object[] qparams = new Object[] {searchValue, searchValue, searchValue, searchValue};
         int count;
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
@@ -346,6 +348,25 @@ public class PostDaoImpl implements PostDao {
 
         try {
             log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+            posts = jdbc.query(query, qparams, postRowMapper);
+        } catch (EmptyResultDataAccessException e) {}
+
+        return posts;
+    }
+
+    @Override
+    public List<Post> findInterestingPostsWithLimit(int limit) {
+        String query = "SELECT  post_id, title, text, \"user\", intro_image, created_date, comments_count, deleted FROM post, usr " +
+                "WHERE \"user\" = user_id " +
+                "AND banned = false " +
+                "AND deleted = false " +
+                "ORDER BY comments_count DESC " +
+                "OFFSET 0 LIMIT ? ";
+        Object[] qparams = new Object[] {limit};
+        List<Post> posts = null;
+
+        try {
+            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
             posts = jdbc.query(query, qparams, postRowMapper);
         } catch (EmptyResultDataAccessException e) {}
 

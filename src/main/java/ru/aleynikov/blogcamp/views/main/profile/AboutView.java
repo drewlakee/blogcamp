@@ -214,7 +214,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
         currentUser = SecurityUtils.getPrincipal();
 
         countryList = countryService.getAllCountriesList();
-        cityList = cityService.getAllCities();
+        cityList = cityService.findAllCities();
 
         if (currentUser.getFullName() != null) {
             String[] userNames = currentUser.getFullName().split(" ");
@@ -237,7 +237,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
 
         if (currentUser.getCountry() != null) {
             countrySelect.setEmptySelectionAllowed(true);
-            countrySelect.setEmptySelectionCaption(currentUser.getCountry());
+            countrySelect.setEmptySelectionCaption(currentUser.getCountry().getName());
         }
 
         countryNamesTree = new TreeSet<>();
@@ -246,7 +246,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
 
         if (currentUser.getCity() != null) {
             citySelect.setEmptySelectionAllowed(true);
-            citySelect.setEmptySelectionCaption(currentUser.getCity());
+            citySelect.setEmptySelectionCaption(currentUser.getCity().getName());
         } else
             citySelect.setEnabled(false);
 

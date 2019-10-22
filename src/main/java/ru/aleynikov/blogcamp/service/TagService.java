@@ -15,7 +15,7 @@ public class TagService {
     private TagDaoImpl tagDao;
 
     public List<Tag> getNewestTagList(int page,  int tagsOnPageLimit) {
-        return tagDao.sortByCreatedDateNewestTagsList(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit);
+        return tagDao.findNewestTags(FilterDataManager.filterOffset(page, tagsOnPageLimit), tagsOnPageLimit);
     }
 
     public List<Tag> getTagListBySearch(int page, int tagsOnPageLimit, String filter) {
@@ -45,5 +45,13 @@ public class TagService {
 
     public void updateTagsCountsOfPostByPostId(Post post) {
         tagDao.updateTagsCountsOfPostByPostId(post);
+    }
+
+    public List<Tag> findTagsSortedByNameAsc(int page, int componentsLimit) {
+        return tagDao.findTagsSortedByNameAsc(FilterDataManager.filterOffset(page, componentsLimit), componentsLimit);
+    }
+
+    public List<Tag> findTopPopularTags(int limit) {
+        return tagDao.findPopularTagsWithLimit(limit);
     }
 }

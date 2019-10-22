@@ -1,5 +1,6 @@
 package ru.aleynikov.blogcamp.component;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
@@ -88,6 +89,7 @@ public class PostComponent extends Div {
 
         postTitleH2.addClassName("margin-none");
         postTitleH2.addClassName("padding-l-10px");
+        postTitleH2.addClassName("post-title-link");
         postTitleH2.setText(post.getTitle());
 
         middleLayout.add(postTitleH2);
@@ -108,6 +110,7 @@ public class PostComponent extends Div {
         readLink.addClassName("fw-600");
 
         commentsCountSpan.addClassName("rs-cmp");
+        commentsCountSpan.addClassName("comments-link");
         commentsCountSpan.setText(String.valueOf(post.getCommentCount()));
         commentIcon.addClassName("margin-l-5px");
         commentsCountSpan.add(commentIcon);
@@ -123,6 +126,9 @@ public class PostComponent extends Div {
         usernameSpan.addClickListener(event -> {
             userDetailDialog.open();
         });
+
+        postTitleH2.addClickListener(event -> UI.getCurrent().navigate(PostView.class, post.getId()));
+        commentsCountSpan.addClickListener(event -> UI.getCurrent().navigate(PostView.class, post.getId()));
     }
 
     private void addTagsToPost(List<Tag> tags) {

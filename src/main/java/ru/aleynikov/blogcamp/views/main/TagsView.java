@@ -61,6 +61,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
 
     private Tabs sortBar = new Tabs();
     private Tab newestTab = new Tab("Newest");
+    private Tab aToZTab = new Tab("A-Z");
 
     private HashMap<String, Object> pageParametersMap = new HashMap<>(
             Map.of("tab", "",
@@ -74,7 +75,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         getContent().setSizeFull();
 
         contentLayout.setHeight(null);
-        contentLayout.getStyle().set("padding", "0");
+        contentLayout.addClassName("padding-none");
 
         headerUpLayout.setSizeFull();
 
@@ -89,7 +90,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         searchField.setClearButtonVisible(true);
         headerLowerLayout.setVerticalComponentAlignment(FlexComponent.Alignment.END, searchField);
 
-        sortBar.add(newestTab);
+        sortBar.add(newestTab, aToZTab);
         sortBar.addClassName("rs-cmp");
         sortBar.addClassName("tabs-bar");
 
@@ -110,21 +111,26 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
                 String selectedTab = event.getSource().getSelectedTab().getLabel();
                 HashMap<String, Object> customQueryParams = new HashMap<>();
 
-               if (selectedTab.equals(newestTab.getLabel())) {
-                        customQueryParams.put("tab", newestTab.getLabel().toLowerCase());
-                        UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
-               }
+                if (selectedTab.equals(aToZTab.getLabel())) {
+                    customQueryParams.put("tab", aToZTab.getLabel().toLowerCase());
+                } else {
+                    customQueryParams.put("tab", newestTab.getLabel().toLowerCase());
+                }
+
+                UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
             }
         });
 
-        searchField.addKeyPressListener(Key.ENTER, keyEventListener -> searchFieldProcess());
-
-        searchTagFieldIcon.addClickListener(event -> searchFieldProcess());
+        searchField.addKeyPressListener(Key.ENTER, keyEventListener ->
+                searchFieldProcess());
+        searchTagFieldIcon.addClickListener(event ->
+                searchFieldProcess());
     }
 
     private void searchFieldProcess() {
         if (!searchField.isEmpty()) {
             sortBar.setSelectedTab(null);
+
             HashMap<String, Object> customQueryParams = new HashMap<>();
             customQueryParams.put("search", searchField.getValue().strip());
             UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
@@ -135,11 +141,14 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
-        setQueryParams(qparams);
+        QueryParametersManager.setQueryParams(qparams, pageParametersMap, pageParametersKeySet);
 
         if (sortBar.getSelectedTab() != null) {
             if (qparams.containsKey("search")) {
                 sortBar.setSelectedTab(null);
+            } else if (pageParametersMap.get("tab").equals(aToZTab.getLabel().toLowerCase())) {
+                sortBar.setSelectedTab(aToZTab);
+                pageParametersMap.replace("tab", aToZTab.getLabel().toLowerCase());
             } else {
                 sortBar.setSelectedTab(newestTab);
                 pageParametersMap.replace("tab", newestTab.getLabel().toLowerCase());
@@ -154,24 +163,9 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         );
     }
 
-    private void setQueryParams(Map<String, List<String>> qparams) {
-        for (String parameter : pageParametersKeySet) {
-            if (!parameter.equals("page")) {
-                pageParametersMap.replace(parameter, "");
-            } else
-                pageParametersMap.replace(parameter, "1");
-        }
-
-        for (String parameter : pageParametersKeySet) {
-            if (qparams.containsKey(parameter)) {
-                pageParametersMap.replace(parameter, qparams.get(parameter).get(0));
-            }
-        }
-    }
-
     private void buildTagsBrowser(int page, String sortTab, String locationPath, String search) {
         int rowLimit = 4;
-        int pageLimit;
+        int pageLimit = 0;
         int counter = 0;
         HorizontalLayout row = new HorizontalLayout();
         List<Tag> tagList;
@@ -188,6 +182,10 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
             tagList = tagService.getTagListBySearch(page, TAGS_ON_PAGE_LIMIT, search);
             countTags = tagService.getTagsCountBySearch(search);
             customQueryParams.put("search", search);
+        } else if (pageParametersMap.get("tab").equals(aToZTab.getLabel().toLowerCase())) {
+            tagList = tagService.findTagsSortedByNameAsc(page, TAGS_ON_PAGE_LIMIT);
+            countTags = tagService.getAllTagsCount();
+            customQueryParams.put("tab", sortTab);
         } else {
             tagList = tagService.getNewestTagList(page, TAGS_ON_PAGE_LIMIT);
             countTags = tagService.getAllTagsCount();

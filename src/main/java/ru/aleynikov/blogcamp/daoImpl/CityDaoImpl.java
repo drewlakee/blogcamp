@@ -3,13 +3,16 @@ package ru.aleynikov.blogcamp.daoImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.dao.CityDao;
 import ru.aleynikov.blogcamp.mapper.CityRowMapper;
 import ru.aleynikov.blogcamp.model.City;
+import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -24,7 +27,7 @@ public class CityDaoImpl implements CityDao {
     private CityRowMapper cityRowMapper;
 
     @Override
-    public List<City> allCitiesList() {
+    public List<City> findAllCities() {
         String query = "SELECT * FROM city";
         List<City> cityList;
 
@@ -32,5 +35,19 @@ public class CityDaoImpl implements CityDao {
         cityList = jdbc.query(query, cityRowMapper);
 
         return cityList;
+    }
+
+    @Override
+    public City findCityById(int id) {
+        String query = "SELECT * FROM city WHERE city_id = ?";
+        Object[] qparams = new Object[] { id };
+        City city = null;
+
+        try {
+            log.info(query + ", {}", Arrays.toString(qparams));
+            city = (City) jdbc.queryForObject(query, qparams, cityRowMapper);
+        } catch (EmptyResultDataAccessException e) {}
+
+        return city;
     }
 }

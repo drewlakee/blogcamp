@@ -109,17 +109,9 @@ public class PostsView extends Composite<Div> implements HasComponents, HasUrlPa
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
-        setQueryParams(qparams);
+        QueryParametersManager.setQueryParams(qparams, pageParametersMap, pageParametersKeySet);
 
         buildPostsBrowser(postsOffset, LIMIT_OF_POSTS, pageParametersMap.get("search").toString());
-    }
-
-    private void setQueryParams(Map<String, List<String>> qparams) {
-        for (String parameter : pageParametersKeySet) {
-            if (qparams.containsKey(parameter)) {
-                pageParametersMap.replace(parameter, qparams.get(parameter).get(0));
-            }
-        }
     }
 
     private void search() {
@@ -160,8 +152,10 @@ public class PostsView extends Composite<Div> implements HasComponents, HasUrlPa
         else
             moreSpan.setVisible(false);
 
-        if (postsCount == 0)
+        if (postsCount == 0) {
+            bodyLayout.removeAll();
             bodyLayout.add(new H2("Posts not founded."));
+        }
 
         postsOffset += LIMIT_OF_POSTS;
 

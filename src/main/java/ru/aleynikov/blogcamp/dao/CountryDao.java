@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface CountryDao {
 
-    List<Country> allCountriesList();
+    List<Country> findAllCountries();
     Country findById(int id);
 }

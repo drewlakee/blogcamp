@@ -35,7 +35,6 @@ public class PostCutComponent extends Div {
     private H3 titleH2 = new H3();
 
     private Span commentsCount = new Span();
-    private Span readLinkSpan = new Span("READ");
     private Span editLinkSpan = new Span("EDIT");
     private Span deleteSpan = new Span("DELETE");
     private Span createdDateSpan = new Span();
@@ -56,6 +55,7 @@ public class PostCutComponent extends Div {
         titleH2.setText(post.getTitle());
         titleH2.addClassName("margin-t-none");
         titleH2.addClassName("margin-b-none");
+        titleH2.addClassName("post-title-link");
         contentHorLeftSideLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, titleH2);
 
         createdDateSpan.addClassName("rs-cmp");
@@ -65,10 +65,6 @@ public class PostCutComponent extends Div {
         createdDateSpan.setText(createdDateFormat.format(post.getCreatedDate()));
         contentHorLeftSideLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, createdDateSpan);
 
-        readLinkSpan.addClassName("link");
-        readLinkSpan.addClassName("opacity-07");
-        contentHorLeftSideLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, readLinkSpan);
-
         editLinkSpan.addClassName("warning");
         editLinkSpan.addClassName("opacity-07");
         contentHorLeftSideLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, editLinkSpan);
@@ -77,11 +73,17 @@ public class PostCutComponent extends Div {
         deleteSpan.addClassName("opacity-07");
         contentHorLeftSideLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, deleteSpan);
 
+        if (postService == null) {
+            editLinkSpan.setVisible(false);
+            deleteSpan.setVisible(false);
+        }
+
         contentHorLeftSideLayout.setWidth("100%");
-        contentHorLeftSideLayout.add(titleH2, createdDateSpan, readLinkSpan, editLinkSpan, deleteSpan);
+        contentHorLeftSideLayout.add(titleH2, createdDateSpan, editLinkSpan, deleteSpan);
 
         commentsCount.setText(String.valueOf(post.getCommentCount()));
         commentsCount.addClassName("rs-cmp");
+        commentsCount.addClassName("comments-link");
         contentHorRightSideLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER, commentsCount);
 
         commentIcon.addClassName("margin-l-5px");
@@ -96,15 +98,18 @@ public class PostCutComponent extends Div {
 
         add(contentLayout);
 
-        readLinkSpan.addClickListener(event -> UI.getCurrent().navigate(PostView.class, post.getId()));
+        titleH2.addClickListener(event -> UI.getCurrent().navigate(PostView.class, post.getId()));
+        commentsCount.addClickListener(event -> UI.getCurrent().navigate(PostView.class, post.getId()));
 
-        editLinkSpan.addClickListener(event -> UI.getCurrent().navigate("editpost/" + post.getId()));
+        if (postService != null) {
+            editLinkSpan.addClickListener(event -> UI.getCurrent().navigate("editpost/" + post.getId()));
 
-        deleteSpan.addClickListener(event -> {
-            postService.deleteById(post.getId());
+            deleteSpan.addClickListener(event -> {
+                postService.deleteById(post.getId());
 
-            this.setVisible(false);
-            Notification.show("Post was deleted.");
-        });
+                this.setVisible(false);
+                Notification.show("Post was deleted.");
+            });
+        }
     }
 }

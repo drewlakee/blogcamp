@@ -99,7 +99,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
         uploadAvatarButton.setSizeFull();
         uploadAvatarButton.addClassName("margin-t-none");
 
-        uploadButtonDiv.setSizeFull();
+        uploadButtonDiv.setWidth("100%");
         uploadButtonDiv.addClassName("upload-btn-div");
         uploadButtonDiv.addClassName("margin-none");
 
@@ -250,7 +250,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
         }
 
         if (currentUser.getCity() != null & currentUser.getCountry() != null) {
-            userFromSpan.setText(currentUser.getCity() + ", " + currentUser.getCountry());
+            userFromSpan.setText(currentUser.getCity().getName() + ", " + currentUser.getCountry().getName());
             infoLayout.add(userFromSpan);
         }
 

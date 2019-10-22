@@ -139,7 +139,7 @@ public class EditorPostView extends Composite<Div> implements HasComponents, Has
         textBodyArea.setPlaceholder("<h1>Html editor!</h1>");
         textBodyArea.setRequired(true);
         textBodyArea.setMinLength(30);
-        textBodyArea.setMaxLength(3000);
+        textBodyArea.setMaxLength(10000);
         textBodyArea.setErrorMessage("Minimal " + textBodyArea.getMinLength() + " length of body.");
 
         htmlAreaDiv.addClassName("html-shower");
@@ -290,8 +290,9 @@ public class EditorPostView extends Composite<Div> implements HasComponents, Has
             updatePostButton.setVisible(true);
 
             dynamicTitle = "Edit post - Blogcamp";
-        } else
+        } else if (!event.getLocation().getPath().startsWith("addpost")) {
             UI.getCurrent().getPage().getHistory().back();
+        }
     }
 
     private boolean isExternalSourceValid() {

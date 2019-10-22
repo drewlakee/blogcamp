@@ -75,7 +75,7 @@ public class UserComponent extends Div {
         if (currentUser.getCity() != null & currentUser.getCountry() != null) {
             userFromSpan.addClassName("user-from");
             userFromSpan.addClassName("margin-none");
-            userFromSpan.setText(currentUser.getCity() + ", " + currentUser.getCountry());
+            userFromSpan.setText(currentUser.getCity().getName() + ", " + currentUser.getCountry().getName());
             contentBodyRightLayout.add(userFromSpan);
         }
 

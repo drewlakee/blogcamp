@@ -7,13 +7,18 @@ import java.util.List;
 
 public interface TagDao {
 
-    Tag findTagByName(String name);
     void save(String name);
-    List<Tag> sortByCreatedDateNewestTagsList(int offset, int limit);
-    int count();
-    List<Tag> findByNameTagsList(int offset, int limit, String filter);
-    int countByName(String filter);
-    List<Tag> findTagsByPostId(int id);
+
     void updateDescriptionById(String description, int id);
     void updateTagsCountsOfPostByPostId(Post post);
+
+    Tag findTagByName(String name);
+    List<Tag> findNewestTags(int offset, int limit);
+    List<Tag> findByNameTagsList(int offset, int limit, String filter);
+    List<Tag> findTagsByPostId(int id);
+    List<Tag> findTagsSortedByNameAsc(int offset, int limit);
+    List<Tag> findPopularTagsWithLimit(int limit);
+
+    int count();
+    int countByName(String filter);
 }

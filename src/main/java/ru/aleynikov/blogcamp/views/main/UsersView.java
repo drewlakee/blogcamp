@@ -132,7 +132,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
-        setQueryParams(qparams);
+        QueryParametersManager.setQueryParams(qparams, pageParametersMap, pageParametersKeySet);
 
         if (sortBar.getSelectedTab() != null) {
             if (qparams.containsKey("search")) {
@@ -149,21 +149,6 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
                 event.getLocation().getPath(),
                 pageParametersMap.get("search").toString()
         );
-    }
-
-    private void setQueryParams(Map<String, List<String>> qparams) {
-        for (String parameter : pageParametersKeySet) {
-            if (!parameter.equals("page")) {
-                pageParametersMap.replace(parameter, "");
-            } else
-                pageParametersMap.replace(parameter, "1");
-        }
-
-        for (String parameter : pageParametersKeySet) {
-            if (qparams.containsKey(parameter)) {
-                pageParametersMap.replace(parameter, qparams.get(parameter).get(0));
-            }
-        }
     }
 
     private void buildUsersBrowser(int page, String sortTab, String locationPath, String filter) {

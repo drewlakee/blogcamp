@@ -15,6 +15,7 @@ import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.GlobeView;
+import ru.aleynikov.blogcamp.views.main.HomeView;
 
 import java.util.HashMap;
 
@@ -81,7 +82,7 @@ public class HeaderComponent extends HorizontalLayout {
 
         add(mainSideLayout);
 
-        logoDiv.addClickListener(event -> UI.getCurrent().navigate(GlobeView.class));
+        logoDiv.addClickListener(event -> UI.getCurrent().navigate(HomeView.class));
         logoutIcon.addClickListener(clickEvent -> {
             SecurityUtils.destroySession();
         });

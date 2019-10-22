@@ -28,7 +28,7 @@ public class PostService {
     }
 
     public List<Post> sortNewestPosts(int page, int componentLimit) {
-        return postDao.sortNewestPosts(FilterDataManager.filterOffset(page, componentLimit), componentLimit);
+        return postDao.findNewestPosts(FilterDataManager.filterOffset(page, componentLimit), componentLimit);
     }
 
     public int count() {
@@ -93,5 +93,9 @@ public class PostService {
 
     public List<Post> findInterestingPosts(int page, int componentLimit) {
         return postDao.findInterestingPosts(FilterDataManager.filterOffset(page, componentLimit), componentLimit);
+    }
+
+    public List<Post> findInterestingPostsWithLimit(int limit) {
+        return postDao.findInterestingPostsWithLimit(limit);
     }
 }

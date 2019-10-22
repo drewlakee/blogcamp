@@ -27,8 +27,8 @@ public class User implements UserDetails, RoleProver {
     private Timestamp registeredDate;
     private String status;
     private Date birthday;
-    private String country;
-    private String city;
+    private Country country;
+    private City city;
     private Role role;
     private String avatar;
     private boolean isBanned;

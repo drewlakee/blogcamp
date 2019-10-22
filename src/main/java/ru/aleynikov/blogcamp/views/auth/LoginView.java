@@ -26,6 +26,7 @@ import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.GlobeView;
+import ru.aleynikov.blogcamp.views.main.HomeView;
 
 @PageTitle("Log in")
 @Route("login")
@@ -120,7 +121,7 @@ public class LoginView extends HorizontalLayout {
                             SecurityContextHolder.getContext().getAuthentication().getName(),
                             SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 
-                    UI.getCurrent().navigate(GlobeView.class);
+                    UI.getCurrent().navigate(HomeView.class);
                 } catch (AuthenticationException ex) {
                     loginErrorLayout.setVisible(true);
                 }

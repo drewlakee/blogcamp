@@ -28,7 +28,7 @@ public class TagDaoImpl implements TagDao {
     private TagRowMapper tagRowMapper;
 
     @Override
-    public List<Tag> sortByCreatedDateNewestTagsList(int offset, int limit) {
+    public List<Tag> findNewestTags(int offset, int limit) {
         String query = "SELECT tag.tag_id, tag.name, tag.description, tag.created FROM tag " +
                 "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
                 "JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
@@ -144,5 +144,43 @@ public class TagDaoImpl implements TagDao {
 
             jdbc.update(queryInsert, qparams);
         }
+    }
+
+    @Override
+    public List<Tag> findTagsSortedByNameAsc(int offset, int limit) {
+        String query = "SELECT tag.tag_id, tag.name, tag.description, tag.created FROM tag " +
+                "                JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
+                "                JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
+                "                JOIN usr ON post.\"user\" = usr.user_id AND usr.banned = false " +
+                "                ORDER BY name ASC " +
+                "                OFFSET ? LIMIT ?";
+        Object[] qparams = new Object[] {offset, limit};
+        List<Tag> tagList = null;
+
+        try {
+            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+            tagList = jdbc.query(query, qparams, tagRowMapper);
+        } catch (EmptyResultDataAccessException e) {}
+
+        return tagList;
+    }
+
+    @Override
+    public List<Tag> findPopularTagsWithLimit(int limit) {
+        String query = "SELECT *, (SELECT COUNT(*) FROM post_to_tag WHERE tag.tag_id = post_to_tag.tag_id) as count FROM tag " +
+                "WHERE (SELECT COUNT(*) FROM post_to_tag " +
+                "    JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
+                "    JOIN usr on post.\"user\" = usr.user_id AND usr.banned = false " +
+                "WHERE tag.tag_id = post_to_tag.tag_id ) > 0 " +
+                "ORDER BY count DESC OFFSET 0 LIMIT ? ";
+        Object[] qparams = new Object[] {limit};
+        List<Tag> tagList = null;
+
+        try {
+            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+            tagList = jdbc.query(query, qparams, tagRowMapper);
+        } catch (EmptyResultDataAccessException e) {}
+
+        return tagList;
     }
 }

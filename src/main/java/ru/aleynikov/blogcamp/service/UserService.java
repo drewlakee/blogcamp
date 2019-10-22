@@ -16,7 +16,7 @@ public class UserService {
     private UserDaoImpl userDao;
 
     public List<User> getSortedByUsernameUserList(int page, int usersOnPageLimit) {
-        return userDao.sortAscByUsername(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit);
+        return userDao.findAscByUsername(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit);
     }
 
     public List<User> getFilterByUsernameUsersList(int page, int usersOnPageLimit, String filter) {
@@ -74,5 +74,9 @@ public class UserService {
 
     public void unBanById(int id) {
         userDao.unBanById(id);
+    }
+
+    public List<User> findActiveUsersWithLimit(int limit) {
+        return userDao.findActiveUsersWithLimit(limit);
     }
 }

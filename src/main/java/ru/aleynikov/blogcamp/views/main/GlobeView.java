@@ -198,7 +198,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
         userInfoLayout.setVisible(false);
-        setQueryParams(qparams);
+        QueryParametersManager.setQueryParams(qparams, pageParametersMap, pageParametersKeySet);
 
         if (sortBar.getSelectedTab() != null) {
             if (qparams.containsKey("search")) {
@@ -225,21 +225,6 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
                 pageParametersMap.get("user").toString(),
                 pageParametersMap.get("global").toString()
         );
-    }
-
-    private void setQueryParams(Map<String, List<String>> qparams) {
-        for (String parameter : pageParametersKeySet) {
-            if (!parameter.equals("page")) {
-                pageParametersMap.replace(parameter, "");
-            } else
-                pageParametersMap.replace(parameter, "1");
-        }
-
-        for (String parameter : pageParametersKeySet) {
-            if (qparams.containsKey(parameter)) {
-                pageParametersMap.replace(parameter, qparams.get(parameter).get(0));
-            }
-        }
     }
 
     private void buildUserDetailInfo(User user) {
