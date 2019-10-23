@@ -19,8 +19,8 @@ public interface UserDao {
 
     User findByUsername(String username);
     User findById(int id);
-    List<User> findAscByUsername(int offset, int limit);
-    List<User> findByUsername(int offset, int limit, String filter);
+    List<User> findAscByUsername(int offset, int limit, boolean isAdmin);
+    List<User> findByUsername(int offset, int limit, String filter, boolean isAdmin);
     List<User> findActiveUsersWithLimit(int limit);
 
     int count();

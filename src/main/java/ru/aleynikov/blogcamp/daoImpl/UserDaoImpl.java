@@ -82,8 +82,9 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> findAscByUsername(int offset, int limit) {
-        String query = "SELECT * FROM usr ORDER BY (username) ASC OFFSET ? LIMIT ?";
+    public List<User> findAscByUsername(int offset, int limit, boolean isAdmin) {
+        String bannedUsers = isAdmin ? "" : "WHERE banned = false";
+        String query = "SELECT * FROM usr " + bannedUsers + " ORDER BY (username) ASC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {offset, limit};
         List<User> userList;
 
@@ -94,8 +95,9 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> findByUsername(int offset, int limit, String filter) {
-        String query = "SELECT * FROM usr WHERE LOWER(username) LIKE LOWER(?) OFFSET ? LIMIT ?";
+    public List<User> findByUsername(int offset, int limit, String filter, boolean isAdmin) {
+        String bannedUsers = isAdmin ? "" : "AND banned = false";
+        String query = "SELECT * FROM usr WHERE LOWER(username) LIKE LOWER(?) " + bannedUsers + " OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {"%"+filter+"%", offset, limit};
         List<User> userList;
 

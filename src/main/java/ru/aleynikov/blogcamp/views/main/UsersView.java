@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.component.PageSwitcherComponent;
 import ru.aleynikov.blogcamp.component.UserComponent;
 import ru.aleynikov.blogcamp.model.User;
+import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.FilterDataManager;
 import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.service.UserService;
@@ -38,6 +39,8 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
 
     @Autowired
     private UserService userService;
+
+    private User userInSession = SecurityUtils.getPrincipal();
 
     private static final int USERS_ON_PAGE_LIMIT = 12;
 
@@ -167,10 +170,10 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
         row.setWidth("100%");
 
         if (!filter.isEmpty()) {
-            userList = userService.getFilterByUsernameUsersList(page, USERS_ON_PAGE_LIMIT, filter);
+            userList = userService.getFilterByUsernameUsersList(page, USERS_ON_PAGE_LIMIT, filter, userInSession.isAdmin());
             countUsers = userService.getFilterUsersCount(filter);
         } else {
-            userList = userService.getSortedByUsernameUserList(page, USERS_ON_PAGE_LIMIT);
+            userList = userService.getSortedByUsernameUserList(page, USERS_ON_PAGE_LIMIT, userInSession.isAdmin());
             countUsers = userService.getAllUsersCount();
             customQueryParams.put("tab", sortTab);
         }

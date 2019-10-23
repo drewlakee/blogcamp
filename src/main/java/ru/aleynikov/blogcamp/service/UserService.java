@@ -15,12 +15,12 @@ public class UserService {
     @Autowired
     private UserDaoImpl userDao;
 
-    public List<User> getSortedByUsernameUserList(int page, int usersOnPageLimit) {
-        return userDao.findAscByUsername(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit);
+    public List<User> getSortedByUsernameUserList(int page, int usersOnPageLimit, boolean isAdmin) {
+        return userDao.findAscByUsername(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit, isAdmin);
     }
 
-    public List<User> getFilterByUsernameUsersList(int page, int usersOnPageLimit, String filter) {
-        return userDao.findByUsername(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit, filter);
+    public List<User> getFilterByUsernameUsersList(int page, int usersOnPageLimit, String filter, boolean isAdmin) {
+        return userDao.findByUsername(FilterDataManager.filterOffset(page, usersOnPageLimit), usersOnPageLimit, filter, isAdmin);
     }
 
     public int getFilterUsersCount(String filter) {
