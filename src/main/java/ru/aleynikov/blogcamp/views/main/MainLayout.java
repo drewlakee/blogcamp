@@ -116,19 +116,12 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
         Map<String, List<String>> emptyQParams = new HashMap<>();
 
         if (event.getNavigationTarget().getSimpleName().equals(HomeView.class.getSimpleName())) {
-//            navigationBar.setSelectedTab(homeTab);
             leftSideBarLayout.setVisible(true);
         } else if (event.getNavigationTarget().getSimpleName().equals(GlobeView.class.getSimpleName())) {
-//            navigationBar.setSelectedTab(globeTab);
             leftSideBarLayout.setVisible(true);
-        } else if (event.getNavigationTarget().getSimpleName().equals(TagsView.class.getSimpleName())) {
-//            navigationBar.setSelectedTab(tagsTab);
-        } else if (event.getNavigationTarget().getSimpleName().equals(UsersView.class.getSimpleName())) {
-//            navigationBar.setSelectedTab(usersTab);
         } else if (event.getLocation().getPath().startsWith("profile")) {
             leftSideBarLayout.setVisible(false);
         } else if (event.getLocation().getPath().startsWith("globe/post")) {
-//            navigationBar.setSelectedTab(globeTab);
             leftSideBarLayout.setVisible(true);
             isGlobalPostView = true;
         } else
