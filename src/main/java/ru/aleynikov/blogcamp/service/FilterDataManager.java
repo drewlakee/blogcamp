@@ -16,7 +16,12 @@ public class FilterDataManager {
     }
 
     public static int pageLimit(float countOfComponents, int limitOfComponentsOnPage) {
-        return Math.round((countOfComponents + limitOfComponentsOnPage / 2) / limitOfComponentsOnPage);
+        int pageLimit = Math.round((countOfComponents + limitOfComponentsOnPage / 2) / limitOfComponentsOnPage);
+
+        if (countOfComponents != limitOfComponentsOnPage)
+            return pageLimit;
+        else
+            return pageLimit - 1;
     }
 
     public static String shieldHtml(String html) {

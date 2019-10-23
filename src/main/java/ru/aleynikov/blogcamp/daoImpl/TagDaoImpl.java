@@ -29,7 +29,7 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public List<Tag> findNewestTags(int offset, int limit) {
-        String query = "SELECT tag.tag_id, tag.name, tag.description, tag.created FROM tag " +
+        String query = "SELECT DISTINCT tag.tag_id, tag.name, tag.description, tag.created FROM tag " +
                 "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
                 "JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
                 "JOIN usr ON post.\"user\" = usr.user_id AND usr.banned = false " +
@@ -45,10 +45,10 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public int count() {
-        String query = "SELECT COUNT(*) FROM tag " +
-                "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
-                "JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
-                "JOIN usr ON post.\"user\" = usr.user_id AND usr.banned = false ";
+        String query = "SELECT COUNT(DISTINCT tag.tag_id) FROM tag" +
+                "                JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id" +
+                "                JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false" +
+                "                JOIN usr ON post.\"user\" = usr.user_id AND usr.banned = false";
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query);
         int count = jdbc.queryForObject(query, Integer.class);
@@ -58,7 +58,7 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public List<Tag> findByNameTagsList(int offset, int limit, String filter) {
-        String query = "SELECT tag.tag_id, tag.name, tag.description, tag.created FROM tag " +
+        String query = "SELECT DISTINCT tag.tag_id, tag.name, tag.description, tag.created FROM tag " +
                 "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
                 "JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
                 "JOIN usr ON post.\"user\" = usr.user_id AND usr.banned = false " +

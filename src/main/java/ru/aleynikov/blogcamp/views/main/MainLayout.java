@@ -76,6 +76,7 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
         navigationBar.add(homeTab, publicTabTitle, globeTab, tagsTab, usersTab);
         navigationBar.addClassName("navigation-bar");
         navigationBar.setOrientation(Tabs.Orientation.VERTICAL);
+        navigationBar.setSelectedTab(homeTab);
 
         leftSideBarLayout.add(navigationBar);
 
@@ -86,8 +87,9 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
         add(headerComponent, containerLayout);
 
         navigationBar.addSelectedChangeListener(event -> {
-            String selectedTab = event.getSource().getSelectedTab().getLabel();
-
+            String selectedTab = "";
+            if (event.getSource().getSelectedTab() != null)
+                selectedTab = event.getSource().getSelectedTab().getLabel();
 
             if (selectedTab.equals(homeTab.getLabel())) {
                 UI.getCurrent().navigate(HomeView.class);
@@ -114,23 +116,25 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
         Map<String, List<String>> emptyQParams = new HashMap<>();
 
         if (event.getNavigationTarget().getSimpleName().equals(HomeView.class.getSimpleName())) {
-            navigationBar.setSelectedTab(homeTab);
+//            navigationBar.setSelectedTab(homeTab);
             leftSideBarLayout.setVisible(true);
         } else if (event.getNavigationTarget().getSimpleName().equals(GlobeView.class.getSimpleName())) {
-            navigationBar.setSelectedTab(globeTab);
+//            navigationBar.setSelectedTab(globeTab);
             leftSideBarLayout.setVisible(true);
         } else if (event.getNavigationTarget().getSimpleName().equals(TagsView.class.getSimpleName())) {
-            navigationBar.setSelectedTab(tagsTab);
+//            navigationBar.setSelectedTab(tagsTab);
         } else if (event.getNavigationTarget().getSimpleName().equals(UsersView.class.getSimpleName())) {
-            navigationBar.setSelectedTab(usersTab);
+//            navigationBar.setSelectedTab(usersTab);
         } else if (event.getLocation().getPath().startsWith("profile")) {
             leftSideBarLayout.setVisible(false);
         } else if (event.getLocation().getPath().startsWith("globe/post")) {
-            navigationBar.setSelectedTab(globeTab);
+//            navigationBar.setSelectedTab(globeTab);
             leftSideBarLayout.setVisible(true);
             isGlobalPostView = true;
         } else
             leftSideBarLayout.setVisible(true);
+
+        navigationBar.setSelectedTab(null);
 
         qparams = new QueryParameters(emptyQParams);
     }
