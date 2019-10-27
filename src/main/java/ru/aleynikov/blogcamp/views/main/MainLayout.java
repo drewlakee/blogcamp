@@ -43,8 +43,6 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
 
     private QueryParameters qparams;
 
-    private boolean isGlobalPostView;
-
     public MainLayout() {
         getContent().setSizeFull();
         getContent().setClassName("main-body");
@@ -94,8 +92,7 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
             if (selectedTab.equals(homeTab.getLabel())) {
                 UI.getCurrent().navigate(HomeView.class);
             } else if (selectedTab.equals(globeTab.getLabel())) {
-                if (!isGlobalPostView)
-                    UI.getCurrent().navigate("globe", qparams);
+                UI.getCurrent().navigate("globe", qparams);
             } else if (selectedTab.equals(tagsTab.getLabel()) ) {
                 UI.getCurrent().navigate("tags", qparams);
             } else if (selectedTab.equals(usersTab.getLabel())) {
@@ -111,19 +108,11 @@ public class MainLayout extends Composite<VerticalLayout> implements HasComponen
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        isGlobalPostView = false;
         qparams = event.getLocation().getQueryParameters();
         Map<String, List<String>> emptyQParams = new HashMap<>();
 
-        if (event.getNavigationTarget().getSimpleName().equals(HomeView.class.getSimpleName())) {
-            leftSideBarLayout.setVisible(true);
-        } else if (event.getNavigationTarget().getSimpleName().equals(GlobeView.class.getSimpleName())) {
-            leftSideBarLayout.setVisible(true);
-        } else if (event.getLocation().getPath().startsWith("profile")) {
+       if (event.getLocation().getPath().startsWith("profile")) {
             leftSideBarLayout.setVisible(false);
-        } else if (event.getLocation().getPath().startsWith("globe/post")) {
-            leftSideBarLayout.setVisible(true);
-            isGlobalPostView = true;
         } else
             leftSideBarLayout.setVisible(true);
 

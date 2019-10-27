@@ -33,9 +33,6 @@ import ru.aleynikov.blogcamp.views.main.HomeView;
 @StyleSheet(StaticResources.LOGIN_STYLES)
 public class LoginView extends HorizontalLayout {
 
-    @Autowired
-    private UserService userService;
-
     private static Logger log = LoggerFactory.getLogger(LoginView.class);
 
     private Image logoImage = new Image(StaticResources.LOGO_IMAGE, "logo");
@@ -111,7 +108,7 @@ public class LoginView extends HorizontalLayout {
 
         loginButton.addClickShortcut(Key.ENTER);
         loginButton.addClickListener(clickEvent -> {
-            if (isLoginFormValid() && !isUserBanned()) {
+            if (isLoginFormValid()) {
                 try {
                     final Authentication authentication = authenticationManager
                             .authenticate(new UsernamePasswordAuthenticationToken(usernameField.getValue().strip(), passwordField.getValue().strip()));
@@ -127,22 +124,6 @@ public class LoginView extends HorizontalLayout {
                 }
             }
         });
-    }
-
-    private boolean isUserBanned() {
-        boolean isUserBanned = false;
-        User user = userService.findUserByUsername(usernameField.getValue().strip());
-
-        if (user != null) {
-            isUserBanned = user.isBanned();
-        }
-
-        if (isUserBanned) {
-            errorLoginLabel.setText("You are was banned.");
-            loginErrorLayout.setVisible(true);
-        }
-
-        return isUserBanned;
     }
 
     private boolean isLoginFormValid() {
