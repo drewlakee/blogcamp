@@ -53,11 +53,9 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
 
     private User userInSession = SecurityUtils.getPrincipal();
 
-    private List<Country> countryList;
-    private TreeSet<String> countryNamesTree;
+    private HashMap<String, Country> countriesMap = new HashMap<>();
 
-    private List<City> cityList;
-    private TreeSet<String> cityNamesTree;
+    private HashMap<String, City> citiesMap = new HashMap<>();
 
     private VerticalLayout mainLayout = new VerticalLayout();
     private VerticalLayout leftBodyAboutLayout = new VerticalLayout();
@@ -144,79 +142,57 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
         add(mainLayout);
 
         countrySelect.addValueChangeListener(event -> {
-            String countrySelectValue;
+            citySelect.clear();
+            citySelect.setEmptySelectionCaption("");
 
-            cityNamesTree.clear();
+            TreeSet cities = new TreeSet();
+            for (City city : citiesMap.values()) {
+                if (city.getCountry().getName().equals((countrySelect.getValue() == null) ? countrySelect.getEmptySelectionCaption() : countrySelect.getValue()))
+                    cities.add(city.getName());
+            }
 
-            if (countrySelect.getValue() == null)
-                countrySelectValue = countrySelect.getEmptySelectionCaption();
-            else
-                countrySelectValue = countrySelect.getValue();
-
-            cityList.stream().filter((x) -> x.getCountry().getName().equals(countrySelectValue)).forEach((x) -> cityNamesTree.add(x.getName()));
-            citySelect.setEmptySelectionAllowed(false);
-            citySelect.setItems(cityNamesTree);
-            citySelect.setEnabled(true);
+            citySelect.setItems(cities);
         });
 
         updateButton.addClickListener(event -> {
-            String countrySelectValue;
-            String citySelectValue;
             HashMap<String, Object> infoForUpdate = new LinkedHashMap<>();
-            Country country = new Country();
-            City city = new City();
-
             infoForUpdate.put("full_name", firstNameField.getValue().strip() + " " + lastNameField.getValue().strip());
             infoForUpdate.put("birthday", birthdayPicker.getValue());
-
-            if (countrySelect.getValue() == null)
-                countrySelectValue = countrySelect.getEmptySelectionCaption();
-            else
-                countrySelectValue = countrySelect.getValue();
-
+            int countryId;
             try {
-                country = countryList.stream().filter((x) -> x.getName().equals(countrySelectValue)).findAny().get();
-            } catch (NoSuchElementException e) {
-                country.setId(-1);
+                countryId = (countrySelect.getValue() != null) ? countriesMap.get(countrySelect.getValue()).getId()
+                        : countriesMap.get(countrySelect.getEmptySelectionCaption()).getId();
+            } catch (NullPointerException e) {
+                countryId = -1;
             }
-            infoForUpdate.put("country", country.getId());
-
-            if (citySelect.getValue() == null)
-                citySelectValue = citySelect.getEmptySelectionCaption();
-            else
-                citySelectValue = citySelect.getValue();
-
+            infoForUpdate.put("country", countryId);
+            int cityId;
             try {
-                city = cityList.stream().filter((x) -> x.getName().equals(citySelectValue)).findAny().get();
-            } catch (NoSuchElementException e) {
-                city.setId(-1);
+                cityId = (citySelect.getValue() != null) ? citiesMap.get(citySelect.getValue()).getId()
+                        : citiesMap.get(citySelect.getEmptySelectionCaption()).getId();
+            } catch (NullPointerException e) {
+                cityId = -1;
             }
-
-            infoForUpdate.put("city", city.getId());
+            infoForUpdate.put("city", cityId);
             infoForUpdate.put("status", statusArea.getValue().strip());
             infoForUpdate.put("current_user_id", SecurityUtils.getPrincipal().getId());
-
             userService.updateUserAboutInfo(infoForUpdate);
-
             sessionManager.updateSessionUser();
 
             UI.getCurrent().navigate("profile/about");
-
             successfullyUpdatedSpan.setVisible(true);
         });
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        setUserCurrentInfo();
+        setCurrentUserInfo(userInSession);
+        setLocationSelectors();
     }
 
-    public void setUserCurrentInfo() {
-        countryList = countryService.getAllCountriesList();
-        cityList = cityService.findAllCities();
-
-        if (userInSession.getFullName() != null) {
-            ArrayList<String> userNames = new ArrayList<>(Arrays.asList(userInSession.getFullName().split(" ")));
+    private void setCurrentUserInfo(User user) {
+        if (user.getFullName() != null) {
+            ArrayList<String> userNames = new ArrayList<>(Arrays.asList(user.getFullName().split(" ")));
             Iterator namesIterator = userNames.iterator();
 
             firstNameField.setValue(namesIterator.next().toString());
@@ -228,31 +204,39 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
             lastNameField.setValue(secondNames);
         }
 
-        if (userInSession.getBirthday() != null) {
-            birthdayPicker.setValue(userInSession.getBirthday().toLocalDate());
+        if (user.getBirthday() != null) {
+            birthdayPicker.setValue(user.getBirthday().toLocalDate());
         }
 
+        if (user.getStatus() != null) {
+            statusArea.setValue(user.getStatus());
+        }
+
+    }
+
+    private void setLocationSelectors() {
+        List<Country> countryList = countryService.getAllCountriesList();
+        List<City> cityList = cityService.findAllCities();
+
+        countryList.forEach(country -> countriesMap.put(country.getName(), country));
+        cityList.forEach(city -> citiesMap.put(city.getName(), city));
+
+        countrySelect.setEmptySelectionAllowed(true);
         if (userInSession.getCountry() != null) {
-            countrySelect.setEmptySelectionAllowed(true);
             countrySelect.setEmptySelectionCaption(userInSession.getCountry().getName());
-        }
-
-        countryNamesTree = new TreeSet<>();
-        countryList.stream().filter((x) -> !x.getName().equals(userInSession.getCountry())).forEach((x) -> countryNamesTree.add(x.getName()));
-        countrySelect.setItems(countryNamesTree);
-
-        if (userInSession.getCity() != null) {
-            citySelect.setEmptySelectionAllowed(true);
-            citySelect.setEmptySelectionCaption(userInSession.getCity().getName());
+            countrySelect.setItems(
+                    countriesMap.keySet().stream().filter(country -> !country.equals(userInSession.getCountry().getName())).collect(Collectors.toSet())
+            );
         } else
-            citySelect.setEnabled(false);
+            countrySelect.setItems(countriesMap.keySet());
 
-        cityNamesTree = new TreeSet<>();
-        cityList.stream().filter((x) -> !x.getName().equals(userInSession.getCity()) && x.getCountry().getName().equals(countrySelect.getValue())).forEach((x) -> cityNamesTree.add(x.getName()));
-        citySelect.setItems(cityNamesTree);
-
-        if (userInSession.getStatus() != null) {
-            statusArea.setValue(userInSession.getStatus());
-        }
+        citySelect.setEmptySelectionAllowed(true);
+        if (userInSession.getCity() != null) {
+            citySelect.setEmptySelectionCaption(userInSession.getCity().getName());
+            citySelect.setItems(
+                    citiesMap.keySet().stream().filter(city -> !city.equals(userInSession.getCity().getName()) && citiesMap.get(city).getCountry().getName().equals(countrySelect.getEmptySelectionCaption())).collect(Collectors.toSet())
+            );
+        } else
+            citySelect.setItems(citiesMap.keySet());
     }
 }
