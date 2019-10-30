@@ -32,6 +32,7 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.ProfileView;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Route(value = "about", layout = ProfileView.class)
 @PageTitle("Profile - About")
@@ -50,7 +51,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
     @Autowired
     private SessionManager sessionManager;
 
-    private User currentUser;
+    private User userInSession = SecurityUtils.getPrincipal();
 
     private List<Country> countryList;
     private TreeSet<String> countryNamesTree;
@@ -207,55 +208,51 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        setUserCurrentInfoIntoForm();
+        setUserCurrentInfo();
     }
 
-    public void setUserCurrentInfoIntoForm() {
-        currentUser = SecurityUtils.getPrincipal();
-
+    public void setUserCurrentInfo() {
         countryList = countryService.getAllCountriesList();
         cityList = cityService.findAllCities();
 
-        if (currentUser.getFullName() != null) {
-            String[] userNames = currentUser.getFullName().split(" ");
-            int userFirstNameId = 0;
-            String lastName = "";
+        if (userInSession.getFullName() != null) {
+            ArrayList<String> userNames = new ArrayList<>(Arrays.asList(userInSession.getFullName().split(" ")));
+            Iterator namesIterator = userNames.iterator();
 
-            for (int i = 0; i < userNames.length; i++) {
-                if (i == userFirstNameId)
-                    firstNameField.setValue(userNames[i]);
-                else
-                    lastName += userNames[i] + " ";
-            }
+            firstNameField.setValue(namesIterator.next().toString());
 
-            lastNameField.setValue(lastName.strip());
+            String secondNames = "";
+            while (namesIterator.hasNext())
+                secondNames += namesIterator.next().toString();
+
+            lastNameField.setValue(secondNames);
         }
 
-        if (currentUser.getBirthday() != null) {
-            birthdayPicker.setValue(currentUser.getBirthday().toLocalDate());
+        if (userInSession.getBirthday() != null) {
+            birthdayPicker.setValue(userInSession.getBirthday().toLocalDate());
         }
 
-        if (currentUser.getCountry() != null) {
+        if (userInSession.getCountry() != null) {
             countrySelect.setEmptySelectionAllowed(true);
-            countrySelect.setEmptySelectionCaption(currentUser.getCountry().getName());
+            countrySelect.setEmptySelectionCaption(userInSession.getCountry().getName());
         }
 
         countryNamesTree = new TreeSet<>();
-        countryList.stream().filter((x) -> !x.getName().equals(currentUser.getCountry())).forEach((x) -> countryNamesTree.add(x.getName()));
+        countryList.stream().filter((x) -> !x.getName().equals(userInSession.getCountry())).forEach((x) -> countryNamesTree.add(x.getName()));
         countrySelect.setItems(countryNamesTree);
 
-        if (currentUser.getCity() != null) {
+        if (userInSession.getCity() != null) {
             citySelect.setEmptySelectionAllowed(true);
-            citySelect.setEmptySelectionCaption(currentUser.getCity().getName());
+            citySelect.setEmptySelectionCaption(userInSession.getCity().getName());
         } else
             citySelect.setEnabled(false);
 
         cityNamesTree = new TreeSet<>();
-        cityList.stream().filter((x) -> !x.getName().equals(currentUser.getCity()) && x.getCountry().getName().equals(countrySelect.getValue())).forEach((x) -> cityNamesTree.add(x.getName()));
+        cityList.stream().filter((x) -> !x.getName().equals(userInSession.getCity()) && x.getCountry().getName().equals(countrySelect.getValue())).forEach((x) -> cityNamesTree.add(x.getName()));
         citySelect.setItems(cityNamesTree);
 
-        if (currentUser.getStatus() != null) {
-            statusArea.setValue(currentUser.getStatus());
+        if (userInSession.getStatus() != null) {
+            statusArea.setValue(userInSession.getStatus());
         }
     }
 }
