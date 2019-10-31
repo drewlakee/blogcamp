@@ -177,11 +177,13 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> findActiveUsersWithLimit(int limit) {
-        String query = "SELECT *, (SELECT COUNT(*) FROM post " +
-                " WHERE deleted = false AND usr.user_id = \"user\") as count FROM usr" +
-                " WHERE banned = false" +
-                " ORDER BY count DESC" +
-                " OFFSET 0 LIMIT ?";
+        String query = "SELECT *, (SELECT COUNT(*)  FROM post" +
+                "                WHERE deleted = false AND usr.user_id = \"user\") as count FROM usr" +
+                "                WHERE banned = false" +
+                "                AND (SELECT COUNT(*)  FROM post" +
+                "                WHERE deleted = false AND usr.user_id = \"user\") > 0" +
+                "                ORDER BY count DESC" +
+                "                OFFSET 0 LIMIT ?";
         Object[] qparams = new Object[] {limit};
         List<User> userList;
 
