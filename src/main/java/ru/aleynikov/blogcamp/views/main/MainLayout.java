@@ -16,7 +16,7 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.RouterLayout;
-import ru.aleynikov.blogcamp.component.HeaderComponent;
+import ru.aleynikov.blogcamp.components.HeaderComponent;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.util.HashMap;

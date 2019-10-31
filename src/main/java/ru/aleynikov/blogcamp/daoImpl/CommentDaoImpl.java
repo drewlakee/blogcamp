@@ -1,17 +1,15 @@
 package ru.aleynikov.blogcamp.daoImpl;
 
-import com.vaadin.flow.spring.annotation.UIScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import ru.aleynikov.blogcamp.dao.CommentDao;
-import ru.aleynikov.blogcamp.mapper.CommentRowMapper;
-import ru.aleynikov.blogcamp.model.Comment;
+import ru.aleynikov.blogcamp.daos.CommentDao;
+import ru.aleynikov.blogcamp.mappers.CommentRowMapper;
+import ru.aleynikov.blogcamp.models.Comment;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;

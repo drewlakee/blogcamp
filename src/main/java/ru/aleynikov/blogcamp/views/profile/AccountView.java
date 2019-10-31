@@ -17,9 +17,9 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.aleynikov.blogcamp.model.User;
+import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
-import ru.aleynikov.blogcamp.service.UserService;
+import ru.aleynikov.blogcamp.services.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.util.Arrays;

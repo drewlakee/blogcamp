@@ -5,7 +5,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -17,7 +16,7 @@ import com.vaadin.flow.router.RouterLink;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.aleynikov.blogcamp.daoImpl.UserDaoImpl;
-import ru.aleynikov.blogcamp.model.User;
+import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 @PageTitle("Password restore")

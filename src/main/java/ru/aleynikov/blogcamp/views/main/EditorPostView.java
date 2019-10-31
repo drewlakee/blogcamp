@@ -19,12 +19,12 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.aleynikov.blogcamp.model.Post;
-import ru.aleynikov.blogcamp.model.Tag;
-import ru.aleynikov.blogcamp.model.User;
+import ru.aleynikov.blogcamp.models.Post;
+import ru.aleynikov.blogcamp.models.Tag;
+import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
-import ru.aleynikov.blogcamp.service.JavaScriptUtils;
-import ru.aleynikov.blogcamp.service.PostService;
+import ru.aleynikov.blogcamp.services.JavaScriptUtils;
+import ru.aleynikov.blogcamp.services.PostService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.sql.Timestamp;

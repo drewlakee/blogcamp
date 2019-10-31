@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import ru.aleynikov.blogcamp.dao.PostDao;
-import ru.aleynikov.blogcamp.mapper.PostRowMapper;
-import ru.aleynikov.blogcamp.model.Post;
-import ru.aleynikov.blogcamp.model.Tag;
+import ru.aleynikov.blogcamp.daos.PostDao;
+import ru.aleynikov.blogcamp.mappers.PostRowMapper;
+import ru.aleynikov.blogcamp.models.Post;
+import ru.aleynikov.blogcamp.models.Tag;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
-import ru.aleynikov.blogcamp.service.TagService;
+import ru.aleynikov.blogcamp.services.TagService;
 
 import java.sql.Timestamp;
 import java.util.Arrays;

@@ -2,7 +2,7 @@ package ru.aleynikov.blogcamp.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.aleynikov.blogcamp.service.UserService;
+import ru.aleynikov.blogcamp.services.UserService;
 
 @Component
 public class SessionManager {

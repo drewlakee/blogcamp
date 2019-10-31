@@ -5,7 +5,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -23,11 +22,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.aleynikov.blogcamp.model.User;
-import ru.aleynikov.blogcamp.service.UserService;
+import ru.aleynikov.blogcamp.models.User;
+import ru.aleynikov.blogcamp.services.UserService;
 import ru.aleynikov.blogcamp.staticResources.RedditAvatars;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
-import ru.aleynikov.blogcamp.views.main.GlobeView;
 import ru.aleynikov.blogcamp.views.main.HomeView;
 
 import java.util.Arrays;
