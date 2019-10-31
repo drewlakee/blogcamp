@@ -177,12 +177,17 @@ public class ProfileLayout extends Composite<Div> implements HasComponents, Rout
            externalImageSetDialog.open();
         });
 
+        externalImageSourceField.addInputListener(event -> {
+           externalImageSourceField.setLabel("Tap on form for load picture");
+        });
+
         externalImageSourceField.addValueChangeListener(event -> {
-            if (isExternalSourceValid()) {
+            if (!externalImageSourceField.isEmpty() && isExternalSourceValid()) {
                 setExternalAvatarButton.setVisible(true);
 
                 int imgWidth = 200;
                 JavaScriptUtils.innerHtml(uploadExternalImageDiv.getId().get(), "<img style=\"width:" + imgWidth + "px\" src=" + externalImageSourceField.getValue().strip() + ">");
+                externalImageSourceField.setLabel("");
             } else
                 setExternalAvatarButton.setVisible(false);
         });
@@ -190,6 +195,7 @@ public class ProfileLayout extends Composite<Div> implements HasComponents, Rout
         setExternalAvatarButton.addClickListener(event -> {
             userService.updateUserAvatarByUserId(externalImageSourceField.getValue().strip(), userInSession.getId());
             externalImageSetDialog.close();
+            externalImageSourceField.clear();
 
             sessionManager.updateSessionUser();
 
@@ -200,7 +206,6 @@ public class ProfileLayout extends Composite<Div> implements HasComponents, Rout
 
         externalImageSetDialog.addDialogCloseActionListener(event -> {
             externalImageSetDialog.close();
-            externalImageSourceField.clear();
             setExternalAvatarButton.setVisible(false);
             externalImageSourceField.setInvalid(false);
             JavaScriptUtils.innerHtml(uploadExternalImageDiv.getId().get(), "");
