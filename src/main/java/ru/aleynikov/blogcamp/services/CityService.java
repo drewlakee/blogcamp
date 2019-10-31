@@ -2,7 +2,7 @@ package ru.aleynikov.blogcamp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.aleynikov.blogcamp.daoImpl.CityDaoImpl;
+import ru.aleynikov.blogcamp.daoImpls.CityDaoImpl;
 import ru.aleynikov.blogcamp.models.City;
 
 import java.util.List;
@@ -14,8 +14,16 @@ public class CityService {
     private CityDaoImpl cityDao;
 
     public List<City> findAllCities() {
-        return cityDao.findAllCities();
+        String query = "SELECT * FROM city";
+
+        return cityDao.queryList(query, null);
     }
-    public City findCityById(int id) { return cityDao.findCityById(id); }
+
+    public City findCityById(int id) {
+        String query = "SELECT * FROM city WHERE city_id = ?";
+        Object[] qparams = new Object[] {id};
+
+        return cityDao.queryForObject(query, qparams);
+    }
 
 }

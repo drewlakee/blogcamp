@@ -1,4 +1,4 @@
-package ru.aleynikov.blogcamp.daoImpl;
+package ru.aleynikov.blogcamp.daoImpls;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,26 +26,23 @@ public class CityDaoImpl implements CityDao {
     private CityRowMapper cityRowMapper;
 
     @Override
-    public List<City> findAllCities() {
-        String query = "SELECT * FROM city";
-        List<City> cityList;
+    public List<City> queryList(String query, Object[] qparams) {
+        List<City> cities;
+        log.info(query + ", {}", Arrays.toString(qparams));
+        cities = jdbc.query(query, qparams, cityRowMapper);
 
-        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query);
-        cityList = jdbc.query(query, cityRowMapper);
-
-        return cityList;
+        return cities;
     }
 
     @Override
-    public City findCityById(int id) {
-        String query = "SELECT * FROM city WHERE city_id = ?";
-        Object[] qparams = new Object[] { id };
-        City city = null;
-
+    public City queryForObject(String query, Object[] qparams) {
+        City city;
         try {
             log.info(query + ", {}", Arrays.toString(qparams));
             city = (City) jdbc.queryForObject(query, qparams, cityRowMapper);
-        } catch (EmptyResultDataAccessException e) {}
+        } catch (EmptyResultDataAccessException e) {
+            city = null;
+        }
 
         return city;
     }

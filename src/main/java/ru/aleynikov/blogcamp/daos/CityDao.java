@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface CityDao {
 
-   List<City> findAllCities();
-   City findCityById(int id);
+   List<City> queryList(String query, Object[] qparams);
+   City queryForObject(String query, Object[] qparams);
 }
