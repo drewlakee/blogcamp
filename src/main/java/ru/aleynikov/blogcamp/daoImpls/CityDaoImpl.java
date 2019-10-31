@@ -26,7 +26,7 @@ public class CityDaoImpl implements CityDao {
     private CityRowMapper cityRowMapper;
 
     @Override
-    public List<City> queryList(String query, Object[] qparams) {
+    public List<City> queryForList(String query, Object[] qparams) {
         List<City> cities;
         log.info(query + ", {}", Arrays.toString(qparams));
         cities = jdbc.query(query, qparams, cityRowMapper);

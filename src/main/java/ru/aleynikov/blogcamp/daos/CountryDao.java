@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface CountryDao {
 
-    List<Country> queryList(String query, Object[] qparams);
+    List<Country> queryForList(String query, Object[] qparams);
     Country queryForObject(String query, Object[] qparams);
 }

@@ -16,7 +16,7 @@ public class CountryService {
     public List<Country> getAllCountriesList() {
         String query = "SELECT * FROM country";
 
-        return countryDao.queryList(query, null);
+        return countryDao.queryForList(query, null);
     }
 
     public Country findById(int id) {

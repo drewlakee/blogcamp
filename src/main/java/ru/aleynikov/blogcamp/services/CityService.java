@@ -16,7 +16,7 @@ public class CityService {
     public List<City> findAllCities() {
         String query = "SELECT * FROM city";
 
-        return cityDao.queryList(query, null);
+        return cityDao.queryForList(query, null);
     }
 
     public City findCityById(int id) {

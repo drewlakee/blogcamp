@@ -27,7 +27,7 @@ public class CountryDaoImpl implements CountryDao {
     private CountryRowMapper countryRowMapper;
 
     @Override
-    public List<Country> queryList(String query, Object[] qparams) {
+    public List<Country> queryForList(String query, Object[] qparams) {
         List<Country> countries;
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
