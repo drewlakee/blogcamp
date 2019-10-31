@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.aleynikov.blogcamp.daoImpl.UserDaoImpl;
+import ru.aleynikov.blogcamp.daoImpls.UserDaoImpl;
 import ru.aleynikov.blogcamp.models.User;
 
 @Service("userDetailsService")

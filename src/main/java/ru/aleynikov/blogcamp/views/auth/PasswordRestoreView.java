@@ -15,7 +15,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.aleynikov.blogcamp.daoImpl.UserDaoImpl;
+import ru.aleynikov.blogcamp.daoImpls.UserDaoImpl;
 import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 

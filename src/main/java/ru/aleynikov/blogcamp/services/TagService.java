@@ -2,7 +2,7 @@ package ru.aleynikov.blogcamp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.aleynikov.blogcamp.daoImpl.TagDaoImpl;
+import ru.aleynikov.blogcamp.daoImpls.TagDaoImpl;
 import ru.aleynikov.blogcamp.models.Post;
 import ru.aleynikov.blogcamp.models.Tag;
 

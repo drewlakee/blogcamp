@@ -1,4 +1,4 @@
-package ru.aleynikov.blogcamp.daoImpl;
+package ru.aleynikov.blogcamp.daoImpls;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
