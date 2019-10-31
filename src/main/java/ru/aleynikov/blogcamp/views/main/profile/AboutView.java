@@ -237,6 +237,6 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
                     citiesMap.keySet().stream().filter(city -> !city.equals(userInSession.getCity().getName()) && citiesMap.get(city).getCountry().getName().equals(countrySelect.getEmptySelectionCaption())).collect(Collectors.toSet())
             );
         } else
-            citySelect.setItems(citiesMap.keySet());
+            citySelect.setItems(citiesMap.keySet().stream().filter(city -> citiesMap.get(city).getCountry().getName().equals(countrySelect.getEmptySelectionCaption())));
     }
 }

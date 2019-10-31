@@ -130,7 +130,6 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     private void searchFieldProcess() {
         if (!searchField.isEmpty()) {
             sortBar.setSelectedTab(null);
-
             HashMap<String, Object> customQueryParams = new HashMap<>();
             customQueryParams.put("search", searchField.getValue().strip());
             UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));

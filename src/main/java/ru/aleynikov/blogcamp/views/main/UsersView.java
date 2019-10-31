@@ -117,12 +117,12 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
             }
         });
 
-        searchField.addKeyPressListener(Key.ENTER, keyEventListener -> searchFieldProcess());
+        searchField.addKeyPressListener(Key.ENTER, keyEventListener -> search());
 
-        searchUserFieldIcon.addClickListener(event -> searchFieldProcess());
+        searchUserFieldIcon.addClickListener(event -> search());
     }
 
-    private void searchFieldProcess() {
+    private void search() {
         if (!searchField.isEmpty()) {
             sortBar.setSelectedTab(null);
             HashMap<String, Object> customQueryParams = new HashMap<>();

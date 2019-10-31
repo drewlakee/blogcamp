@@ -40,6 +40,7 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -87,7 +88,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
     private Div htmlDiv = new Div();
 
     private H2 titleH2 = new H2();
-    private H2 notExistH2 = new H2("Post not exist.");
+    private H2 postNotExistH2 = new H2("Post not exist.");
 
     private Image postImage = new Image();
     private Image userImage = new Image();
@@ -312,17 +313,13 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
             JavaScriptUtils.innerHtml(htmlDiv.getId().get(), currentPost.getText());
 
-            boolean firstTag = true;
-            for (Tag tag : currentPost.getTags()) {
-                if (firstTag) {
-                    TagComponent tagComponent = new TagComponent(tag);
-                    bodyFootUpperLayout.add(tagComponent);
-                    firstTag = false;
-                } else {
-                    TagComponent tagComponent = new TagComponent(tag);
-                    tagComponent.addClassName("margin-l-5px");
-                    bodyFootUpperLayout.add(tagComponent);
-                }
+            Iterator tagsIterator = currentPost.getTags().iterator();
+            bodyFootUpperLayout.add(new TagComponent((Tag) tagsIterator.next()));
+
+            while (tagsIterator.hasNext()) {
+                TagComponent tagComponent = new TagComponent(((Tag) tagsIterator.next()));
+                tagComponent.addClassName("margin-l-5px");
+                bodyFootUpperLayout.add(tagComponent);
             }
 
             userImage.setSrc(currentPost.getUser().getAvatar());
@@ -345,7 +342,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
         } else {
             contentLayout.setVisible(false);
             notPostExistLayout.setVisible(true);
-            notPostExistLayout.add(notExistH2);
+            notPostExistLayout.add(postNotExistH2);
         }
     }
 

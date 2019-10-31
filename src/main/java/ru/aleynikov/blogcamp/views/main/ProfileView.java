@@ -43,7 +43,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
     @Autowired
     private SessionManager sessionManager;
 
-    private User currentUser = SecurityUtils.getPrincipal();
+    private User userInSession = SecurityUtils.getPrincipal();
 
     private int currYear = Calendar.getInstance().get(Calendar.YEAR);
 
@@ -187,7 +187,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
         });
 
         setExternalAvatarButton.addClickListener(event -> {
-            userService.updateUserAvatarByUserId(externalImageSourceField.getValue().strip(), currentUser.getId());
+            userService.updateUserAvatarByUserId(externalImageSourceField.getValue().strip(), userInSession.getId());
             externalImageSetDialog.close();
 
             sessionManager.updateSessionUser();
@@ -233,34 +233,34 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
         else if (event.getLocation().getPath().endsWith("account"))
             switchBar.setSelectedTab(accountTab);
 
-        userProfileLayoutBuild();
+        setUserCurrentProfileInfo(userInSession);
     }
 
-    public void userProfileLayoutBuild() {
-        userAvatarImage.setSrc(currentUser.getAvatar());
+    public void setUserCurrentProfileInfo(User user) {
+        userAvatarImage.setSrc(user.getAvatar());
 
         infoLayout.removeAll();
 
-        userUsernameSpan.setText(currentUser.getUsername());
+        userUsernameSpan.setText(user.getUsername());
         infoLayout.add(userUsernameSpan);
 
-        if (currentUser.getFullName() != null) {
-            userFullNameSpan.setText(currentUser.getFullName());
+        if (user.getFullName() != null) {
+            userFullNameSpan.setText(user.getFullName());
             infoLayout.add(userFullNameSpan);
         }
 
-        if (currentUser.getCity() != null & currentUser.getCountry() != null) {
-            userFromSpan.setText(currentUser.getCity().getName() + ", " + currentUser.getCountry().getName());
+        if (user.getCity() != null & user.getCountry() != null) {
+            userFromSpan.setText(user.getCity().getName() + ", " + user.getCountry().getName());
             infoLayout.add(userFromSpan);
         }
 
-        if (currentUser.getBirthday() != null) {
-            userBirthdaySpan.setText(currentUser.getBirthday().toLocalDate().format(DateTimeFormatter.ofPattern("d MMMM YYYY", Locale.ENGLISH)) + " (" + (currYear - currentUser.getBirthday().toLocalDate().getYear()) + " years old)");
+        if (user.getBirthday() != null) {
+            userBirthdaySpan.setText(user.getBirthday().toLocalDate().format(DateTimeFormatter.ofPattern("d MMMM YYYY", Locale.ENGLISH)) + " (" + (currYear - user.getBirthday().toLocalDate().getYear()) + " years old)");
             infoLayout.add(userBirthdaySpan);
         }
 
-        if (currentUser.getStatus() != null) {
-            userStatusSpan.setText(currentUser.getStatus());
+        if (user.getStatus() != null) {
+            userStatusSpan.setText(user.getStatus());
             infoLayout.add(userStatusSpan);
         }
     }
