@@ -1,4 +1,4 @@
-package ru.aleynikov.blogcamp.views.main;
+package ru.aleynikov.blogcamp.views.profile;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasComponents;
@@ -25,6 +25,7 @@ import ru.aleynikov.blogcamp.security.SessionManager;
 import ru.aleynikov.blogcamp.service.JavaScriptUtils;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.views.main.MainLayout;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -35,7 +36,7 @@ import java.util.Locale;
 @PageTitle("Profile - Blogcamp")
 @StyleSheet(StaticResources.MAIN_STYLES)
 @StyleSheet(StaticResources.PROFILE_STYLES)
-public class ProfileView extends Composite<Div> implements HasComponents, RouterLayout, BeforeEnterObserver {
+public class ProfileLayout extends Composite<Div> implements HasComponents, RouterLayout, BeforeEnterObserver {
 
     @Autowired
     private UserService userService;
@@ -79,7 +80,7 @@ public class ProfileView extends Composite<Div> implements HasComponents, Router
     private Tab aboutTab = new Tab("About");
     private Tab accountTab = new Tab("Account settings");
 
-    public ProfileView() {
+    public ProfileLayout() {
         getContent().setSizeFull();
 
         contentLayout.setSizeFull();

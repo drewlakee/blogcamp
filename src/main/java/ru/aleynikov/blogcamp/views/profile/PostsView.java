@@ -1,4 +1,4 @@
-package ru.aleynikov.blogcamp.views.main.profile;
+package ru.aleynikov.blogcamp.views.profile;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasComponents;
@@ -23,14 +23,13 @@ import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.PostService;
 import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
-import ru.aleynikov.blogcamp.views.main.ProfileView;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Route(value = "posts", layout = ProfileView.class)
+@Route(value = "posts", layout = ProfileLayout.class)
 @PageTitle("Profile - Posts")
 @StyleSheet(StaticResources.PROFILE_STYLES)
 public class PostsView extends Composite<Div> implements HasComponents, HasUrlParameter<String> {

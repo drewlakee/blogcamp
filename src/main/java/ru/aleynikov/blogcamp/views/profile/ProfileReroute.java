@@ -1,4 +1,4 @@
-package ru.aleynikov.blogcamp.views.main.profile;
+package ru.aleynikov.blogcamp.views.profile;
 
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.html.Div;

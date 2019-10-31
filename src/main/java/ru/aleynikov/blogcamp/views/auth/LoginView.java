@@ -1,12 +1,15 @@
 package ru.aleynikov.blogcamp.views.auth;
 
+import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
@@ -16,30 +19,23 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import ru.aleynikov.blogcamp.model.User;
-import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
-import ru.aleynikov.blogcamp.views.main.GlobeView;
 import ru.aleynikov.blogcamp.views.main.HomeView;
 
 @PageTitle("Log in")
-@Route("login")
+@Route(value = "login", layout = AuthLayout.class)
 @StyleSheet(StaticResources.LOGIN_STYLES)
-public class LoginView extends HorizontalLayout {
+public class LoginView extends Composite<Div> implements HasComponents {
 
     private static Logger log = LoggerFactory.getLogger(LoginView.class);
 
-    private Image logoImage = new Image(StaticResources.LOGO_IMAGE, "logo");
-
     private HorizontalLayout loginErrorLayout = new HorizontalLayout();
 
-    private VerticalLayout loginLayout = new VerticalLayout();
     private VerticalLayout loginFormLayout = new VerticalLayout();
 
     private H2 loginLabel = new H2("Log in");
@@ -56,26 +52,20 @@ public class LoginView extends HorizontalLayout {
     private RouterLink signUpLink = new RouterLink("Sign up", SignUpView.class);
 
     public LoginView(AuthenticationManager authenticationManager) {
-        setSizeFull();
-
-        loginLayout.setWidth(null);
-        loginLayout.setClassName("login-layout");
-        loginLayout.setAlignItems(Alignment.CENTER);
-
-        logoImage.setClassName("logo-login");
+        getContent().setSizeFull();
 
         loginErrorLayout.setSizeFull();
         loginErrorLayout.setClassName("error-login");
         loginErrorLayout.add(errorLoginLabel);
-        loginErrorLayout.setAlignItems(Alignment.CENTER);
+        loginErrorLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         loginErrorLayout.setVisible(false);
 
         errorLoginLabel.setClassName("error-label-login");
 
         loginFormLayout.setWidth("360px");
         loginFormLayout.setClassName("login-form");
-        loginFormLayout.setHorizontalComponentAlignment(Alignment.START, loginLabel);
-        loginFormLayout.setAlignItems(Alignment.CENTER);
+        loginFormLayout.setHorizontalComponentAlignment(FlexComponent.Alignment.START, loginLabel);
+        loginFormLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 
         loginLabel.setClassName("login-label");
 
@@ -100,11 +90,7 @@ public class LoginView extends HorizontalLayout {
         loginFormLayout.add(loginErrorLayout, loginLabel, usernameField,
                 passwordField, loginButton, forgotPasswordButton, signUpLink);
 
-        loginLayout.add(logoImage, loginFormLayout);
-
-        setVerticalComponentAlignment(Alignment.CENTER, loginLayout);
-
-        add(loginLayout);
+        add(loginFormLayout);
 
         loginButton.addClickShortcut(Key.ENTER);
         loginButton.addClickListener(clickEvent -> {

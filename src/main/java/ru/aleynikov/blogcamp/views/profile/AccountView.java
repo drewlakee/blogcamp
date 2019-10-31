@@ -1,4 +1,4 @@
-package ru.aleynikov.blogcamp.views.main.profile;
+package ru.aleynikov.blogcamp.views.profile;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasComponents;
@@ -21,11 +21,10 @@ import ru.aleynikov.blogcamp.model.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
-import ru.aleynikov.blogcamp.views.main.ProfileView;
 
 import java.util.Arrays;
 
-@Route(value = "account", layout = ProfileView.class)
+@Route(value = "account", layout = ProfileLayout.class)
 @PageTitle("Profile - Account")
 @StyleSheet(StaticResources.PROFILE_STYLES)
 public class AccountView extends Composite<Div> implements HasComponents, BeforeEnterObserver {

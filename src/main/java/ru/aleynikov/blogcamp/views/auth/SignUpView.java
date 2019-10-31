@@ -36,7 +36,7 @@ import java.util.Map;
 
 
 @PageTitle("Sign up")
-@Route("registration")
+@Route(value = "registration", layout = AuthLayout.class)
 @StyleSheet(StaticResources.SIGN_UP_STYLES)
 public class SignUpView extends HorizontalLayout {
 
@@ -48,14 +48,11 @@ public class SignUpView extends HorizontalLayout {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    private VerticalLayout signUpLayout = new VerticalLayout();
     private VerticalLayout signUpFormLayout = new VerticalLayout();
 
     private HorizontalLayout signUpErrorLayout = new HorizontalLayout();
 
     private Label errorUsernameAlreadyExistLabel = new Label("Username already exist.");
-
-    private Image logoImage = new Image(StaticResources.LOGO_IMAGE, "logo");
 
     private H2 signUpLabel = new H2("Sign up");
 
@@ -75,8 +72,6 @@ public class SignUpView extends HorizontalLayout {
     public SignUpView(AuthenticationManager authenticationManager) {
         setSizeFull();
 
-        logoImage.setClassName("logo-signup");
-
         errorUsernameAlreadyExistLabel.setClassName("error-label-signup");
 
         signUpErrorLayout.setSizeFull();
@@ -85,10 +80,6 @@ public class SignUpView extends HorizontalLayout {
         signUpErrorLayout.setVisible(false);
 
         signUpLabel.setClassName("signup-form-label");
-
-        signUpLayout.setWidth(null);
-        signUpLayout.setClassName("signup-layout");
-        signUpLayout.setAlignItems(Alignment.CENTER);
 
         signUpFormLayout.setSizeFull();
         signUpFormLayout.setWidth("360px");
@@ -147,11 +138,7 @@ public class SignUpView extends HorizontalLayout {
                 passwordField, repeatPasswordField, continueButton,
                 secretQuestionField, secretAnswerField, signUpButton, logInLink);
 
-        signUpLayout.add(logoImage, signUpFormLayout);
-
-        setVerticalComponentAlignment(Alignment.CENTER, signUpLayout);
-
-        add(signUpLayout);
+        add(signUpFormLayout);
 
         continueButton.addClickShortcut(Key.ENTER).setEventPropagationAllowed(!signUpButton.isVisible());
         continueButton.addClickListener(clickEvent -> {
