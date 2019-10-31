@@ -14,10 +14,15 @@ public class CountryService {
     private CountryDaoImpl countryDao;
 
     public List<Country> getAllCountriesList() {
-        return countryDao.findAllCountries();
+        String query = "SELECT * FROM country";
+
+        return countryDao.queryList(query, null);
     }
 
     public Country findById(int id) {
-        return countryDao.findById(id);
+        String query = "SELECT * FROM country WHERE country_id = ?";
+        Object[] qparams = new Object[] {id};
+
+        return countryDao.queryForObject(query, qparams);
     }
 }

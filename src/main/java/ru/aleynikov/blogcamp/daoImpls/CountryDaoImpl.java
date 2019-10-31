@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.daos.CountryDao;
 import ru.aleynikov.blogcamp.mappers.CountryRowMapper;
+import ru.aleynikov.blogcamp.models.City;
 import ru.aleynikov.blogcamp.models.Country;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
@@ -26,26 +27,25 @@ public class CountryDaoImpl implements CountryDao {
     private CountryRowMapper countryRowMapper;
 
     @Override
-    public List<Country> findAllCountries() {
-        String query = "SELECT * FROM country";
-        List<Country> countryList;
+    public List<Country> queryList(String query, Object[] qparams) {
+        List<Country> countries;
 
-        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query);
-        countryList = jdbc.query(query, countryRowMapper);
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        countries = jdbc.query(query, qparams, countryRowMapper);
 
-        return countryList;
+        return countries;
     }
 
     @Override
-    public Country findById(int id) {
-        String query = "SELECT * FROM country WHERE country_id = ?";
-        Object[] qparams = new Object[] {id};
-        Country country = null;
+    public Country queryForObject(String query, Object[] qparams) {
+        Country country;
 
         try {
             log.info(query + ", {}", Arrays.toString(qparams));
             country = (Country) jdbc.queryForObject(query, qparams, countryRowMapper);
-        } catch (EmptyResultDataAccessException e) {}
+        } catch (EmptyResultDataAccessException e) {
+            country = null;
+        }
 
         return country;
     }
