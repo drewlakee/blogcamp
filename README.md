@@ -1,5 +1,3 @@
-# Vaadin 13 + Spring Framework + Spring Boot + PostgreSQL
+# Vaadin 13 + Spring Framework + PostgreSQL
 
-![logo](https://raw.githubusercontent.com/drewlakee/blogcamp/master/src/main/resources/META-INF/resources/images/logo.png)
-
-Made as a course project (4 semestr)
+Made as a course project in 2019, 4 semester.
