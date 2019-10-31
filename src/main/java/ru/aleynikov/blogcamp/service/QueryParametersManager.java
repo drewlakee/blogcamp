@@ -18,6 +18,7 @@ public class QueryParametersManager {
     }
 
     public static void setQueryParams(Map<String, List<String>> qparams, HashMap<String, Object> pageParametersMap, Set<String> pageParametersKeySet) {
+
         for (String parameter : pageParametersKeySet) {
             if (!parameter.equals("page")) {
                 pageParametersMap.replace(parameter, "");

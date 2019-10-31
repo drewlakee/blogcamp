@@ -6,7 +6,6 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -102,9 +101,9 @@ public class HomeView extends Composite<Div> implements HasComponents, BeforeEnt
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        List<Tag> popularTags = null;
-        List<Post> interestingPosts = null;
-        List<User> activeUsers = null;
+        List<Tag> popularTags;
+        List<Post> interestingPosts;
+        List<User> activeUsers;
 
         popularTags = tagService.findTopPopularTags(TOP_TAGS_LIMIT);
 

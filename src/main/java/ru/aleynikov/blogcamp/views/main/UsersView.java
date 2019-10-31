@@ -67,7 +67,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
                     "search","",
                     "page", "1")
     );
-    private static Set<String> pageParametersKeySet = Set.of("tab", "search", "page");
+    private static Set<String> pageParametersKeySet;
     private Map<String, List<String>> qparams;
 
     public UsersView() {
@@ -135,6 +135,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
+        pageParametersKeySet = pageParametersMap.keySet();
         QueryParametersManager.setQueryParams(qparams, pageParametersMap, pageParametersKeySet);
 
         if (sortBar.getSelectedTab() != null) {

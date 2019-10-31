@@ -62,7 +62,7 @@ public class PostsView extends Composite<Div> implements HasComponents, HasUrlPa
     private HashMap<String, Object> pageParametersMap = new HashMap<>(
             Map.of("search","")
     );
-    private static Set<String> pageParametersKeySet = Set.of("search");
+    private static Set<String> pageParametersKeySet;
     private Map<String, List<String>> qparams;
 
     public PostsView() {
@@ -109,6 +109,7 @@ public class PostsView extends Composite<Div> implements HasComponents, HasUrlPa
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
+        pageParametersKeySet = pageParametersMap.keySet();
         QueryParametersManager.setQueryParams(qparams, pageParametersMap, pageParametersKeySet);
 
         buildPostsBrowser(postsOffset, LIMIT_OF_POSTS, pageParametersMap.get("search").toString());

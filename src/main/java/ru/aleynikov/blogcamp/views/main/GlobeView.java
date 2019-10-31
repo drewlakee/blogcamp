@@ -27,10 +27,7 @@ import ru.aleynikov.blogcamp.service.QueryParametersManager;
 import ru.aleynikov.blogcamp.service.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Route(value = "globe", layout = MainLayout.class)
 @PageTitle("Posts - Blogcamp")
@@ -84,7 +81,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
                     "user", "",
                     "global", "")
     );
-    private static Set<String> pageParametersKeySet = Set.of("tab", "search", "tag", "page", "user", "global");
+    private static Set<String> pageParametersKeySet;
     private Map<String, List<String>> qparams;
 
     public GlobeView() {
@@ -198,6 +195,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
         userInfoLayout.setVisible(false);
+        pageParametersKeySet = pageParametersMap.keySet();
         QueryParametersManager.setQueryParams(qparams, pageParametersMap, pageParametersKeySet);
 
         if (sortBar.getSelectedTab() != null) {
