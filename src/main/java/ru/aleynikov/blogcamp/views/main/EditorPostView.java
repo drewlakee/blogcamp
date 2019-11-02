@@ -219,7 +219,7 @@ public class EditorPostView extends Composite<Div> implements HasComponents, Has
                 else
                     updatedPost.put("intro_image", null);
                 updatedPost.put("created_date", new Timestamp(System.currentTimeMillis()));
-                postService.updatePost(updatedPost);
+                postService.update(updatedPost);
 
                 Set<String> newTags = new LinkedHashSet<>();
                 Arrays.stream(tagsField.getValue().split(" ")).filter(tag -> !tag.strip().isEmpty()).forEach((x) -> newTags.add(x.toLowerCase().replaceAll(",", "")));
