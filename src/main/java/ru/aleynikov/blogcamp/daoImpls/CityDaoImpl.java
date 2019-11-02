@@ -28,7 +28,7 @@ public class CityDaoImpl implements CityDao {
     @Override
     public List<City> queryForList(String query, Object[] qparams) {
         List<City> cities;
-        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        log.info(query + ", {}", Arrays.toString(qparams));
         cities = jdbc.query(query, qparams, cityRowMapper);
 
         return cities;
@@ -38,7 +38,7 @@ public class CityDaoImpl implements CityDao {
     public City queryForObject(String query, Object[] qparams) {
         City city;
         try {
-            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+            log.info(query + ", {}", Arrays.toString(qparams));
             city = (City) jdbc.queryForObject(query, qparams, cityRowMapper);
         } catch (EmptyResultDataAccessException e) {
             city = null;

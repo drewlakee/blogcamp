@@ -30,7 +30,7 @@ public class CountryDaoImpl implements CountryDao {
     public List<Country> queryForList(String query, Object[] qparams) {
         List<Country> countries;
 
-        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        log.info(query + ", {}", Arrays.toString(qparams));
         countries = jdbc.query(query, qparams, countryRowMapper);
 
         return countries;
@@ -41,7 +41,7 @@ public class CountryDaoImpl implements CountryDao {
         Country country;
 
         try {
-            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+            log.info(query + ", {}", Arrays.toString(qparams));
             country = (Country) jdbc.queryForObject(query, qparams, countryRowMapper);
         } catch (EmptyResultDataAccessException e) {
             country = null;
