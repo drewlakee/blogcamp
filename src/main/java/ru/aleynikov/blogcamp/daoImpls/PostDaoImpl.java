@@ -13,7 +13,6 @@ import ru.aleynikov.blogcamp.models.Tag;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.services.TagService;
 
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +62,7 @@ public class PostDaoImpl implements PostDao {
                     qparamsForInsert = new Object[] {postIdFromDb, tagFromDb.getId()};
                     jdbc.update(insertTagToPostQuery, qparamsForInsert);
                 } else {
-                    tagService.saveTag(tag);
+                    tagService.save(tag);
                     tagFromDb = tagService.findTagByName(tag);
 
                     qparamsForInsert = new Object[] {postIdFromDb, tagFromDb.getId()};

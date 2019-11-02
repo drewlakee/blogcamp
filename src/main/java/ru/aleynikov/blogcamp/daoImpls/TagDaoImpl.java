@@ -8,11 +8,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.daos.TagDao;
 import ru.aleynikov.blogcamp.mappers.TagRowMapper;
-import ru.aleynikov.blogcamp.models.Post;
 import ru.aleynikov.blogcamp.models.Tag;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,60 +26,19 @@ public class TagDaoImpl implements TagDao {
     private TagRowMapper tagRowMapper;
 
     @Override
-    public List<Tag> findNewestTags(int offset, int limit) {
-        String query = "SELECT DISTINCT tag.tag_id, tag.name, tag.description, tag.created FROM tag " +
-                "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
-                "JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
-                "JOIN usr ON post.\"user\" = usr.user_id AND usr.banned = false " +
-                "ORDER BY created DESC OFFSET ? LIMIT ? ";
-        Object[] qparams = new Object[] {offset, limit};
-        List<Tag> tagList;
-
+    public void save(String query, Object[] qparams) {
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
-        tagList = jdbc.query(query, qparams, tagRowMapper);
-
-        return tagList;
+        jdbc.update(query, qparams);
     }
 
     @Override
-    public int count() {
-        String query = "SELECT COUNT(DISTINCT tag.tag_id) FROM tag" +
-                "                JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id" +
-                "                JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false" +
-                "                JOIN usr ON post.\"user\" = usr.user_id AND usr.banned = false";
-
-        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query);
-        int count = jdbc.queryForObject(query, Integer.class);
-
-        return count;
-    }
-
-    @Override
-    public List<Tag> findByNameTagsList(int offset, int limit, String filter) {
-        String query = "SELECT DISTINCT tag.tag_id, tag.name, tag.description, tag.created FROM tag " +
-                "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
-                "JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
-                "JOIN usr ON post.\"user\" = usr.user_id AND usr.banned = false " +
-                "WHERE LOWER(tag.name) LIKE LOWER(?) " +
-                "ORDER BY (created) DESC " +
-                "OFFSET ? LIMIT ?";
-        Object[] qparams = new Object[] { "%"+filter+"%", offset, limit};
-        List<Tag> tagList;
-
+    public void update(String query, Object[] qparams) {
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
-        tagList = jdbc.query(query, qparams, tagRowMapper);
-
-        return tagList;
+        jdbc.update(query, qparams);
     }
 
     @Override
-    public int countByName(String filter) {
-        String query = "SELECT COUNT(*) FROM tag " +
-                "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
-                "JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
-                "JOIN usr ON post.\"user\" = usr.user_id AND usr.banned = false " +
-                "WHERE tag.name LIKE ?";
-        Object[] qparams = new Object[] {"%"+filter+"%"};
+    public int count(String query, Object[] qparams) {
         int count;
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
@@ -91,32 +48,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public Tag findTagByName(String name) {
-        String query = "SELECT * FROM tag WHERE name = ?";
-        Object[] qparams = new Object[] {name};
-        Tag tag = null;
-
-        try {
-            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
-            tag = (Tag) jdbc.queryForObject(query, qparams, tagRowMapper);
-        } catch (EmptyResultDataAccessException e) {}
-
-        return tag;
-    }
-
-    @Override
-    public void save(String name) {
-        String query = "INSERT INTO tag (name, created) VALUES (?, ?)";
-        Object[] qparams = new Object[] {name, new Timestamp(System.currentTimeMillis())};
-
-        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
-        jdbc.update(query, qparams);
-    }
-
-    @Override
-    public List<Tag> findTagsByPostId(int id) {
-        String query = "SELECT * FROM (post_to_tag JOIN tag USING (tag_id)) WHERE post_id = ?";
-        Object[] qparams = new Object[] {id};
+    public List<Tag> queryForList(String query, Object[] qparams) {
         List<Tag> tagList;
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
@@ -126,61 +58,16 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public void updateDescriptionById(String description, int id) {
-        String query = "UPDATE tag SET description = ? WHERE tag_id = ?";
-        Object[] qparams = new Object[] {description, id};
+    public Tag queryForObject(String query, Object[] qparams) {
+        Tag tag;
 
-        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
-        jdbc.update(query, qparams);
-    }
-
-    @Override
-    public void updateTagsCountsOfPostByPostId(Post post) {
-        String queryInsert = "UPDATE post_to_tag SET tag_id = ? WHERE tag_id = ? AND post_id = ?";
-        Object[] qparams;
-
-        for(Tag tag : post.getTags()) {
-            qparams = new Object[] {tag.getId(), tag.getId(), post.getId()};
-
-            jdbc.update(queryInsert, qparams);
+        try {
+            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+            tag = (Tag) jdbc.queryForObject(query, qparams, tagRowMapper);
+        } catch (EmptyResultDataAccessException e) {
+            tag = null;
         }
-    }
 
-    @Override
-    public List<Tag> findTagsSortedByNameAsc(int offset, int limit) {
-        String query = "SELECT tag.tag_id, tag.name, tag.description, tag.created FROM tag " +
-                "                JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
-                "                JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
-                "                JOIN usr ON post.\"user\" = usr.user_id AND usr.banned = false " +
-                "                ORDER BY name ASC " +
-                "                OFFSET ? LIMIT ?";
-        Object[] qparams = new Object[] {offset, limit};
-        List<Tag> tagList = null;
-
-        try {
-            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
-            tagList = jdbc.query(query, qparams, tagRowMapper);
-        } catch (EmptyResultDataAccessException e) {}
-
-        return tagList;
-    }
-
-    @Override
-    public List<Tag> findPopularTagsWithLimit(int limit) {
-        String query = "SELECT *, (SELECT COUNT(*) FROM post_to_tag WHERE tag.tag_id = post_to_tag.tag_id) as count FROM tag " +
-                "WHERE (SELECT COUNT(*) FROM post_to_tag " +
-                "    JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
-                "    JOIN usr on post.\"user\" = usr.user_id AND usr.banned = false " +
-                "WHERE tag.tag_id = post_to_tag.tag_id ) > 0 " +
-                "ORDER BY count DESC OFFSET 0 LIMIT ? ";
-        Object[] qparams = new Object[] {limit};
-        List<Tag> tagList = null;
-
-        try {
-            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
-            tagList = jdbc.query(query, qparams, tagRowMapper);
-        } catch (EmptyResultDataAccessException e) {}
-
-        return tagList;
+        return tag;
     }
 }
