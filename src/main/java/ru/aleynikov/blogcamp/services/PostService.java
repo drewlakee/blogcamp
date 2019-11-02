@@ -32,7 +32,13 @@ public class PostService {
     }
 
     public int count() {
-        return postDao.count();
+        String query = "SELECT COUNT(*) FROM post, usr " +
+                "WHERE deleted = false " +
+                "AND \"user\" = user_id " +
+                "AND usr.banned = false";
+
+
+        return postDao.count(query, null);
     }
 
     public List<Post> findPostsByTitle(int page, int componentLimit, String filter) {
@@ -40,7 +46,15 @@ public class PostService {
     }
 
     public int countByTitle(String filter) {
-        return postDao.countByTitle(filter);
+        String query = "SELECT COUNT(*) " +
+                "FROM post, usr " +
+                "WHERE LOWER(title) LIKE LOWER(?) " +
+                "AND deleted = false " +
+                "AND \"user\" = user_id " +
+                "AND usr.banned = false";
+        Object[] qparams = new Object[] {"%"+filter+"%"};
+
+        return postDao.count(query, qparams);
     }
 
     public List<Post> findPostsByTag(int page, int componentLimit, String tag) {
@@ -48,7 +62,16 @@ public class PostService {
     }
 
     public int countByTag(String tag) {
-        return postDao.countByTag(tag);
+        String query = "SELECT COUNT(*) " +
+                "FROM (post_to_tag right join post using (post_id)), usr " +
+                "WHERE tag_id = (SELECT tag_id " +
+                "FROM tag WHERE name = ?) " +
+                "AND \"user\" = user_id " +
+                "AND usr.banned = false " +
+                "AND deleted = false";
+        Object[] qparams = new Object[] {tag};
+
+        return postDao.count(query, qparams);
     }
 
     public List<Post> findPostsByUsername(int page, int componentLimit, String username) {
@@ -56,7 +79,14 @@ public class PostService {
     }
 
     public int countPostsByUsername(String username) {
-        return postDao.countByUsername(username);
+        String query = "SELECT COUNT(*) " +
+                "FROM post " +
+                "WHERE \"user\" = (SELECT user_id FROM usr WHERE username = ? " +
+                "AND usr.banned = false) " +
+                "AND deleted = false";
+        Object[] qparams = new Object[] {username};
+
+        return postDao.count(query, qparams);
     }
 
     public List<Post> findPostsGlobal(int page, int componentLimit, String search) {
@@ -64,7 +94,20 @@ public class PostService {
     }
 
     public int countGlobal(String search) {
-        return postDao.countGlobal(search);
+        String query = "SELECT COUNT(DISTINCT post_to_tag.post_id) " +
+                "FROM post JOIN post_to_tag USING (post_id) " +
+                "JOIN tag USING (tag_id) " +
+                "JOIN usr ON post.\"user\" = user_id " +
+                "WHERE (LOWER(tag.name) LIKE LOWER(?) " +
+                "OR LOWER(post.title) LIKE LOWER(?) " +
+                "OR LOWER(post.text) LIKE LOWER(?)) " +
+                "OR LOWER(username) LIKE LOWER(?) " +
+                "AND deleted = false " +
+                "AND usr.banned = false ";
+        String searchValue = "%" + search + "%";
+        Object[] qparams = new Object[] {searchValue, searchValue, searchValue, searchValue};
+
+        return postDao.count(query, qparams);
     }
 
     public List<Post> findNewestPostsByUserId(int offset, int componentLimit, int id) {
@@ -76,7 +119,16 @@ public class PostService {
     }
 
     public int countByUserIdAndSearchByTitle(int id, String search) {
-        return postDao.countByUserIdAndSearchByTitle(id, search);
+        String query = "SELECT COUNT(*) " +
+                "FROM post, usr " +
+                "WHERE \"user\" = ? " +
+                "AND \"user\" = user_id " +
+                "AND usr.banned = false " +
+                "AND deleted = false " +
+                "AND LOWER(title) LIKE (?)";
+        Object[] qparams = new Object[] {id, "%" + search + "%"};
+
+        return postDao.count(query, qparams);
     }
 
     public void deleteById(int id) {

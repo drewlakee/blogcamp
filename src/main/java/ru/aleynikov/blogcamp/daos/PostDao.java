@@ -27,10 +27,5 @@ public interface PostDao {
     void setTagsToPost(Set<String> tags, HashMap<String, Object> post);
     void removeTagsFromPost(Set<String> tags, HashMap<String, Object> post);
 
-    int countByUserIdAndSearchByTitle(int userId, String search);
-    int countByTitle(String filter);
-    int count();
-    int countByTag(String tag);
-    int countByUsername(String username);
-    int countGlobal(String search);
+    int count(String query, Object[] qparams);
 }
