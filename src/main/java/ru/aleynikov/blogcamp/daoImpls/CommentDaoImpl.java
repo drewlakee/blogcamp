@@ -10,9 +10,7 @@ import ru.aleynikov.blogcamp.mappers.CommentRowMapper;
 import ru.aleynikov.blogcamp.models.Comment;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class CommentDaoImpl implements CommentDao {
@@ -26,35 +24,7 @@ public class CommentDaoImpl implements CommentDao {
     private CommentRowMapper commentRowMapper;
 
     @Override
-    public List<Comment> findNewestByPostIdWithOffsetAndLimit(int offset, int limit, int id) {
-        String query = "SELECT comment_id, text, created_date, \"user\", post, deleted FROM comment, usr WHERE \"user\" = user_id AND usr.banned = false AND post = ? AND deleted = false ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
-        Object[] qparams = new Object[] {id, offset, limit};
-        List<Comment> comments;
-
-        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
-        comments = jdbc.query(query, qparams, commentRowMapper);
-
-        return comments;
-    }
-    
-    @Override
-    public void save(HashMap<String, Object> comment) {
-        String query = "INSERT INTO comment (text, created_date, \"user\", post) VALUES (?, ?, ?, ?)";
-        Object[] qparams = new Object[] {
-                comment.get("text"),
-                comment.get("created_date"),
-                comment.get("user_id"),
-                comment.get("post_id")
-        };
-
-        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
-        jdbc.update(query, qparams);
-    }
-
-    @Override
-    public int countByPostId(int id) {
-        String query = "SELECT COUNT(*) FROM comment, usr WHERE user_id = \"user\" AND banned = false AND post = ? AND deleted = false";
-        Object[] qparams = new Object[] {id};
+    public int count(String query, Object[] qparams) {
         int count;
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
@@ -64,10 +34,23 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public void deleteById(int id) {
-        String query = "UPDATE comment SET deleted = true WHERE comment_id = ? AND deleted = false";
-        Object[] qparams = new Object[] {id};
+    public List<Comment> queryForList(String query, Object[] qparams) {
+        List<Comment> comments;
 
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        comments = jdbc.query(query, qparams, commentRowMapper);
+
+        return comments;
+    }
+
+    @Override
+    public void save(String query, Object[] qparams) {
+        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        jdbc.update(query, qparams);
+    }
+
+    @Override
+    public void delete(String query, Object[] qparams) {
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
         jdbc.update(query, qparams);
     }
