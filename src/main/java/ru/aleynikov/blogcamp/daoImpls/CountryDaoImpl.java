@@ -41,7 +41,7 @@ public class CountryDaoImpl implements CountryDao {
         Country country;
 
         try {
-            log.info(query + ", {}", Arrays.toString(qparams));
+            log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
             country = (Country) jdbc.queryForObject(query, qparams, countryRowMapper);
         } catch (EmptyResultDataAccessException e) {
             country = null;
