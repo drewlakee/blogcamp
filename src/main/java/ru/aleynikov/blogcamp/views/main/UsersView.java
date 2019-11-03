@@ -18,13 +18,13 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.aleynikov.blogcamp.component.PageSwitcherComponent;
-import ru.aleynikov.blogcamp.component.UserComponent;
-import ru.aleynikov.blogcamp.model.User;
+import ru.aleynikov.blogcamp.components.PageSwitcherComponent;
+import ru.aleynikov.blogcamp.components.UserComponent;
+import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
-import ru.aleynikov.blogcamp.service.FilterDataManager;
-import ru.aleynikov.blogcamp.service.QueryParametersManager;
-import ru.aleynikov.blogcamp.service.UserService;
+import ru.aleynikov.blogcamp.services.FilterDataManager;
+import ru.aleynikov.blogcamp.services.QueryParametersManager;
+import ru.aleynikov.blogcamp.services.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.util.HashMap;
@@ -67,7 +67,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
                     "search","",
                     "page", "1")
     );
-    private static Set<String> pageParametersKeySet = Set.of("tab", "search", "page");
+    private static Set<String> pageParametersKeySet;
     private Map<String, List<String>> qparams;
 
     public UsersView() {
@@ -117,12 +117,12 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
             }
         });
 
-        searchField.addKeyPressListener(Key.ENTER, keyEventListener -> searchFieldProcess());
+        searchField.addKeyPressListener(Key.ENTER, keyEventListener -> search());
 
-        searchUserFieldIcon.addClickListener(event -> searchFieldProcess());
+        searchUserFieldIcon.addClickListener(event -> search());
     }
 
-    private void searchFieldProcess() {
+    private void search() {
         if (!searchField.isEmpty()) {
             sortBar.setSelectedTab(null);
             HashMap<String, Object> customQueryParams = new HashMap<>();
@@ -135,6 +135,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
+        pageParametersKeySet = pageParametersMap.keySet();
         QueryParametersManager.setQueryParams(qparams, pageParametersMap, pageParametersKeySet);
 
         if (sortBar.getSelectedTab() != null) {

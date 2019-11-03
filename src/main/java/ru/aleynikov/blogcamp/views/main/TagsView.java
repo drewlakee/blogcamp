@@ -18,15 +18,12 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.aleynikov.blogcamp.component.PageSwitcherComponent;
-import ru.aleynikov.blogcamp.component.TagComponent;
-import ru.aleynikov.blogcamp.model.Tag;
-import ru.aleynikov.blogcamp.model.User;
-import ru.aleynikov.blogcamp.security.SecurityUtils;
-import ru.aleynikov.blogcamp.service.FilterDataManager;
-import ru.aleynikov.blogcamp.service.PostService;
-import ru.aleynikov.blogcamp.service.QueryParametersManager;
-import ru.aleynikov.blogcamp.service.TagService;
+import ru.aleynikov.blogcamp.components.PageSwitcherComponent;
+import ru.aleynikov.blogcamp.components.TagComponent;
+import ru.aleynikov.blogcamp.models.Tag;
+import ru.aleynikov.blogcamp.services.FilterDataManager;
+import ru.aleynikov.blogcamp.services.QueryParametersManager;
+import ru.aleynikov.blogcamp.services.TagService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.util.HashMap;
@@ -68,7 +65,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
                     "search","",
                     "page", "1")
     );
-    private static Set<String> pageParametersKeySet = Set.of("tab", "search", "page");
+    private static Set<String> pageParametersKeySet;
     private Map<String, List<String>> qparams;
 
     public TagsView() {
@@ -130,7 +127,6 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     private void searchFieldProcess() {
         if (!searchField.isEmpty()) {
             sortBar.setSelectedTab(null);
-
             HashMap<String, Object> customQueryParams = new HashMap<>();
             customQueryParams.put("search", searchField.getValue().strip());
             UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
@@ -141,6 +137,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
+        pageParametersKeySet = pageParametersMap.keySet();
         QueryParametersManager.setQueryParams(qparams, pageParametersMap, pageParametersKeySet);
 
         if (sortBar.getSelectedTab() != null) {
@@ -179,16 +176,16 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         row.setWidth("100%");
 
         if (!search.isEmpty()) {
-            tagList = tagService.getTagListBySearch(page, TAGS_ON_PAGE_LIMIT, search);
-            countTags = tagService.getTagsCountBySearch(search);
+            tagList = tagService.findTagListBySearch(page, TAGS_ON_PAGE_LIMIT, search);
+            countTags = tagService.findTagsCountBySearch(search);
             customQueryParams.put("search", search);
         } else if (pageParametersMap.get("tab").equals(aToZTab.getLabel().toLowerCase())) {
             tagList = tagService.findTagsSortedByNameAsc(page, TAGS_ON_PAGE_LIMIT);
-            countTags = tagService.getAllTagsCount();
+            countTags = tagService.findAllTagsCount();
             customQueryParams.put("tab", sortTab);
         } else {
-            tagList = tagService.getNewestTagList(page, TAGS_ON_PAGE_LIMIT);
-            countTags = tagService.getAllTagsCount();
+            tagList = tagService.findNewestTagList(page, TAGS_ON_PAGE_LIMIT);
+            countTags = tagService.findAllTagsCount();
             customQueryParams.put("tab", sortTab);
         }
         

@@ -5,7 +5,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -16,22 +15,22 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.aleynikov.blogcamp.daoImpl.UserDaoImpl;
-import ru.aleynikov.blogcamp.model.User;
+import ru.aleynikov.blogcamp.daoImpls.UserDaoImpl;
+import ru.aleynikov.blogcamp.models.User;
+import ru.aleynikov.blogcamp.services.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 @PageTitle("Password restore")
-@Route("restore")
+@Route(value = "restore", layout = AuthLayout.class)
 @StyleSheet(StaticResources.PASS_RESTORE_STYLES)
 public class PasswordRestoreView extends HorizontalLayout {
 
     @Autowired
-    private UserDaoImpl userDao;
+    private UserService userService;
 
     @Autowired
     private BCryptPasswordEncoder encoder;
 
-    private VerticalLayout passRestoreLayout = new VerticalLayout();
     private VerticalLayout passRestoreFormLayout = new VerticalLayout();
 
     private HorizontalLayout passRestoreErrorLayout = new HorizontalLayout();
@@ -44,8 +43,6 @@ public class PasswordRestoreView extends HorizontalLayout {
     private Label changeNewPassLabel = new Label("Change password:");
 
     private H2 passRestoreLabel = new H2("Password restore");
-
-    private Image logoImage = new Image(StaticResources.LOGO_IMAGE, "logo");
 
     private TextField usernameField = new TextField();
     private TextField answerField = new TextField();
@@ -63,8 +60,6 @@ public class PasswordRestoreView extends HorizontalLayout {
     public PasswordRestoreView() {
         setSizeFull();
 
-        logoImage.setClassName("logo-pass-restore");
-
         errorAccountNotExistLabel.setClassName("error-label-pass-restore");
 
         errorAnswerLabel.setClassName("error-label-pass-restore");
@@ -75,9 +70,6 @@ public class PasswordRestoreView extends HorizontalLayout {
         passRestoreErrorLayout.setVisible(false);
 
         passRestoreLabel.setClassName("pass-restore-form-label");
-
-        passRestoreLayout.setClassName("pass-restore-layout");
-        passRestoreLayout.setAlignItems(Alignment.CENTER);
 
         passRestoreFormLayout.setSizeFull();
         passRestoreFormLayout.setWidth("360px");
@@ -133,9 +125,7 @@ public class PasswordRestoreView extends HorizontalLayout {
         passRestoreFormLayout.add(passRestoreErrorLayout, passRestoreLabel, changeNewPassLabel, answerOnQuestionLabel, enterUsernameLabel,
                 questionLabel, answerField, usernameField, newPassField, repeatNewPassField, continueButton, changePassButton, backToLoginLink);
 
-        passRestoreLayout.add(logoImage, passRestoreFormLayout);
-
-        add(passRestoreLayout);
+        add(passRestoreFormLayout);
 
         continueButton.addClickShortcut(Key.ENTER).setEventPropagationAllowed(!changePassButton.isVisible());
         continueButton.addClickListener(clickEvent -> {
@@ -179,7 +169,8 @@ public class PasswordRestoreView extends HorizontalLayout {
         changePassButton.addClickShortcut(Key.ENTER).setEventPropagationAllowed(!continueButton.isVisible());
         changePassButton.addClickListener(clickEvent -> {
             if (isNewPasswordValid()) {
-                userDao.updatePasswordByUsername(usernameField.getValue().strip(), encoder.encode(newPassField.getValue().strip()));
+
+                userService.updateUserPassword(usernameField.getValue().strip(), encoder.encode(newPassField.getValue().strip()));
                 UI.getCurrent().getUI().ifPresent(ui -> ui.navigate("login"));
             }
         });
@@ -198,7 +189,7 @@ public class PasswordRestoreView extends HorizontalLayout {
 
     private boolean isAccountExist() {
         if (existingAccount == null)
-            existingAccount = userDao.findByUsername(usernameField.getValue().strip());
+            existingAccount = userService.findUserByUsername(usernameField.getValue().strip());
 
         if (existingAccount != null) {
             passRestoreErrorLayout.setVisible(false);

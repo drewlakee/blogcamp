@@ -17,20 +17,17 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.aleynikov.blogcamp.component.PageSwitcherComponent;
-import ru.aleynikov.blogcamp.component.PostComponent;
-import ru.aleynikov.blogcamp.model.Post;
-import ru.aleynikov.blogcamp.model.User;
-import ru.aleynikov.blogcamp.service.FilterDataManager;
-import ru.aleynikov.blogcamp.service.PostService;
-import ru.aleynikov.blogcamp.service.QueryParametersManager;
-import ru.aleynikov.blogcamp.service.UserService;
+import ru.aleynikov.blogcamp.components.PageSwitcherComponent;
+import ru.aleynikov.blogcamp.components.PostComponent;
+import ru.aleynikov.blogcamp.models.Post;
+import ru.aleynikov.blogcamp.models.User;
+import ru.aleynikov.blogcamp.services.FilterDataManager;
+import ru.aleynikov.blogcamp.services.PostService;
+import ru.aleynikov.blogcamp.services.QueryParametersManager;
+import ru.aleynikov.blogcamp.services.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Route(value = "globe", layout = MainLayout.class)
 @PageTitle("Posts - Blogcamp")
@@ -84,7 +81,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
                     "user", "",
                     "global", "")
     );
-    private static Set<String> pageParametersKeySet = Set.of("tab", "search", "tag", "page", "user", "global");
+    private static Set<String> pageParametersKeySet;
     private Map<String, List<String>> qparams;
 
     public GlobeView() {
@@ -198,6 +195,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
         userInfoLayout.setVisible(false);
+        pageParametersKeySet = pageParametersMap.keySet();
         QueryParametersManager.setQueryParams(qparams, pageParametersMap, pageParametersKeySet);
 
         if (sortBar.getSelectedTab() != null) {

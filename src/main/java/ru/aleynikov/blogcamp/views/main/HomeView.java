@@ -6,7 +6,6 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -14,15 +13,15 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.aleynikov.blogcamp.component.PostCutComponent;
-import ru.aleynikov.blogcamp.component.TagComponent;
-import ru.aleynikov.blogcamp.component.UserDetailDialog;
-import ru.aleynikov.blogcamp.model.Post;
-import ru.aleynikov.blogcamp.model.Tag;
-import ru.aleynikov.blogcamp.model.User;
-import ru.aleynikov.blogcamp.service.PostService;
-import ru.aleynikov.blogcamp.service.TagService;
-import ru.aleynikov.blogcamp.service.UserService;
+import ru.aleynikov.blogcamp.components.PostCutComponent;
+import ru.aleynikov.blogcamp.components.TagComponent;
+import ru.aleynikov.blogcamp.components.UserDetailDialog;
+import ru.aleynikov.blogcamp.models.Post;
+import ru.aleynikov.blogcamp.models.Tag;
+import ru.aleynikov.blogcamp.models.User;
+import ru.aleynikov.blogcamp.services.PostService;
+import ru.aleynikov.blogcamp.services.TagService;
+import ru.aleynikov.blogcamp.services.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 import java.util.List;
@@ -102,9 +101,9 @@ public class HomeView extends Composite<Div> implements HasComponents, BeforeEnt
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        List<Tag> popularTags = null;
-        List<Post> interestingPosts = null;
-        List<User> activeUsers = null;
+        List<Tag> popularTags;
+        List<Post> interestingPosts;
+        List<User> activeUsers;
 
         popularTags = tagService.findTopPopularTags(TOP_TAGS_LIMIT);
 
