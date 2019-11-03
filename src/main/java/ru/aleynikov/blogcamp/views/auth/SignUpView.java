@@ -160,7 +160,7 @@ public class SignUpView extends HorizontalLayout {
                newUserData.put("secret_question", secretQuestionField.getValue().strip().replaceAll("/?", "") + "?");
                newUserData.put("secret_answer", passwordEncoder.encode(secretAnswerField.getValue().strip()));
                newUserData.put("avatar", RedditAvatars.getRandomAvatar());
-               userService.saveUser(newUserData);
+               userService.save(newUserData);
 
                log.info("User with username [{}] was successfully registered.", newUserData.get("username"));
 

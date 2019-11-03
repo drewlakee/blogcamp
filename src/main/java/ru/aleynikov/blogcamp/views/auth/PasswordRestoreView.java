@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.aleynikov.blogcamp.daoImpls.UserDaoImpl;
 import ru.aleynikov.blogcamp.models.User;
+import ru.aleynikov.blogcamp.services.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 
 @PageTitle("Password restore")
@@ -25,7 +26,7 @@ import ru.aleynikov.blogcamp.staticResources.StaticResources;
 public class PasswordRestoreView extends HorizontalLayout {
 
     @Autowired
-    private UserDaoImpl userDao;
+    private UserService userService;
 
     @Autowired
     private BCryptPasswordEncoder encoder;
@@ -168,7 +169,8 @@ public class PasswordRestoreView extends HorizontalLayout {
         changePassButton.addClickShortcut(Key.ENTER).setEventPropagationAllowed(!continueButton.isVisible());
         changePassButton.addClickListener(clickEvent -> {
             if (isNewPasswordValid()) {
-                userDao.updatePasswordByUsername(usernameField.getValue().strip(), encoder.encode(newPassField.getValue().strip()));
+
+                userService.updateUserPassword(usernameField.getValue().strip(), encoder.encode(newPassField.getValue().strip()));
                 UI.getCurrent().getUI().ifPresent(ui -> ui.navigate("login"));
             }
         });
@@ -187,7 +189,7 @@ public class PasswordRestoreView extends HorizontalLayout {
 
     private boolean isAccountExist() {
         if (existingAccount == null)
-            existingAccount = userDao.findByUsername(usernameField.getValue().strip());
+            existingAccount = userService.findUserByUsername(usernameField.getValue().strip());
 
         if (existingAccount != null) {
             passRestoreErrorLayout.setVisible(false);

@@ -164,7 +164,7 @@ public class UserDetailDialog extends Dialog {
             banUserSpan.setVisible(true);
             postsFindLinkSpan.setVisible(true);
 
-            userService.unBanById(postUser.getId());
+            userService.unbanById(postUser.getId());
             Notification.show(postUser.getUsername() + " was unbanned.");
         });
     }

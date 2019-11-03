@@ -13,12 +13,12 @@ import ru.aleynikov.blogcamp.models.User;
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserDaoImpl userDao;
+    private UserService userService;
 
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.findByUsername(username);
+        User user = userService.findUserByUsername(username);
         return user;
     }
 }
