@@ -154,15 +154,15 @@ public class PostService {
                 "JOIN post_to_tag USING (post_id) " +
                 "JOIN tag USING (tag_id) " +
                 "JOIN usr ON \"user\" = user_id " +
-                "WHERE (LOWER(tag.name) LIKE LOWER(?) " +
-                "OR LOWER(post.title) LIKE LOWER(?) " +
-                "OR LOWER(post.text) LIKE LOWER(?)) " +
-                "OR LOWER(username) LIKE LOWER(?) " +
-                "AND deleted = false " +
+                "WHERE post.deleted = false " +
                 "AND usr.banned = false " +
+                "AND (LOWER(tag.name) LIKE LOWER(?) " +
+                "OR LOWER(post.title) LIKE LOWER(?) " +
+                "OR LOWER(post.text) LIKE LOWER(?) " +
+                "OR LOWER(username) LIKE LOWER(?)) " +
                 "GROUP BY post.post_id " +
                 "ORDER BY (created_date) DESC " +
-                "OFFSET ? LIMIT ? ";
+                "OFFSET ? LIMIT ?";
         String searchValue = "%" + search + "%";
         Object[] qparams = new Object[] {
                 searchValue,
@@ -176,16 +176,16 @@ public class PostService {
     }
 
     public int countGlobal(String search) {
-        String query = "SELECT COUNT(DISTINCT post_to_tag.post_id) " +
-                "FROM post JOIN post_to_tag USING (post_id) " +
+        String query = "SELECT COUNT(DISTINCT post_to_tag.post_id) FROM post " +
+                "JOIN post_to_tag USING (post_id) " +
                 "JOIN tag USING (tag_id) " +
-                "JOIN usr ON post.\"user\" = user_id " +
-                "WHERE (LOWER(tag.name) LIKE LOWER(?) " +
+                "JOIN usr ON \"user\" = user_id " +
+                "WHERE post.deleted = false " +
+                "AND usr.banned = false " +
+                "AND (LOWER(tag.name) LIKE LOWER(?) " +
                 "OR LOWER(post.title) LIKE LOWER(?) " +
-                "OR LOWER(post.text) LIKE LOWER(?)) " +
-                "OR LOWER(username) LIKE LOWER(?) " +
-                "AND deleted = false " +
-                "AND usr.banned = false ";
+                "OR LOWER(post.text) LIKE LOWER(?) " +
+                "OR LOWER(username) LIKE LOWER(?))";
         String searchValue = "%" + search + "%";
         Object[] qparams = new Object[] {searchValue, searchValue, searchValue, searchValue};
 
