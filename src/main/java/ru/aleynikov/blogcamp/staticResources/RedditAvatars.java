@@ -3,6 +3,7 @@ package ru.aleynikov.blogcamp.staticResources;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class RedditAvatars {
 
@@ -28,10 +29,7 @@ public class RedditAvatars {
         }
     };
 
-    private static int sourcesSize = redditAvatarsSources.size();
-    private static Random random = new Random();
-
     public static String getRandomAvatar() {
-        return redditAvatarsSources.get(random.nextInt(sourcesSize));
+        return redditAvatarsSources.get(ThreadLocalRandom.current().nextInt(redditAvatarsSources.size()));
     }
 }
