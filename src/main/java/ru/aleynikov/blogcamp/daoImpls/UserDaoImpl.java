@@ -29,7 +29,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void update(String query, Object[] qparams) {
-        log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
+        log.info(query + ", {}", Arrays.toString(qparams));
         jdbc.update(query, qparams);
     }
 
