@@ -32,8 +32,6 @@ public class User implements UserDetails, RoleProver {
     private String avatar;
     private boolean isBanned;
 
-    public User() {}
-
     public void refreshUser(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
