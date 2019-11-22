@@ -27,12 +27,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.HomeView;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @PageTitle("Log in")
 @Route(value = "login", layout = AuthLayout.class)
 @StyleSheet(StaticResources.LOGIN_STYLES)
 public class LoginView extends Composite<Div> implements HasComponents {
 
     private static Logger log = LoggerFactory.getLogger(LoginView.class);
+
+    private Pattern regularExpPattern;
+    private Matcher regularMatcher;
 
     private HorizontalLayout loginErrorLayout = new HorizontalLayout();
 
@@ -76,6 +82,7 @@ public class LoginView extends Composite<Div> implements HasComponents {
         usernameField.setMaxLength(30);
         usernameField.setMinLength(6);
         usernameField.setRequired(true);
+        usernameField.setErrorMessage("Must be not empty and have minimal " + usernameField.getMinLength() + " length.");
 
         passwordField.getElement().setAttribute("name", "password");
         passwordField.setLabel("Password");
@@ -84,6 +91,8 @@ public class LoginView extends Composite<Div> implements HasComponents {
         passwordField.setMaxLength(30);
         passwordField.setMinLength(8);
         passwordField.setRequired(true);
+        passwordField.setErrorMessage("Must be not empty and have minimal " + passwordField.getMinLength() + " length.");
+
 
         loginButton.setClassName("button");
 
@@ -113,29 +122,20 @@ public class LoginView extends Composite<Div> implements HasComponents {
     }
 
     private boolean isLoginFormValid() {
-        boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty() && !usernameField.getValue().strip().contains(" ");
-        boolean isPasswordValid = !passwordField.isInvalid() && !passwordField.isEmpty();
+        regularExpPattern = Pattern.compile(String.format("^(\\w|\\d){%d,%d}+$", usernameField.getMinLength(), usernameField.getMaxLength()));
+        regularMatcher = regularExpPattern.matcher(usernameField.getValue().strip());
+        boolean isUsernameValid = regularMatcher.matches();
 
-        if (isUsernameValid && isPasswordValid) {
-            loginErrorLayout.setVisible(false);
-            return true;
-        } else {
-            if (!isUsernameValid && !isPasswordValid) {
-                usernameField.setInvalid(true);
-                passwordField.setInvalid(true);
-            }
+        regularExpPattern = Pattern.compile(String.format("^(\\w|\\d){%d,%d}+$", passwordField.getMinLength(), passwordField.getMaxLength()));
+        regularMatcher = regularExpPattern.matcher(passwordField.getValue().strip());
+        boolean isPasswordValid = regularMatcher.matches();
 
-            if (!isUsernameValid) {
-                usernameField.setInvalid(true);
-                usernameField.focus();
-            }
+        if (!isUsernameValid)
+            usernameField.setInvalid(true);
 
-            if (!isPasswordValid && isUsernameValid) {
-                passwordField.setInvalid(true);
-                passwordField.focus();
-            }
+        if (!isPasswordValid)
+            passwordField.setInvalid(true);
 
-            return false;
-        }
+        return isUsernameValid && isPasswordValid;
     }
 }
