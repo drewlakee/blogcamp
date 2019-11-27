@@ -19,6 +19,8 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +29,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.HomeView;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @PageTitle("Log in")
@@ -37,8 +38,13 @@ public class LoginView extends Composite<Div> implements HasComponents {
 
     private static Logger log = LoggerFactory.getLogger(LoginView.class);
 
-    private Pattern regularExpPattern;
-    private Matcher regularMatcher;
+    @Autowired
+    @Qualifier("regularExpForUsername")
+    private Pattern regularExpUsername;
+
+    @Autowired
+    @Qualifier("regularExpForPassword")
+    private Pattern regularExpPassword;
 
     private HorizontalLayout loginErrorLayout = new HorizontalLayout();
 
@@ -122,13 +128,12 @@ public class LoginView extends Composite<Div> implements HasComponents {
     }
 
     private boolean isLoginFormValid() {
-        regularExpPattern = Pattern.compile(String.format("^(\\w|\\d){%d,%d}+$", usernameField.getMinLength(), usernameField.getMaxLength()));
-        regularMatcher = regularExpPattern.matcher(usernameField.getValue().strip());
-        boolean isUsernameValid = regularMatcher.matches();
-
-        regularExpPattern = Pattern.compile(String.format("^(\\w|\\d){%d,%d}+$", passwordField.getMinLength(), passwordField.getMaxLength()));
-        regularMatcher = regularExpPattern.matcher(passwordField.getValue().strip());
-        boolean isPasswordValid = regularMatcher.matches();
+        boolean isUsernameValid = regularExpUsername
+                .matcher(usernameField.getValue().strip())
+                .matches();
+        boolean isPasswordValid = regularExpPassword
+                .matcher(passwordField.getValue().strip())
+                .matches();
 
         if (!isUsernameValid)
             usernameField.setInvalid(true);
