@@ -17,6 +17,7 @@ import com.vaadin.flow.router.RouterLink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,6 +32,8 @@ import ru.aleynikov.blogcamp.views.main.HomeView;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @PageTitle("Sign up")
@@ -45,6 +48,14 @@ public class SignUpView extends HorizontalLayout {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    @Qualifier("regularExpForUsername")
+    private Pattern regularExpUsername;
+
+    @Autowired
+    @Qualifier("regularExpForPassword")
+    private Pattern regularExpPassword;
 
     private VerticalLayout signUpFormLayout = new VerticalLayout();
 
@@ -91,7 +102,7 @@ public class SignUpView extends HorizontalLayout {
         usernameField.setMaxLength(20);
         usernameField.setMinLength(6);
         usernameField.setRequired(true);
-        usernameField.setErrorMessage("Minimal length is " + usernameField.getMinLength() + " characters, without white spaces.");
+        usernameField.setErrorMessage("Must be without whitespaces and minimal " + usernameField.getMinLength() + " length.");
 
         passwordField.setLabel("Password");
         passwordField.setClassName("field");
@@ -99,7 +110,7 @@ public class SignUpView extends HorizontalLayout {
         passwordField.setMaxLength(30);
         passwordField.setMinLength(8);
         passwordField.setRequired(true);
-        passwordField.setErrorMessage("Minimal length of password is " + passwordField.getMinLength() + " characters.");
+        passwordField.setErrorMessage("Must be without whitespaces and minimal " + passwordField.getMinLength() + " length.");
 
         repeatPasswordField.setLabel("Repeat password");
         repeatPasswordField.setClassName("field");
@@ -115,7 +126,7 @@ public class SignUpView extends HorizontalLayout {
         secretQuestionField.setClassName("field");
         secretQuestionField.setWidth("100%");
         secretQuestionField.setMaxLength(40);
-        secretQuestionField.setMinLength(5);
+        secretQuestionField.setMinLength(2);
         secretQuestionField.setRequired(true);
         secretQuestionField.setVisible(false);
         secretQuestionField.setErrorMessage("Must contain at least two words.");
@@ -140,7 +151,7 @@ public class SignUpView extends HorizontalLayout {
 
         continueButton.addClickShortcut(Key.ENTER).setEventPropagationAllowed(!signUpButton.isVisible());
         continueButton.addClickListener(clickEvent -> {
-           if (isFormValid() && isUsernameUnique()) {
+           if (isFromValid() && isUsernameUnique()) {
                usernameField.setVisible(false);
                passwordField.setVisible(false);
                repeatPasswordField.setVisible(false);
@@ -154,7 +165,7 @@ public class SignUpView extends HorizontalLayout {
 
         signUpButton.addClickShortcut(Key.ENTER).setEventPropagationAllowed(!continueButton.isVisible());
         signUpButton.addClickListener(clickEvent -> {
-           if (isSecretQuestionValid()) {
+           if (isSecretFormValid()) {
                newUserData.put("username", usernameField.getValue().strip());
                newUserData.put("password", passwordEncoder.encode(passwordField.getValue().strip()));
                newUserData.put("secret_question", secretQuestionField.getValue().strip().replaceAll("/?", "") + "?");
@@ -176,32 +187,25 @@ public class SignUpView extends HorizontalLayout {
         });
     }
 
-    private boolean isFormValid() {
-        boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty() && !usernameField.getValue().strip().contains(" ");
-        boolean isPasswordValid = !passwordField.isInvalid() && !passwordField.isEmpty();
-        boolean isPasswordRepeatValid = passwordField.getValue().equals(repeatPasswordField.getValue());
+    private boolean isFromValid() {
+        boolean isUsernameValid = regularExpUsername
+                .matcher(usernameField.getValue().strip())
+                .matches();
+        boolean isPasswordValid = regularExpPassword
+                .matcher(passwordField.getValue().strip())
+                .matches();
 
-        if (isUsernameValid && isPasswordValid && isPasswordRepeatValid) {
-            signUpErrorLayout.setVisible(false);
-            return true;
-        } else {
-            if (!isUsernameValid) {
-                usernameField.setInvalid(true);
-                usernameField.focus();
-            }
+        boolean isPasswordEquals = passwordField.getValue().strip().equals(repeatPasswordField.getValue().strip());
 
-            if (!isPasswordValid && isUsernameValid) {
-                passwordField.setInvalid(true);
-                passwordField.focus();
-            }
+        if (!isUsernameValid)
+            usernameField.setInvalid(true);
 
-            if (!isPasswordRepeatValid && isPasswordValid) {
-                repeatPasswordField.setInvalid(true);
-                repeatPasswordField.focus();
-            }
+        if (!isPasswordValid)
+            passwordField.setInvalid(true);
+        else if (!isPasswordEquals)
+            repeatPasswordField.setInvalid(true);
 
-            return false;
-        }
+        return isUsernameValid && isPasswordValid & isPasswordEquals;
     }
 
     private boolean isUsernameUnique() {
@@ -215,7 +219,7 @@ public class SignUpView extends HorizontalLayout {
         }
     }
 
-    private boolean isSecretQuestionValid() {
+    private boolean isSecretFormValid() {
         boolean isQuestionValid = !secretQuestionField.isInvalid() && !secretQuestionField.isEmpty() && isHaveTwoWords(secretQuestionField.getValue().strip());
         boolean isAnswerValid = !secretAnswerField.isInvalid() && !secretAnswerField.isEmpty();
 
