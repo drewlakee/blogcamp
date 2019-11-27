@@ -3,11 +3,9 @@ package ru.aleynikov.blogcamp;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Configuration
