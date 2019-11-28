@@ -22,4 +22,4 @@ Made as a course project in 2019, 5 semester.
 ## PostgeSQL diagrams
 ![Alt text](docs/screens/postgreData.png)
 
-Dump of base data in [blogcamp.tar](blogcamp.tar) archive.
+Dump of data base in [blogcamp.tar](blogcamp.tar) archive.
