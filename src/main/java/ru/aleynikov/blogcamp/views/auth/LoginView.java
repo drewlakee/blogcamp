@@ -19,6 +19,8 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,12 +29,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
 import ru.aleynikov.blogcamp.views.main.HomeView;
 
+import java.util.regex.Pattern;
+
 @PageTitle("Log in")
 @Route(value = "login", layout = AuthLayout.class)
 @StyleSheet(StaticResources.LOGIN_STYLES)
 public class LoginView extends Composite<Div> implements HasComponents {
 
     private static Logger log = LoggerFactory.getLogger(LoginView.class);
+
+    @Autowired
+    @Qualifier("regularExpForUsername")
+    private Pattern regularExpUsername;
+
+    @Autowired
+    @Qualifier("regularExpForPassword")
+    private Pattern regularExpPassword;
 
     private HorizontalLayout loginErrorLayout = new HorizontalLayout();
 
@@ -76,6 +88,7 @@ public class LoginView extends Composite<Div> implements HasComponents {
         usernameField.setMaxLength(30);
         usernameField.setMinLength(6);
         usernameField.setRequired(true);
+        usernameField.setErrorMessage("Must be not empty and have minimal " + usernameField.getMinLength() + " length.");
 
         passwordField.getElement().setAttribute("name", "password");
         passwordField.setLabel("Password");
@@ -84,6 +97,8 @@ public class LoginView extends Composite<Div> implements HasComponents {
         passwordField.setMaxLength(30);
         passwordField.setMinLength(8);
         passwordField.setRequired(true);
+        passwordField.setErrorMessage("Must be not empty and have minimal " + passwordField.getMinLength() + " length.");
+
 
         loginButton.setClassName("button");
 
@@ -113,29 +128,19 @@ public class LoginView extends Composite<Div> implements HasComponents {
     }
 
     private boolean isLoginFormValid() {
-        boolean isUsernameValid = !usernameField.isInvalid() && !usernameField.isEmpty() && !usernameField.getValue().strip().contains(" ");
-        boolean isPasswordValid = !passwordField.isInvalid() && !passwordField.isEmpty();
+        boolean isUsernameValid = regularExpUsername
+                .matcher(usernameField.getValue().strip())
+                .matches();
+        boolean isPasswordValid = regularExpPassword
+                .matcher(passwordField.getValue().strip())
+                .matches();
 
-        if (isUsernameValid && isPasswordValid) {
-            loginErrorLayout.setVisible(false);
-            return true;
-        } else {
-            if (!isUsernameValid && !isPasswordValid) {
-                usernameField.setInvalid(true);
-                passwordField.setInvalid(true);
-            }
+        if (!isUsernameValid)
+            usernameField.setInvalid(true);
 
-            if (!isUsernameValid) {
-                usernameField.setInvalid(true);
-                usernameField.focus();
-            }
+        if (!isPasswordValid)
+            passwordField.setInvalid(true);
 
-            if (!isPasswordValid && isUsernameValid) {
-                passwordField.setInvalid(true);
-                passwordField.focus();
-            }
-
-            return false;
-        }
+        return isUsernameValid && isPasswordValid;
     }
 }
