@@ -14,11 +14,14 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.aleynikov.blogcamp.daoImpls.UserDaoImpl;
 import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.services.UserService;
 import ru.aleynikov.blogcamp.staticResources.StaticResources;
+
+import java.util.regex.Pattern;
 
 @PageTitle("Password restore")
 @Route(value = "restore", layout = AuthLayout.class)
@@ -30,6 +33,10 @@ public class PasswordRestoreView extends HorizontalLayout {
 
     @Autowired
     private BCryptPasswordEncoder encoder;
+
+    @Autowired
+    @Qualifier("regularExpForPassword")
+    private Pattern regularExpPassword;
 
     private VerticalLayout passRestoreFormLayout = new VerticalLayout();
 
@@ -203,24 +210,14 @@ public class PasswordRestoreView extends HorizontalLayout {
     }
 
     private boolean isNewPasswordValid() {
-        boolean isNewPasswordValid = !newPassField.isInvalid() && !newPassField.isEmpty();
-        boolean isNewPasswordRepeatValid = newPassField.getValue().equals(repeatNewPassField.getValue());
+        boolean isNewPasswordValid = !newPassField.isEmpty() && regularExpPassword.matcher(newPassField.getValue().strip()).matches();
+        boolean isNewPasswordRepeatValid = newPassField.getValue().strip().equals(repeatNewPassField.getValue().strip());
 
-        if (isNewPasswordRepeatValid && isNewPasswordValid) {
-            return true;
-        } else {
+        if (!isNewPasswordValid)
+            newPassField.setInvalid(true);
+        else if (!isNewPasswordRepeatValid)
+            repeatNewPassField.setInvalid(true);
 
-            if (!isNewPasswordValid) {
-                newPassField.setInvalid(true);
-                newPassField.focus();
-            }
-
-            if (!isNewPasswordRepeatValid && isNewPasswordValid) {
-                repeatNewPassField.setInvalid(true);
-                repeatNewPassField.focus();
-            }
-
-            return false;
-        }
+        return isNewPasswordValid && isNewPasswordRepeatValid;
     }
 }
