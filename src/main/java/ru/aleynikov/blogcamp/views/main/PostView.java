@@ -287,7 +287,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
     }
 
     private boolean isValidParameter(Integer parameter) {
-        Post post = postService.findById(parameter);
+        Post post = postService.findPostById(parameter);
 
         if (post != null) {
             currentPost = post;
@@ -348,7 +348,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
     private void loadComments(int offset, int limitLoadComments) {
         List<Comment> comments;
-        comments = commentService.findNewestByPostIdWithOffsetAndLimit(offset, limitLoadComments, currentPost.getId());
+        comments = commentService.getNewestCommentListByPostIdWithOffsetAndLimit(offset, limitLoadComments, currentPost.getId());
         commentsCount = commentService.countByPostId(currentPost.getId());
         commentsCountSpan.setText("(" + commentsCount + ")");
 

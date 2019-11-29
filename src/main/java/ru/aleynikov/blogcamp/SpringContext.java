@@ -1,6 +1,7 @@
 package ru.aleynikov.blogcamp;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,13 +12,25 @@ import java.util.regex.Pattern;
 @Configuration
 public class SpringContext {
 
+    @Value("${jdbc.driver}")
+    private String jdbcDriver;
+
+    @Value("${jdbc.url}")
+    private String jdbcUrl;
+
+    @Value("${psql.username}")
+    private String psqlUsername;
+
+    @Value("${psql.password}")
+    private String psqlPassword;
+
     @Bean
     public HikariDataSource HikariDataSource() {
         HikariDataSource hikariDataSource = new HikariDataSource();
-        hikariDataSource.setDriverClassName(Config.JDBC_DRIVER);
-        hikariDataSource.setJdbcUrl(Config.JDBC_URL);
-        hikariDataSource.setUsername(Config.USERNAME_PSQL);
-        hikariDataSource.setPassword(Config.PASSWORD_PSQL);
+        hikariDataSource.setDriverClassName(jdbcDriver);
+        hikariDataSource.setJdbcUrl(jdbcUrl);
+        hikariDataSource.setUsername(psqlUsername);
+        hikariDataSource.setPassword(psqlPassword);
 
         return hikariDataSource;
     }

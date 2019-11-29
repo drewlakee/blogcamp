@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.daos.CityDao;
 import ru.aleynikov.blogcamp.mappers.CityRowMapper;
 import ru.aleynikov.blogcamp.models.City;
-import ru.aleynikov.blogcamp.security.SecurityUtils;
 
 import java.util.Arrays;
 import java.util.List;

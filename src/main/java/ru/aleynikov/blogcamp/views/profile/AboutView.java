@@ -215,7 +215,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
 
     private void setLocationSelectors() {
         List<Country> countryList = countryService.getAllCountriesList();
-        List<City> cityList = cityService.findAllCities();
+        List<City> cityList = cityService.getAllCitiesList();
 
         countryList.forEach(country -> countriesMap.put(country.getName(), country));
         cityList.forEach(city -> citiesMap.put(city.getName(), city));

@@ -140,10 +140,10 @@ public class PostsView extends Composite<Div> implements HasComponents, HasUrlPa
         List<Post> posts;
 
         if (!search.isEmpty()) {
-            posts = postService.findNewestPostsByUserIdAndSearchByTitle(offset, limit, userInSession.getId(), search);
+            posts = postService.getNewestPostListByUserIdAndSearchByTitle(offset, limit, userInSession.getId(), search);
             postsCount = postService.countByUserIdAndSearchByTitle(userInSession.getId(), search);
         } else {
-            posts = postService.findNewestPostsByUserId(offset, limit, userInSession.getId());
+            posts = postService.getNewestPostListByUserId(offset, limit, userInSession.getId());
             postsCount = postService.countPostsByUsername(userInSession.getUsername());
         }
 

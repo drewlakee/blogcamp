@@ -15,7 +15,7 @@ public class CommentService {
     @Autowired
     private CommentDaoImpl commentDao;
 
-    public List<Comment> findNewestByPostIdWithOffsetAndLimit(int offset, int limitLoadNewComments, int id) {
+    public List<Comment> getNewestCommentListByPostIdWithOffsetAndLimit(int offset, int limitLoadNewComments, int id) {
         String query = "SELECT comment_id, text, created_date, \"user\", post, deleted FROM comment, usr " +
                 "WHERE \"user\" = user_id " +
                 "AND usr.banned = false " +

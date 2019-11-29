@@ -176,16 +176,16 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
         row.setWidth("100%");
 
         if (!search.isEmpty()) {
-            tagList = tagService.findTagListBySearch(page, TAGS_ON_PAGE_LIMIT, search);
-            countTags = tagService.findTagsCountBySearch(search);
+            tagList = tagService.getTagListBySearch(page, TAGS_ON_PAGE_LIMIT, search);
+            countTags = tagService.getTagsCountBySearch(search);
             customQueryParams.put("search", search);
         } else if (pageParametersMap.get("tab").equals(aToZTab.getLabel().toLowerCase())) {
-            tagList = tagService.findTagsSortedByNameAsc(page, TAGS_ON_PAGE_LIMIT);
-            countTags = tagService.findAllTagsCount();
+            tagList = tagService.getTagsSortedByNameAsc(page, TAGS_ON_PAGE_LIMIT);
+            countTags = tagService.getAllTagsCount();
             customQueryParams.put("tab", sortTab);
         } else {
-            tagList = tagService.findNewestTagList(page, TAGS_ON_PAGE_LIMIT);
-            countTags = tagService.findAllTagsCount();
+            tagList = tagService.getNewestTagList(page, TAGS_ON_PAGE_LIMIT);
+            countTags = tagService.getAllTagsCount();
             customQueryParams.put("tab", sortTab);
         }
         
