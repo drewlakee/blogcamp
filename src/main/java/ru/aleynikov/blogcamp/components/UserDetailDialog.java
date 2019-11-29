@@ -155,7 +155,7 @@ public class UserDetailDialog extends Dialog {
             postsFindLinkSpan.setVisible(false);
             unBunUserSpan.setVisible(true);
 
-            userService.banById(postUser.getId());
+            userService.banUserById(postUser.getId());
             Notification.show(postUser.getUsername() + " was banned.");
         });
 
@@ -164,7 +164,7 @@ public class UserDetailDialog extends Dialog {
             banUserSpan.setVisible(true);
             postsFindLinkSpan.setVisible(true);
 
-            userService.unbanById(postUser.getId());
+            userService.unbanUserById(postUser.getId());
             Notification.show(postUser.getUsername() + " was unbanned.");
         });
     }

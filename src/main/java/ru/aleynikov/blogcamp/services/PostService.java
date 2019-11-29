@@ -3,6 +3,7 @@ package ru.aleynikov.blogcamp.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.aleynikov.blogcamp.daoImpls.PostDaoImpl;
+import ru.aleynikov.blogcamp.daos.PostDao;
 import ru.aleynikov.blogcamp.models.Post;
 
 import java.sql.Timestamp;
@@ -14,7 +15,7 @@ import java.util.Set;
 public class PostService {
 
     @Autowired
-    private PostDaoImpl postDao;
+    private PostDao postDao;
 
     private static final String mainPostQueryParams = " post_id, title, text, \"user\", intro_image, created_date, comments_count, deleted ";
 
@@ -35,7 +36,7 @@ public class PostService {
         postDao.setTagsToPost(tags, post);
     }
 
-    public Post findById(int id) {
+    public Post findPostById(int id) {
         String query = "SELECT " + mainPostQueryParams + " " +
                 "FROM post, usr " +
                 "WHERE post_id = ? " +
@@ -49,7 +50,7 @@ public class PostService {
         return postDao.queryForObject(query, qparams);
     }
 
-    public List<Post> sortNewestPosts(int page, int componentLimit) {
+    public List<Post> getSortedNewestPostList(int page, int componentLimit) {
         String query = "SELECT " + mainPostQueryParams + " " +
                 "FROM post, usr " +
                 "WHERE deleted = false " +
@@ -75,7 +76,7 @@ public class PostService {
         return postDao.count(query, null);
     }
 
-    public List<Post> findPostsByTitle(int page, int componentLimit, String filter) {
+    public List<Post> getPostListByTitle(int page, int componentLimit, String filter) {
         String query = "SELECT " + mainPostQueryParams + " FROM post, usr WHERE LOWER(title) LIKE LOWER(?) AND deleted = false AND \"user\" = user_id AND usr.banned = false ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {
                 "%"+filter+"%",
@@ -98,7 +99,7 @@ public class PostService {
         return postDao.count(query, qparams);
     }
 
-    public List<Post> findPostsByTag(int page, int componentLimit, String tag) {
+    public List<Post> getPostListByTag(int page, int componentLimit, String tag) {
         String query = "SELECT " + mainPostQueryParams + " FROM (post_to_tag right join post using (post_id)), usr WHERE tag_id = (SELECT tag_id FROM tag WHERE name = ?) AND \"user\" = user_id AND usr.banned = false AND deleted = false ORDER BY (created_date) DESC  OFFSET ? LIMIT ?;";
         Object[] qparams = new Object[] {
                 tag,
@@ -122,7 +123,7 @@ public class PostService {
         return postDao.count(query, qparams);
     }
 
-    public List<Post> findPostsByUsername(int page, int componentLimit, String username) {
+    public List<Post> getPostListByUsername(int page, int componentLimit, String username) {
         String query = "SELECT " + mainPostQueryParams + " " +
                 "FROM post " +
                 "WHERE \"user\" = (SELECT user_id FROM usr WHERE username = ? AND usr.banned = false) " +
@@ -149,7 +150,7 @@ public class PostService {
         return postDao.count(query, qparams);
     }
 
-    public List<Post> findPostsGlobal(int page, int componentLimit, String search) {
+    public List<Post> getPostListGlobal(int page, int componentLimit, String search) {
         String query = "SELECT post.post_id, title, text, \"user\", intro_image, created_date, comments_count, deleted FROM post " +
                 "JOIN post_to_tag USING (post_id) " +
                 "JOIN tag USING (tag_id) " +
@@ -192,7 +193,7 @@ public class PostService {
         return postDao.count(query, qparams);
     }
 
-    public List<Post> findNewestPostsByUserId(int offset, int componentLimit, int id) {
+    public List<Post> getNewestPostListByUserId(int offset, int componentLimit, int id) {
         String query = "SELECT " + mainPostQueryParams + " " +
                 "FROM post, usr " +
                 "WHERE \"user\" = ? " +
@@ -206,7 +207,7 @@ public class PostService {
         return postDao.queryForList(query, qparams);
     }
 
-    public List<Post> findNewestPostsByUserIdAndSearchByTitle(int page, int componentLimit, int id, String search) {
+    public List<Post> getNewestPostListByUserIdAndSearchByTitle(int page, int componentLimit, int id, String search) {
         String query = "SELECT " + mainPostQueryParams + " FROM post, usr WHERE \"user\" = ? AND \"user\" = user_id AND usr.banned = false AND deleted = false AND LOWER(title) LIKE LOWER(?) ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {
                 id,
@@ -252,7 +253,7 @@ public class PostService {
         postDao.update(query, qparams);
     }
 
-    public List<Post> findInterestingPosts(int page, int componentLimit) {
+    public List<Post> getInterestingPostList(int page, int componentLimit) {
         String query = "SELECT " + mainPostQueryParams + " FROM post, usr " +
                 "WHERE user_id = \"user\" " +
                 "AND usr.banned = false " +
@@ -267,7 +268,7 @@ public class PostService {
         return postDao.queryForList(query, qparams);
     }
 
-    public List<Post> findInterestingPostsWithLimit(int limit) {
+    public List<Post> getInterestingPostListWithLimit(int limit) {
         String query = "SELECT  post_id, title, text, \"user\", intro_image, created_date, comments_count, deleted FROM post, usr " +
                 "WHERE \"user\" = user_id " +
                 "AND banned = false " +

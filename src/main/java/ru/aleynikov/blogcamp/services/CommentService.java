@@ -3,6 +3,7 @@ package ru.aleynikov.blogcamp.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.aleynikov.blogcamp.daoImpls.CommentDaoImpl;
+import ru.aleynikov.blogcamp.daos.CommentDao;
 import ru.aleynikov.blogcamp.models.Comment;
 
 import java.sql.Timestamp;
@@ -13,9 +14,9 @@ import java.util.List;
 public class CommentService {
 
     @Autowired
-    private CommentDaoImpl commentDao;
+    private CommentDao commentDao;
 
-    public List<Comment> findNewestByPostIdWithOffsetAndLimit(int offset, int limitLoadNewComments, int id) {
+    public List<Comment> getNewestCommentListByPostIdWithOffsetAndLimit(int offset, int limitLoadNewComments, int id) {
         String query = "SELECT comment_id, text, created_date, \"user\", post, deleted FROM comment, usr " +
                 "WHERE \"user\" = user_id " +
                 "AND usr.banned = false " +

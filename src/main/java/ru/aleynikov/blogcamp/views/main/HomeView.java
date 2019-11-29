@@ -105,14 +105,14 @@ public class HomeView extends Composite<Div> implements HasComponents, BeforeEnt
         List<Post> interestingPosts;
         List<User> activeUsers;
 
-        popularTags = tagService.findTopPopularTags(TOP_TAGS_LIMIT);
+        popularTags = tagService.getTopPopularTags(TOP_TAGS_LIMIT);
 
         tagsLayout.removeAll();
         popularTags.forEach(tag -> {
             tagsLayout.add(new TagComponent(tag));
         });
 
-        interestingPosts = postService.findInterestingPostsWithLimit(INTERESTING_POSTS_LIMIT);
+        interestingPosts = postService.getInterestingPostListWithLimit(INTERESTING_POSTS_LIMIT);
 
         postsLayout.removeAll();
         interestingPosts.forEach(post -> {
@@ -120,7 +120,7 @@ public class HomeView extends Composite<Div> implements HasComponents, BeforeEnt
         });
 
         usersLayout.removeAll();
-        activeUsers = userService.findActiveUsersWithLimit(TOP_ACTIVE_USERS);
+        activeUsers = userService.getActiveUsersWithLimit(TOP_ACTIVE_USERS);
 
         activeUsers.forEach(user -> {
             Image userImg = new Image();

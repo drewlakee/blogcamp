@@ -11,10 +11,8 @@ import ru.aleynikov.blogcamp.mappers.UserRowMapper;
 import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class UserDaoImpl implements UserDao {

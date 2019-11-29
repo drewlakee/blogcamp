@@ -95,7 +95,7 @@ public class PostDaoImpl implements PostDao {
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
         jdbc.update(query, qparams);
 
-        tagService.updateTagsCountsOfPostByPostId(postForTagsCountsUpdate);
+        tagService.updateTagsCountOfPostByPostId(postForTagsCountsUpdate);
     }
 
     @Override

@@ -3,6 +3,7 @@ package ru.aleynikov.blogcamp.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.aleynikov.blogcamp.daoImpls.TagDaoImpl;
+import ru.aleynikov.blogcamp.daos.TagDao;
 import ru.aleynikov.blogcamp.models.Post;
 import ru.aleynikov.blogcamp.models.Tag;
 
@@ -13,9 +14,9 @@ import java.util.List;
 public class TagService {
 
     @Autowired
-    private TagDaoImpl tagDao;
+    private TagDao tagDao;
 
-    public List<Tag> findNewestTagList(int page, int tagsOnPageLimit) {
+    public List<Tag> getNewestTagList(int page, int tagsOnPageLimit) {
         String query = "SELECT DISTINCT tag.tag_id, tag.name, tag.description, tag.created FROM tag " +
                 "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
                 "JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
@@ -30,7 +31,7 @@ public class TagService {
         return tagDao.queryForList(query, qparams);
     }
 
-    public List<Tag> findTagListBySearch(int page, int tagsOnPageLimit, String filter) {
+    public List<Tag> getTagListBySearch(int page, int tagsOnPageLimit, String search) {
         String query = "SELECT DISTINCT tag.tag_id, tag.name, tag.description, tag.created FROM tag " +
                 "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
                 "JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
@@ -39,7 +40,7 @@ public class TagService {
                 "ORDER BY (created) DESC " +
                 "OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {
-                "%"+filter+"%",
+                "%"+search+"%",
                 FilterDataManager.filterOffset(page, tagsOnPageLimit),
                 tagsOnPageLimit
         };
@@ -47,18 +48,18 @@ public class TagService {
         return tagDao.queryForList(query, qparams);
     }
 
-    public int findTagsCountBySearch(String filter) {
+    public int getTagsCountBySearch(String search) {
         String query = "SELECT COUNT(*) FROM tag " +
                 "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
                 "JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
                 "JOIN usr ON post.\"user\" = usr.user_id AND usr.banned = false " +
                 "WHERE tag.name LIKE ?";
-        Object[] qparams = new Object[] {"%"+filter+"%"};
+        Object[] qparams = new Object[] {"%"+search+"%"};
 
         return tagDao.count(query, qparams);
     }
 
-    public int findAllTagsCount() {
+    public int getAllTagsCount() {
         String query = "SELECT COUNT(DISTINCT tag.tag_id) FROM tag " +
                 "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
                 "JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
@@ -84,7 +85,7 @@ public class TagService {
         tagDao.save(query, qparams);
     }
 
-    public List<Tag> findTagsByPostId(int id) {
+    public List<Tag> getTagsListByPostId(int id) {
         String query = "SELECT * FROM (post_to_tag JOIN tag USING (tag_id)) WHERE post_id = ?";
         Object[] qparams = new Object[] {id};
 
@@ -102,7 +103,7 @@ public class TagService {
         tagDao.update(query, qparams);
     }
 
-    public void updateTagsCountsOfPostByPostId(Post post) {
+    public void updateTagsCountOfPostByPostId(Post post) {
         String query = "UPDATE post_to_tag SET tag_id = ? WHERE tag_id = ? AND post_id = ?";
         Object[] qparams;
 
@@ -112,7 +113,7 @@ public class TagService {
         }
     }
 
-    public List<Tag> findTagsSortedByNameAsc(int page, int componentsLimit) {
+    public List<Tag> getTagsSortedByNameAsc(int page, int componentsLimit) {
         String query = "SELECT tag.tag_id, tag.name, tag.description, tag.created FROM tag " +
                 "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
                 "JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
@@ -127,7 +128,7 @@ public class TagService {
         return tagDao.queryForList(query, qparams);
     }
 
-    public List<Tag> findTopPopularTags(int limit) {
+    public List<Tag> getTopPopularTags(int limit) {
         String query = "SELECT *, (SELECT COUNT(*) FROM post_to_tag WHERE tag.tag_id = post_to_tag.tag_id) as count FROM tag " +
                 "WHERE (SELECT COUNT(*) FROM post_to_tag " +
                 "    JOIN post ON post_to_tag.post_id = post.post_id AND post.deleted = false " +
