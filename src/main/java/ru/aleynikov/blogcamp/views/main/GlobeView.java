@@ -242,31 +242,31 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
         customQueryParams.put("page", page);
 
         if (!search.isEmpty() && globalSearch.isEmpty()) {
-            posts = postService.findPostsByTitle(page, POST_ON_PAGE_LIMIT, search);
+            posts = postService.getPostListByTitle(page, POST_ON_PAGE_LIMIT, search);
             count = postService.countByTitle(search);
             customQueryParams.put("search", search);
         } else if (!globalSearch.isEmpty() && globalSearch.strip().equals("yes")) {
-            posts = postService.findPostsGlobal(page, POST_ON_PAGE_LIMIT, search);
+            posts = postService.getPostListGlobal(page, POST_ON_PAGE_LIMIT, search);
             count = postService.countGlobal(search);
             customQueryParams.put("search", search);
             customQueryParams.put("global", globalSearch);
         } else if (!tag.isEmpty()) {
-            posts = postService.findPostsByTag(page, POST_ON_PAGE_LIMIT, tag);
+            posts = postService.getPostListByTag(page, POST_ON_PAGE_LIMIT, tag);
             count = postService.countByTag(tag);
             customQueryParams.put("tag", tag);
         } else if (!user.isEmpty()) {
-            posts = postService.findPostsByUsername(page, POST_ON_PAGE_LIMIT, user);
+            posts = postService.getPostListByUsername(page, POST_ON_PAGE_LIMIT, user);
             count = postService.countPostsByUsername(user);
             User foundedUser = userService.findUserByUsername(user);
             if (foundedUser != null)
                 buildUserDetailInfo(foundedUser);
             customQueryParams.put("user", user);
         } else if (sortTab.equals(interestingTab.getLabel().toLowerCase())) {
-            posts = postService.findInterestingPosts(page, POST_ON_PAGE_LIMIT);
+            posts = postService.getInterestingPostList(page, POST_ON_PAGE_LIMIT);
             count = postService.count();
             customQueryParams.put("tab", sortTab);
         } else {
-            posts = postService.sortNewestPosts(page, POST_ON_PAGE_LIMIT);
+            posts = postService.getSortedNewestPostList(page, POST_ON_PAGE_LIMIT);
             count = postService.count();
             customQueryParams.put("tab", sortTab);
         }

@@ -13,7 +13,7 @@ public class CityService {
     @Autowired
     private CityDaoImpl cityDao;
 
-    public List<City> findAllCities() {
+    public List<City> getAllCitiesList() {
         String query = "SELECT * FROM city";
 
         return cityDao.queryForList(query, null);

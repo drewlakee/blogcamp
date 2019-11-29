@@ -171,10 +171,10 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
         row.setWidth("100%");
 
         if (!filter.isEmpty()) {
-            userList = userService.getFilterByUsernameUsersList(page, USERS_ON_PAGE_LIMIT, filter, userInSession.isAdmin());
-            countUsers = userService.getFilterUsersCount(filter);
+            userList = userService.getFilteredByUsernameUsersList(page, USERS_ON_PAGE_LIMIT, filter, userInSession.isAdmin());
+            countUsers = userService.getFilteredUsersCount(filter);
         } else {
-            userList = userService.getSortedByUsernameUserList(page, USERS_ON_PAGE_LIMIT, userInSession.isAdmin());
+            userList = userService.getSortedByUsernameUsersList(page, USERS_ON_PAGE_LIMIT, userInSession.isAdmin());
             countUsers = userService.getAllUsersCount();
             customQueryParams.put("tab", sortTab);
         }

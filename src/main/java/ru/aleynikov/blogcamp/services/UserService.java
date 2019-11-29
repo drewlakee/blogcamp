@@ -16,7 +16,7 @@ public class UserService {
     @Autowired
     private UserDaoImpl userDao;
 
-    public List<User> getSortedByUsernameUserList(int page, int usersOnPageLimit, boolean isAdmin) {
+    public List<User> getSortedByUsernameUsersList(int page, int usersOnPageLimit, boolean isAdmin) {
         String bannedUsers = isAdmin ? "" : "WHERE banned = false";
         String query = "SELECT * FROM usr " + bannedUsers + " " +
                 "ORDER BY (username) ASC " +
@@ -29,7 +29,7 @@ public class UserService {
         return userDao.queryForList(query, qparams);
     }
 
-    public List<User> getFilterByUsernameUsersList(int page, int usersOnPageLimit, String filter, boolean isAdmin) {
+    public List<User> getFilteredByUsernameUsersList(int page, int usersOnPageLimit, String filter, boolean isAdmin) {
         String bannedUsers = isAdmin ? "" : "AND banned = false";
         String query = "SELECT * FROM usr " +
                 "WHERE LOWER(username) LIKE LOWER(?) " + bannedUsers + " " +
@@ -43,7 +43,7 @@ public class UserService {
         return userDao.queryForList(query, qparams);
     }
 
-    public int getFilterUsersCount(String filter) {
+    public int getFilteredUsersCount(String filter) {
         String query = "SELECT COUNT(*) FROM usr " +
                 "WHERE username LIKE ?";
         Object[] qparams = new Object[] {"%"+filter+"%"};
@@ -66,7 +66,7 @@ public class UserService {
         return userDao.queryForObject(query, qparams);
     }
 
-    public User findById(int id) {
+    public User findUserById(int id) {
         String query = "SELECT * FROM usr WHERE user_id = ?";
         Object[] qparams = new Object[] {id};
 
@@ -128,7 +128,7 @@ public class UserService {
         userDao.update(query, qparams);
     }
 
-    public void banById(int id) {
+    public void banUserById(int id) {
         String query = "UPDATE usr SET banned = true, active = false " +
                 "WHERE user_id = ?";
         Object[] qparams = new Object[] {id};
@@ -136,7 +136,7 @@ public class UserService {
         userDao.ban(query, qparams);
     }
 
-    public void unbanById(int id) {
+    public void unbanUserById(int id) {
         String query = "UPDATE usr SET banned = false, active = true " +
                 "WHERE user_id = ?";
         Object[] qparams = new Object[] {id};
@@ -144,7 +144,7 @@ public class UserService {
         userDao.unban(query, qparams);
     }
 
-    public List<User> findActiveUsersWithLimit(int limit) {
+    public List<User> getActiveUsersWithLimit(int limit) {
         String query = "SELECT *, (SELECT COUNT(*)  FROM post " +
                 "WHERE deleted = false AND usr.user_id = \"user\") as count FROM usr " +
                 "WHERE banned = false " +
