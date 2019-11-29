@@ -3,6 +3,7 @@ package ru.aleynikov.blogcamp.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.aleynikov.blogcamp.daoImpls.PostDaoImpl;
+import ru.aleynikov.blogcamp.daos.PostDao;
 import ru.aleynikov.blogcamp.models.Post;
 
 import java.sql.Timestamp;
@@ -14,7 +15,7 @@ import java.util.Set;
 public class PostService {
 
     @Autowired
-    private PostDaoImpl postDao;
+    private PostDao postDao;
 
     private static final String mainPostQueryParams = " post_id, title, text, \"user\", intro_image, created_date, comments_count, deleted ";
 

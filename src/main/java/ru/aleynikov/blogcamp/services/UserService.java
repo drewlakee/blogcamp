@@ -3,6 +3,7 @@ package ru.aleynikov.blogcamp.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.aleynikov.blogcamp.daoImpls.UserDaoImpl;
+import ru.aleynikov.blogcamp.daos.UserDao;
 import ru.aleynikov.blogcamp.models.User;
 
 import java.sql.Timestamp;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class UserService {
 
     @Autowired
-    private UserDaoImpl userDao;
+    private UserDao userDao;
 
     public List<User> getSortedByUsernameUsersList(int page, int usersOnPageLimit, boolean isAdmin) {
         String bannedUsers = isAdmin ? "" : "WHERE banned = false";
