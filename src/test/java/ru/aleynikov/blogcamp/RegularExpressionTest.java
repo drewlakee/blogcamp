@@ -2,14 +2,25 @@ package ru.aleynikov.blogcamp;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.regex.Pattern;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class RegularExpressionTest {
 
-    private SpringContext springContext = new SpringContext();
-    private Pattern regularExpUsername = springContext.regularExpForUsername();
-    private Pattern regularExpPassword = springContext.regularExpForPassword();
+    @Autowired
+    @Qualifier("regularExpForUsername")
+    private Pattern regularExpUsername;
+
+    @Autowired
+    @Qualifier("regularExpForPassword")
+    private Pattern regularExpPassword;
 
     @Test
     public void testUsername() {
