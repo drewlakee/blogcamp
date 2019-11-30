@@ -15,15 +15,15 @@ import com.vaadin.flow.router.RouterLink;
 import ru.aleynikov.blogcamp.models.Post;
 import ru.aleynikov.blogcamp.models.Tag;
 import ru.aleynikov.blogcamp.services.UserService;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 import ru.aleynikov.blogcamp.views.main.PostView;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-@StyleSheet(StaticResources.POST_STYLES)
-@StyleSheet(StaticResources.MAIN_STYLES)
+@StyleSheet(StaticContent.POST_STYLES)
+@StyleSheet(StaticContent.MAIN_STYLES)
 public class PostComponent extends Div {
 
     private VerticalLayout contentLayout = new VerticalLayout();

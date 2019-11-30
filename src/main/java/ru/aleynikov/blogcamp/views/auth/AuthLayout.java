@@ -10,14 +10,14 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLayout;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
-@StyleSheet(StaticResources.LOGIN_STYLES)
-@StyleSheet(StaticResources.PASS_RESTORE_STYLES)
-@StyleSheet(StaticResources.SIGN_UP_STYLES)
+@StyleSheet(StaticContent.LOGIN_STYLES)
+@StyleSheet(StaticContent.PASS_RESTORE_STYLES)
+@StyleSheet(StaticContent.SIGN_UP_STYLES)
 public class AuthLayout extends Composite<Div> implements HasComponents, RouterLayout {
 
-    private Image logoImage = new Image(StaticResources.LOGO_IMAGE, "logo");
+    private Image logoImage = new Image(StaticContent.LOGO_IMAGE, "logo");
 
     private VerticalLayout loginLayout = new VerticalLayout();
 

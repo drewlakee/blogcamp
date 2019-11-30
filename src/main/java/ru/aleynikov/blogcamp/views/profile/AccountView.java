@@ -20,13 +20,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.services.UserService;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
 import java.util.Arrays;
 
 @Route(value = "account", layout = ProfileLayout.class)
 @PageTitle("Profile - Account")
-@StyleSheet(StaticResources.PROFILE_STYLES)
+@StyleSheet(StaticContent.PROFILE_STYLES)
 public class AccountView extends Composite<Div> implements HasComponents, BeforeEnterObserver {
 
     @Autowired

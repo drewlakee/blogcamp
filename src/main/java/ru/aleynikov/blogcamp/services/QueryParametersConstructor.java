@@ -2,7 +2,7 @@ package ru.aleynikov.blogcamp.services;
 
 import java.util.*;
 
-public class QueryParametersManager {
+public class QueryParametersConstructor {
 
     public static Map<String, List<String>> buildQueryParams(HashMap<String, Object> parameters) {
         Map<String, List<String>> qmap = new HashMap<>();
@@ -17,7 +17,7 @@ public class QueryParametersManager {
         return qmap;
     }
 
-    public static void setQueryParams(Map<String, List<String>> qparams, HashMap<String, Object> pageParametersMap, Set<String> pageParametersKeySet) {
+    public static void setQueryParamsToViewClass(Map<String, List<String>> qparams, HashMap<String, Object> pageParametersMap, Set<String> pageParametersKeySet) {
 
         for (String parameter : pageParametersKeySet) {
             if (!parameter.equals("page")) {

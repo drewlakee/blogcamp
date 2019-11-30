@@ -21,10 +21,10 @@ import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
-import ru.aleynikov.blogcamp.security.SessionManager;
-import ru.aleynikov.blogcamp.services.JavaScriptUtils;
+import ru.aleynikov.blogcamp.security.SessionState;
+import ru.aleynikov.blogcamp.web.JavaScript;
 import ru.aleynikov.blogcamp.services.UserService;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 import ru.aleynikov.blogcamp.views.main.MainLayout;
 
 import java.time.format.DateTimeFormatter;
@@ -34,15 +34,15 @@ import java.util.Locale;
 @RoutePrefix(value = "profile")
 @ParentLayout(MainLayout.class)
 @PageTitle("Profile - Blogcamp")
-@StyleSheet(StaticResources.MAIN_STYLES)
-@StyleSheet(StaticResources.PROFILE_STYLES)
+@StyleSheet(StaticContent.MAIN_STYLES)
+@StyleSheet(StaticContent.PROFILE_STYLES)
 public class ProfileLayout extends Composite<Div> implements HasComponents, RouterLayout, BeforeEnterObserver {
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    private SessionManager sessionManager;
+    private SessionState sessionState;
 
     private User userInSession = SecurityUtils.getPrincipal();
 
@@ -186,7 +186,7 @@ public class ProfileLayout extends Composite<Div> implements HasComponents, Rout
                 setExternalAvatarButton.setVisible(true);
 
                 int imgWidth = 200;
-                JavaScriptUtils.innerHtml(uploadExternalImageDiv.getId().get(), "<img style=\"width:" + imgWidth + "px\" src=" + externalImageSourceField.getValue().strip() + ">");
+                JavaScript.innerHtml(uploadExternalImageDiv.getId().get(), "<img style=\"width:" + imgWidth + "px\" src=" + externalImageSourceField.getValue().strip() + ">");
                 externalImageSourceField.setLabel("");
             } else
                 setExternalAvatarButton.setVisible(false);
@@ -197,7 +197,7 @@ public class ProfileLayout extends Composite<Div> implements HasComponents, Rout
             externalImageSetDialog.close();
             externalImageSourceField.clear();
 
-            sessionManager.updateSessionUser();
+            sessionState.updateUserPrincipals();
 
             userAvatarImage.setSrc(SecurityUtils.getPrincipal().getAvatar());
 
@@ -208,7 +208,7 @@ public class ProfileLayout extends Composite<Div> implements HasComponents, Rout
             externalImageSetDialog.close();
             setExternalAvatarButton.setVisible(false);
             externalImageSourceField.setInvalid(false);
-            JavaScriptUtils.innerHtml(uploadExternalImageDiv.getId().get(), "");
+            JavaScript.innerHtml(uploadExternalImageDiv.getId().get(), "");
         });
     }
 
@@ -221,7 +221,7 @@ public class ProfileLayout extends Composite<Div> implements HasComponents, Rout
 
         if (!isFieldNotEmpty || !isSourceExternal || !isSourceImage) {
             externalImageSourceField.setInvalid(true);
-            JavaScriptUtils.innerHtml(uploadExternalImageDiv.getId().get(), "");
+            JavaScript.innerHtml(uploadExternalImageDiv.getId().get(), "");
         }
 
         return isSourceExternal && isSourceImage && isFieldNotEmpty;

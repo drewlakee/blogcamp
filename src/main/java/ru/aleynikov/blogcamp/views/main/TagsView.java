@@ -21,10 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.aleynikov.blogcamp.components.PageSwitcherComponent;
 import ru.aleynikov.blogcamp.components.TagComponent;
 import ru.aleynikov.blogcamp.models.Tag;
-import ru.aleynikov.blogcamp.services.FilterDataManager;
-import ru.aleynikov.blogcamp.services.QueryParametersManager;
+import ru.aleynikov.blogcamp.services.DataHandleService;
+import ru.aleynikov.blogcamp.services.QueryParametersConstructor;
 import ru.aleynikov.blogcamp.services.TagService;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.Set;
 
 @Route(value = "tags", layout = MainLayout.class)
 @PageTitle("Tags - Blogcamp")
-@StyleSheet(StaticResources.MAIN_STYLES)
+@StyleSheet(StaticContent.MAIN_STYLES)
 public class TagsView extends Composite<Div> implements HasComponents, HasUrlParameter<String> {
 
     @Autowired
@@ -114,7 +114,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
                     customQueryParams.put("tab", newestTab.getLabel().toLowerCase());
                 }
 
-                UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
+                UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersConstructor.buildQueryParams(customQueryParams)));
             }
         });
 
@@ -129,7 +129,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
             sortBar.setSelectedTab(null);
             HashMap<String, Object> customQueryParams = new HashMap<>();
             customQueryParams.put("search", searchField.getValue().strip());
-            UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
+            UI.getCurrent().navigate("tags", new QueryParameters(QueryParametersConstructor.buildQueryParams(customQueryParams)));
         } else
             UI.getCurrent().navigate("tags");
     }
@@ -138,7 +138,7 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
         pageParametersKeySet = pageParametersMap.keySet();
-        QueryParametersManager.setQueryParams(qparams, pageParametersMap, pageParametersKeySet);
+        QueryParametersConstructor.setQueryParamsToViewClass(qparams, pageParametersMap, pageParametersKeySet);
 
         if (sortBar.getSelectedTab() != null) {
             if (qparams.containsKey("search")) {
@@ -204,9 +204,9 @@ public class TagsView extends Composite<Div> implements HasComponents, HasUrlPar
                 }
             }
 
-            pageLimit = FilterDataManager.pageLimit(countTags, TAGS_ON_PAGE_LIMIT);
+            pageLimit = DataHandleService.calculatePageLimit(countTags, TAGS_ON_PAGE_LIMIT);
 
-            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.buildQueryParams(customQueryParams)));
+            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersConstructor.buildQueryParams(customQueryParams)));
         } else {
             bodyLayout.add(notFoundedH2);
         }

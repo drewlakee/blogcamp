@@ -14,13 +14,13 @@ import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.services.CommentService;
 import ru.aleynikov.blogcamp.services.UserService;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-@StyleSheet(StaticResources.COMMENT_STYLES)
-@StyleSheet(StaticResources.MAIN_STYLES)
+@StyleSheet(StaticContent.COMMENT_STYLES)
+@StyleSheet(StaticContent.MAIN_STYLES)
 public class CommentComponent extends Div {
 
     private User userInSession = SecurityUtils.getPrincipal();

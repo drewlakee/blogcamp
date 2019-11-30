@@ -12,10 +12,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.QueryParameters;
 import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
-import ru.aleynikov.blogcamp.services.JavaScriptUtils;
-import ru.aleynikov.blogcamp.services.QueryParametersManager;
+import ru.aleynikov.blogcamp.web.JavaScript;
+import ru.aleynikov.blogcamp.services.QueryParametersConstructor;
 import ru.aleynikov.blogcamp.services.UserService;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -23,8 +23,8 @@ import java.util.HashMap;
 import java.util.Locale;
 
 
-@StyleSheet(StaticResources.USER_STYLES)
-@StyleSheet(StaticResources.MAIN_STYLES)
+@StyleSheet(StaticContent.USER_STYLES)
+@StyleSheet(StaticContent.MAIN_STYLES)
 public class UserDetailDialog extends Dialog {
 
     private VerticalLayout detailUserLayout = new VerticalLayout();
@@ -145,8 +145,8 @@ public class UserDetailDialog extends Dialog {
         postsFindLinkSpan.addClickListener(event -> {
             HashMap<String, Object> qparams = new HashMap<>();
             qparams.put("user", postUser.getUsername());
-            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(qparams)));
-            JavaScriptUtils.scrollPageTop();
+            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersConstructor.buildQueryParams(qparams)));
+            JavaScript.scrollPageTop();
             close();
         });
 

@@ -2,7 +2,6 @@ package ru.aleynikov.blogcamp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.aleynikov.blogcamp.daoImpls.TagDaoImpl;
 import ru.aleynikov.blogcamp.daos.TagDao;
 import ru.aleynikov.blogcamp.models.Post;
 import ru.aleynikov.blogcamp.models.Tag;
@@ -23,7 +22,7 @@ public class TagService {
                 "JOIN usr ON post.\"user\" = usr.user_id AND usr.banned = false " +
                 "ORDER BY created DESC OFFSET ? LIMIT ? ";
         Object[] qparams = new Object[] {
-                FilterDataManager.filterOffset(page, tagsOnPageLimit),
+                DataHandleService.filterOffset(page, tagsOnPageLimit),
                 tagsOnPageLimit
         };
 
@@ -41,7 +40,7 @@ public class TagService {
                 "OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {
                 "%"+search+"%",
-                FilterDataManager.filterOffset(page, tagsOnPageLimit),
+                DataHandleService.filterOffset(page, tagsOnPageLimit),
                 tagsOnPageLimit
         };
 
@@ -121,7 +120,7 @@ public class TagService {
                 "ORDER BY name ASC " +
                 "OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {
-                FilterDataManager.filterOffset(page, componentsLimit),
+                DataHandleService.filterOffset(page, componentsLimit),
                 componentsLimit
         };
 

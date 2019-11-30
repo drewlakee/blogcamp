@@ -2,7 +2,6 @@ package ru.aleynikov.blogcamp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.aleynikov.blogcamp.daoImpls.UserDaoImpl;
 import ru.aleynikov.blogcamp.daos.UserDao;
 import ru.aleynikov.blogcamp.models.User;
 
@@ -23,7 +22,7 @@ public class UserService {
                 "ORDER BY (username) ASC " +
                 "OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {
-                FilterDataManager.filterOffset(page, usersOnPageLimit),
+                DataHandleService.filterOffset(page, usersOnPageLimit),
                 usersOnPageLimit
         };
 
@@ -37,7 +36,7 @@ public class UserService {
                 "OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {
                 "%"+filter+"%",
-                FilterDataManager.filterOffset(page, usersOnPageLimit),
+                DataHandleService.filterOffset(page, usersOnPageLimit),
                 usersOnPageLimit
         };
 

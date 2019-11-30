@@ -1,6 +1,6 @@
-package ru.aleynikov.blogcamp.staticResources;
+package ru.aleynikov.blogcamp.statics;
 
-public class StaticResources {
+public class StaticContent {
 
         // Static: images, gif ...
 
