@@ -1,6 +1,6 @@
 # Vaadin 13 + Spring Framework + PostgreSQL
 
-In general it's a web-platform for blog-making and something like social network (like Habr or smth like that).
+Web-application on Vaadin for blog-managing.
 
 Made as a course project in 2019, 5 semester.
 
@@ -22,4 +22,4 @@ Made as a course project in 2019, 5 semester.
 ## PostgeSQL diagrams
 ![Alt text](docs/screens/postgreData.png)
 
-Dump of data base in [blogcamp.tar](blogcamp.tar) archive.
+Dump of database in [blogcamp.tar](blogcamp.tar) archive.
