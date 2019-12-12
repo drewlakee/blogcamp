@@ -23,17 +23,17 @@ import ru.aleynikov.blogcamp.models.Post;
 import ru.aleynikov.blogcamp.models.Tag;
 import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
-import ru.aleynikov.blogcamp.services.JavaScriptUtils;
+import ru.aleynikov.blogcamp.web.JavaScript;
 import ru.aleynikov.blogcamp.services.PostService;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
 import java.sql.Timestamp;
 import java.util.*;
 
 @Route(value = "addpost", layout = MainLayout.class)
 @RouteAlias(value = "editpost", layout = MainLayout.class)
-@StyleSheet(StaticResources.MAIN_STYLES)
-@StyleSheet(StaticResources.POST_STYLES)
+@StyleSheet(StaticContent.MAIN_STYLES)
+@StyleSheet(StaticContent.POST_STYLES)
 public class EditorPostView extends Composite<Div> implements HasComponents, HasUrlParameter<Integer>, HasDynamicTitle {
 
     @Autowired
@@ -175,17 +175,17 @@ public class EditorPostView extends Composite<Div> implements HasComponents, Has
            } else if (imageLoadGroup.getValue().equals(NONE_IMAGE)) {
                externalLinkOnImageField.setVisible(false);
                externalLinkOnImageField.setRequired(false);
-               JavaScriptUtils.innerHtml("show-image", "");
+               JavaScript.innerHtml("show-image", "");
            }
         });
 
         externalLinkOnImageField.addValueChangeListener(event -> {
             if (isExternalSourceValid())
-                JavaScriptUtils.innerHtml("show-image", "<img style=\"width:" + externalImageWidth + "px\" src=" + externalLinkOnImageField.getValue().strip() + ">");
+                JavaScript.innerHtml("show-image", "<img style=\"width:" + externalImageWidth + "px\" src=" + externalLinkOnImageField.getValue().strip() + ">");
         });
 
         textBodyArea.addValueChangeListener(event -> {
-            JavaScriptUtils.innerHtml(htmlAreaDiv.getId().get(), textBodyArea.getValue());
+            JavaScript.innerHtml(htmlAreaDiv.getId().get(), textBodyArea.getValue());
         });
 
         createPostButton.addClickListener(event -> {

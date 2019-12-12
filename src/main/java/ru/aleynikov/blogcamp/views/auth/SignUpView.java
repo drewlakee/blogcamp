@@ -25,8 +25,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.services.UserService;
-import ru.aleynikov.blogcamp.staticResources.RedditAvatars;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.RedditContent;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 import ru.aleynikov.blogcamp.views.main.HomeView;
 
 import java.util.LinkedHashMap;
@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 
 @PageTitle("Sign up")
 @Route(value = "registration", layout = AuthLayout.class)
-@StyleSheet(StaticResources.SIGN_UP_STYLES)
+@StyleSheet(StaticContent.SIGN_UP_STYLES)
 public class SignUpView extends HorizontalLayout {
 
     private static Logger log = LoggerFactory.getLogger(SignUpView.class);
@@ -168,7 +168,7 @@ public class SignUpView extends HorizontalLayout {
                newUserData.put("password", passwordEncoder.encode(passwordField.getValue().strip()));
                newUserData.put("secret_question", secretQuestionField.getValue().strip().replaceAll("/?", "") + "?");
                newUserData.put("secret_answer", passwordEncoder.encode(secretAnswerField.getValue().strip()));
-               newUserData.put("avatar", RedditAvatars.getRandomAvatar());
+               newUserData.put("avatar", RedditContent.getRandomAvatar());
                userService.save(newUserData);
 
                log.info("User with username [{}] was successfully registered.", newUserData.get("username"));

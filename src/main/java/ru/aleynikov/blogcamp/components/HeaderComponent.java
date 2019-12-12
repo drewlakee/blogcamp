@@ -12,21 +12,21 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.QueryParameters;
 import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
-import ru.aleynikov.blogcamp.services.QueryParametersManager;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.services.QueryParametersConstructor;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 import ru.aleynikov.blogcamp.views.main.HomeView;
 
 import java.util.HashMap;
 
 
-@StyleSheet(StaticResources.HEADER_STYLES)
+@StyleSheet(StaticContent.HEADER_STYLES)
 public class HeaderComponent extends HorizontalLayout {
 
     private User currentUser = SecurityUtils.getPrincipal();
 
     private HorizontalLayout mainSideLayout = new HorizontalLayout();
 
-    private Image logoImage = new Image(StaticResources.LOGO_IMAGE, "logo");
+    private Image logoImage = new Image(StaticContent.LOGO_IMAGE, "logo");
     private Image userAvatarImage = new Image("", "avatar");
 
     private TextField searchField = new TextField();
@@ -98,7 +98,7 @@ public class HeaderComponent extends HorizontalLayout {
             qparams.put("search", searchField.getValue().strip());
             qparams.put("global", "yes");
 
-            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(qparams)));
+            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersConstructor.buildQueryParams(qparams)));
         } else {
             UI.getCurrent().navigate("globe");
         }

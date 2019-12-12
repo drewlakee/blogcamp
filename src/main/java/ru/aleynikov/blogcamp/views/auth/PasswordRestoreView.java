@@ -16,16 +16,15 @@ import com.vaadin.flow.router.RouterLink;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.aleynikov.blogcamp.daoImpls.UserDaoImpl;
 import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.services.UserService;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
 import java.util.regex.Pattern;
 
 @PageTitle("Password restore")
 @Route(value = "restore", layout = AuthLayout.class)
-@StyleSheet(StaticResources.PASS_RESTORE_STYLES)
+@StyleSheet(StaticContent.PASS_RESTORE_STYLES)
 public class PasswordRestoreView extends HorizontalLayout {
 
     @Autowired

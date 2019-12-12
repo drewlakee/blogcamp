@@ -22,10 +22,10 @@ import ru.aleynikov.blogcamp.components.PageSwitcherComponent;
 import ru.aleynikov.blogcamp.components.UserComponent;
 import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
-import ru.aleynikov.blogcamp.services.FilterDataManager;
-import ru.aleynikov.blogcamp.services.QueryParametersManager;
+import ru.aleynikov.blogcamp.services.DataHandleService;
+import ru.aleynikov.blogcamp.services.QueryParametersConstructor;
 import ru.aleynikov.blogcamp.services.UserService;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +34,7 @@ import java.util.Set;
 
 @Route(value = "users", layout = MainLayout.class)
 @PageTitle("Users - Blogcamp")
-@StyleSheet(StaticResources.MAIN_STYLES)
+@StyleSheet(StaticContent.MAIN_STYLES)
 public class UsersView extends Composite<Div> implements HasComponents, HasUrlParameter<String> {
 
     @Autowired
@@ -112,7 +112,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
 
                 if (selectedTab.equals(nameTab.getLabel())) {
                     customQueryParams.put("tab", nameTab.getLabel().toLowerCase());
-                    UI.getCurrent().navigate("users", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
+                    UI.getCurrent().navigate("users", new QueryParameters(QueryParametersConstructor.buildQueryParams(customQueryParams)));
                 }
             }
         });
@@ -127,7 +127,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
             sortBar.setSelectedTab(null);
             HashMap<String, Object> customQueryParams = new HashMap<>();
             customQueryParams.put("search", searchField.getValue().strip());
-            UI.getCurrent().navigate("users", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
+            UI.getCurrent().navigate("users", new QueryParameters(QueryParametersConstructor.buildQueryParams(customQueryParams)));
         } else
             UI.getCurrent().navigate("users");
     }
@@ -136,7 +136,7 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
         pageParametersKeySet = pageParametersMap.keySet();
-        QueryParametersManager.setQueryParams(qparams, pageParametersMap, pageParametersKeySet);
+        QueryParametersConstructor.setQueryParamsToViewClass(qparams, pageParametersMap, pageParametersKeySet);
 
         if (sortBar.getSelectedTab() != null) {
             if (qparams.containsKey("search")) {
@@ -194,9 +194,9 @@ public class UsersView extends Composite<Div> implements HasComponents, HasUrlPa
                 }
             }
 
-            pageLimit = FilterDataManager.pageLimit(countUsers, USERS_ON_PAGE_LIMIT);
+            pageLimit = DataHandleService.calculatePageLimit(countUsers, USERS_ON_PAGE_LIMIT);
 
-            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.buildQueryParams(customQueryParams)));
+            bodyLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersConstructor.buildQueryParams(customQueryParams)));
         } else {
             bodyLayout.add(notFoundedH2);
         }

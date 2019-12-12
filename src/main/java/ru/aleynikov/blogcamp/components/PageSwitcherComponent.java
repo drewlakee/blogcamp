@@ -6,14 +6,14 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.QueryParameters;
-import ru.aleynikov.blogcamp.services.JavaScriptUtils;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.web.JavaScript;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@StyleSheet(StaticResources.MAIN_STYLES)
+@StyleSheet(StaticContent.MAIN_STYLES)
 public class PageSwitcherComponent extends HorizontalLayout {
 
     private Span dotsSpan = new Span("...");
@@ -88,7 +88,7 @@ public class PageSwitcherComponent extends HorizontalLayout {
         qparams.replace("page", page);
 
         UI.getCurrent().navigate(location, new QueryParameters(qparams));
-        JavaScriptUtils.scrollPageTop();
+        JavaScript.scrollPageTop();
     }
 
 }

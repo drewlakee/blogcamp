@@ -1,11 +1,10 @@
-package ru.aleynikov.blogcamp.staticResources;
+package ru.aleynikov.blogcamp.statics;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class RedditAvatars {
+public class RedditContent {
 
     private static final List<String> redditAvatarsSources = new ArrayList<>() {
         {

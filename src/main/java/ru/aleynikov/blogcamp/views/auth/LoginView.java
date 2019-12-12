@@ -26,14 +26,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 import ru.aleynikov.blogcamp.views.main.HomeView;
 
 import java.util.regex.Pattern;
 
 @PageTitle("Log in")
 @Route(value = "login", layout = AuthLayout.class)
-@StyleSheet(StaticResources.LOGIN_STYLES)
+@StyleSheet(StaticContent.LOGIN_STYLES)
 public class LoginView extends Composite<Div> implements HasComponents {
 
     private static Logger log = LoggerFactory.getLogger(LoginView.class);

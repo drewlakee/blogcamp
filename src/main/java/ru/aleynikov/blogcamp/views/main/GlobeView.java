@@ -21,17 +21,17 @@ import ru.aleynikov.blogcamp.components.PageSwitcherComponent;
 import ru.aleynikov.blogcamp.components.PostComponent;
 import ru.aleynikov.blogcamp.models.Post;
 import ru.aleynikov.blogcamp.models.User;
-import ru.aleynikov.blogcamp.services.FilterDataManager;
+import ru.aleynikov.blogcamp.services.DataHandleService;
 import ru.aleynikov.blogcamp.services.PostService;
-import ru.aleynikov.blogcamp.services.QueryParametersManager;
+import ru.aleynikov.blogcamp.services.QueryParametersConstructor;
 import ru.aleynikov.blogcamp.services.UserService;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
 import java.util.*;
 
 @Route(value = "globe", layout = MainLayout.class)
 @PageTitle("Posts - Blogcamp")
-@StyleSheet(StaticResources.MAIN_STYLES)
+@StyleSheet(StaticContent.MAIN_STYLES)
 public class GlobeView extends Composite<Div> implements HasComponents, HasUrlParameter<String> {
 
     @Autowired
@@ -168,10 +168,10 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
 
                 if (selectedTab.equals(newestTab.getLabel())) {
                     customQueryParams.put("tab", newestTab.getLabel().toLowerCase());
-                    UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
+                    UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersConstructor.buildQueryParams(customQueryParams)));
                 } else if (selectedTab.equals(interestingTab.getLabel())){
                     customQueryParams.put("tab", interestingTab.getLabel().toLowerCase());
-                    UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
+                    UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersConstructor.buildQueryParams(customQueryParams)));
                 }
             }
         });
@@ -186,7 +186,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
             sortBar.setSelectedTab(null);
             HashMap<String, Object> customQueryParams = new HashMap<>();
             customQueryParams.put("search", searchField.getValue().strip());
-            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(customQueryParams)));
+            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersConstructor.buildQueryParams(customQueryParams)));
         } else
             UI.getCurrent().navigate("globe");
     }
@@ -196,7 +196,7 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
         qparams = event.getLocation().getQueryParameters().getParameters();
         userInfoLayout.setVisible(false);
         pageParametersKeySet = pageParametersMap.keySet();
-        QueryParametersManager.setQueryParams(qparams, pageParametersMap, pageParametersKeySet);
+        QueryParametersConstructor.setQueryParamsToViewClass(qparams, pageParametersMap, pageParametersKeySet);
 
         if (sortBar.getSelectedTab() != null) {
             if (qparams.containsKey("search")) {
@@ -280,9 +280,9 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
                 bodyLayout.add(postComponent);
             }
 
-            pageLimit = FilterDataManager.pageLimit(count, POST_ON_PAGE_LIMIT);
+            pageLimit = DataHandleService.calculatePageLimit(count, POST_ON_PAGE_LIMIT);
 
-            footLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersManager.buildQueryParams(customQueryParams)));
+            footLayout.add(new PageSwitcherComponent(page, pageLimit, locationPath, QueryParametersConstructor.buildQueryParams(customQueryParams)));
         } else {
             bodyLayout.add(notFoundedH2);
         }

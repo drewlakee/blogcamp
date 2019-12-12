@@ -5,12 +5,12 @@ import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.services.UserService;
 
 @Component
-public class SessionManager {
+public class SessionState {
 
     @Autowired
     private UserService userService;
 
-    public void updateSessionUser() {
+    public void updateUserPrincipals() {
         SecurityUtils.getPrincipal().refreshUser(userService.findUserByUsername(SecurityUtils.getPrincipal().getUsername()));
     }
 }

@@ -3,12 +3,12 @@ package ru.aleynikov.blogcamp.views;
 
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.router.*;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
 import javax.servlet.http.HttpServletResponse;
 
 @PageTitle("Page Not Found")
-@StyleSheet(StaticResources.NOT_FOUND_PAGE_STYLES)
+@StyleSheet(StaticContent.NOT_FOUND_PAGE_STYLES)
 public class CustomNotFoundView extends RouteNotFoundError {
 
     @Override

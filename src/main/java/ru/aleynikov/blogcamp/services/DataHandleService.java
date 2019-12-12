@@ -1,6 +1,6 @@
 package ru.aleynikov.blogcamp.services;
 
-public class FilterDataManager {
+public class DataHandleService {
 
     public static int filterOffset(int page, int componentsOnPageLimit) {
         int offset = 0;
@@ -15,18 +15,12 @@ public class FilterDataManager {
         return offset;
     }
 
-    public static int pageLimit(float countOfComponents, int limitOfComponentsOnPage) {
+    public static int calculatePageLimit(float countOfComponents, int limitOfComponentsOnPage) {
         int pageLimit = Math.round((countOfComponents + limitOfComponentsOnPage / 2) / limitOfComponentsOnPage);
 
         if (countOfComponents != limitOfComponentsOnPage)
             return pageLimit;
         else
             return pageLimit - 1;
-    }
-
-    public static String shieldHtml(String html) {
-        return html.
-                replaceAll("\n", " ").
-                replaceAll("'", "\\\\'");
     }
 }

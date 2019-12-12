@@ -22,13 +22,13 @@ import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.services.PostService;
 import ru.aleynikov.blogcamp.services.TagService;
 import ru.aleynikov.blogcamp.services.UserService;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
 import java.util.List;
 
 @Route(value = "home", layout = MainLayout.class)
 @PageTitle("Blogcamp")
-@StyleSheet(StaticResources.MAIN_STYLES)
+@StyleSheet(StaticContent.MAIN_STYLES)
 public class HomeView extends Composite<Div> implements HasComponents, BeforeEnterObserver {
 
     @Autowired

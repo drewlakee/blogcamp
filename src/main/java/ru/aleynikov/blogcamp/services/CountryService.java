@@ -3,6 +3,7 @@ package ru.aleynikov.blogcamp.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.aleynikov.blogcamp.daoImpls.CountryDaoImpl;
+import ru.aleynikov.blogcamp.daos.CountryDao;
 import ru.aleynikov.blogcamp.models.Country;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 public class CountryService {
 
     @Autowired
-    private CountryDaoImpl countryDao;
+    private CountryDao countryDao;
 
     public List<Country> getAllCountriesList() {
         String query = "SELECT * FROM country";
