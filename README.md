@@ -18,8 +18,13 @@ Made as a course project in 2019, 5 semester.
   ![Alt text](docs/screens/post2.png)
 
 </details>
- 
-## PostgeSQL diagrams
-![Alt text](docs/screens/postgreData.png)
+
+
+<details>
+   <summary>SQL diagrams</summary>
+    
+  ![Alt text](docs/screens/postgreData.png)
+
+</details>
 
 Dump of database in [blogcamp.tar](blogcamp.tar) archive.
