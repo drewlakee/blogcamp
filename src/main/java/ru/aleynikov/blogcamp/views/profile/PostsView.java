@@ -21,8 +21,8 @@ import ru.aleynikov.blogcamp.models.Post;
 import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.services.PostService;
-import ru.aleynikov.blogcamp.services.QueryParametersManager;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.services.QueryParametersConstructor;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +31,7 @@ import java.util.Set;
 
 @Route(value = "posts", layout = ProfileLayout.class)
 @PageTitle("Profile - Posts")
-@StyleSheet(StaticResources.PROFILE_STYLES)
+@StyleSheet(StaticContent.PROFILE_STYLES)
 public class PostsView extends Composite<Div> implements HasComponents, HasUrlParameter<String> {
 
     @Autowired
@@ -109,7 +109,7 @@ public class PostsView extends Composite<Div> implements HasComponents, HasUrlPa
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         qparams = event.getLocation().getQueryParameters().getParameters();
         pageParametersKeySet = pageParametersMap.keySet();
-        QueryParametersManager.setQueryParams(qparams, pageParametersMap, pageParametersKeySet);
+        QueryParametersConstructor.setQueryParamsToViewClass(qparams, pageParametersMap, pageParametersKeySet);
 
         buildPostsBrowser(postsOffset, LIMIT_OF_POSTS, pageParametersMap.get("search").toString());
     }
@@ -124,7 +124,7 @@ public class PostsView extends Composite<Div> implements HasComponents, HasUrlPa
             HashMap<String, Object> qparams = new HashMap<>();
             qparams.put("search", search);
 
-            UI.getCurrent().navigate("profile/posts", new QueryParameters(QueryParametersManager.buildQueryParams(qparams)));
+            UI.getCurrent().navigate("profile/posts", new QueryParameters(QueryParametersConstructor.buildQueryParams(qparams)));
         } else
             UI.getCurrent().navigate("profile/posts");
     }

@@ -32,10 +32,10 @@ import ru.aleynikov.blogcamp.models.Tag;
 import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.services.CommentService;
-import ru.aleynikov.blogcamp.services.JavaScriptUtils;
+import ru.aleynikov.blogcamp.web.JavaScript;
 import ru.aleynikov.blogcamp.services.PostService;
 import ru.aleynikov.blogcamp.services.UserService;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -45,8 +45,8 @@ import java.util.List;
 import java.util.Locale;
 
 @Route(value = "globe/post", layout = MainLayout.class)
-@StyleSheet(StaticResources.MAIN_STYLES)
-@StyleSheet(StaticResources.POST_STYLES)
+@StyleSheet(StaticContent.MAIN_STYLES)
+@StyleSheet(StaticContent.POST_STYLES)
 public class PostView extends Composite<Div> implements HasComponents, HasUrlParameter<Integer>, HasDynamicTitle {
 
     @Autowired
@@ -311,7 +311,7 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
                 postImage.setSrc(currentPost.getIntroImage());
             }
 
-            JavaScriptUtils.innerHtml(htmlDiv.getId().get(), currentPost.getText());
+            JavaScript.innerHtml(htmlDiv.getId().get(), currentPost.getText());
 
             Iterator tagsIterator = currentPost.getTags().iterator();
             bodyFootUpperLayout.add(new TagComponent((Tag) tagsIterator.next()));

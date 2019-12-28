@@ -2,7 +2,6 @@ package ru.aleynikov.blogcamp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.aleynikov.blogcamp.daoImpls.PostDaoImpl;
 import ru.aleynikov.blogcamp.daos.PostDao;
 import ru.aleynikov.blogcamp.models.Post;
 
@@ -59,7 +58,7 @@ public class PostService {
                 "ORDER BY (created_date) DESC " +
                 "OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {
-                FilterDataManager.filterOffset(page, componentLimit),
+                DataHandleService.filterOffset(page, componentLimit),
                 componentLimit
         };
 
@@ -80,7 +79,7 @@ public class PostService {
         String query = "SELECT " + mainPostQueryParams + " FROM post, usr WHERE LOWER(title) LIKE LOWER(?) AND deleted = false AND \"user\" = user_id AND usr.banned = false ORDER BY (created_date) DESC OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {
                 "%"+filter+"%",
-                FilterDataManager.filterOffset(page, componentLimit),
+                DataHandleService.filterOffset(page, componentLimit),
                 componentLimit
         };
 
@@ -103,7 +102,7 @@ public class PostService {
         String query = "SELECT " + mainPostQueryParams + " FROM (post_to_tag right join post using (post_id)), usr WHERE tag_id = (SELECT tag_id FROM tag WHERE name = ?) AND \"user\" = user_id AND usr.banned = false AND deleted = false ORDER BY (created_date) DESC  OFFSET ? LIMIT ?;";
         Object[] qparams = new Object[] {
                 tag,
-                FilterDataManager.filterOffset(page, componentLimit),
+                DataHandleService.filterOffset(page, componentLimit),
                 componentLimit
         };
 
@@ -132,7 +131,7 @@ public class PostService {
                 "OFFSET ? LIMIT ?";
         Object[] qparams = new Object[] {
                 username,
-                FilterDataManager.filterOffset(page, componentLimit),
+                DataHandleService.filterOffset(page, componentLimit),
                 componentLimit
         };
 
@@ -170,7 +169,7 @@ public class PostService {
                 searchValue,
                 searchValue,
                 searchValue,
-                FilterDataManager.filterOffset(page, componentLimit),
+                DataHandleService.filterOffset(page, componentLimit),
                 componentLimit};
 
         return postDao.queryForList(query, qparams);
@@ -212,7 +211,7 @@ public class PostService {
         Object[] qparams = new Object[] {
                 id,
                 "%" + search + "%" ,
-                FilterDataManager.filterOffset(page, componentLimit),
+                DataHandleService.filterOffset(page, componentLimit),
                 componentLimit
         };
 
@@ -261,7 +260,7 @@ public class PostService {
                 "ORDER BY (comments_count) DESC " +
                 "OFFSET ? LIMIT ? ";
         Object[] qparams = new Object[] {
-                FilterDataManager.filterOffset(page, componentLimit),
+                DataHandleService.filterOffset(page, componentLimit),
                 componentLimit
         };
 

@@ -13,16 +13,16 @@ import com.vaadin.flow.router.QueryParameters;
 import ru.aleynikov.blogcamp.models.Tag;
 import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
-import ru.aleynikov.blogcamp.services.JavaScriptUtils;
-import ru.aleynikov.blogcamp.services.QueryParametersManager;
+import ru.aleynikov.blogcamp.web.JavaScript;
+import ru.aleynikov.blogcamp.services.QueryParametersConstructor;
 import ru.aleynikov.blogcamp.services.TagService;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@StyleSheet(StaticResources.MAIN_STYLES)
-@StyleSheet(StaticResources.TAG_STYLES)
+@StyleSheet(StaticContent.MAIN_STYLES)
+@StyleSheet(StaticContent.TAG_STYLES)
 public class TagComponent extends Div {
 
     private User userInSession = SecurityUtils.getPrincipal();
@@ -59,8 +59,8 @@ public class TagComponent extends Div {
         tagNameSpan.addClickListener(event -> {
             HashMap<String, Object> qparam = new HashMap<>();
             qparam.put("tag", tag.getName());
-            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(qparam)));
-            JavaScriptUtils.scrollPageTop();
+            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersConstructor.buildQueryParams(qparam)));
+            JavaScript.scrollPageTop();
         });
     }
 
@@ -123,8 +123,8 @@ public class TagComponent extends Div {
         tagNameSpan.addClickListener(event -> {
             HashMap<String, Object> qparam = new HashMap<>();
             qparam.put("tag", tag.getName());
-            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersManager.buildQueryParams(qparam)));
-            JavaScriptUtils.scrollPageTop();
+            UI.getCurrent().navigate("globe", new QueryParameters(QueryParametersConstructor.buildQueryParams(qparam)));
+            JavaScript.scrollPageTop();
         });
     }
 }

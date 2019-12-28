@@ -13,14 +13,14 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import ru.aleynikov.blogcamp.models.Post;
 import ru.aleynikov.blogcamp.services.PostService;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 import ru.aleynikov.blogcamp.views.main.PostView;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-@StyleSheet(StaticResources.POST_STYLES)
-@StyleSheet(StaticResources.MAIN_STYLES)
+@StyleSheet(StaticContent.POST_STYLES)
+@StyleSheet(StaticContent.MAIN_STYLES)
 public class PostCutComponent extends Div {
 
     private VerticalLayout contentLayout = new VerticalLayout();

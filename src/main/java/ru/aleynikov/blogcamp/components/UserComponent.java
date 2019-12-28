@@ -9,10 +9,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.services.UserService;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
-@StyleSheet(StaticResources.USER_STYLES)
-@StyleSheet(StaticResources.MAIN_STYLES)
+@StyleSheet(StaticContent.USER_STYLES)
+@StyleSheet(StaticContent.MAIN_STYLES)
 public class UserComponent extends Div {
 
     private VerticalLayout contentLayout = new VerticalLayout();

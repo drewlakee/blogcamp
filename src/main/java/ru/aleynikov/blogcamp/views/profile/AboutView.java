@@ -24,18 +24,18 @@ import ru.aleynikov.blogcamp.models.City;
 import ru.aleynikov.blogcamp.models.Country;
 import ru.aleynikov.blogcamp.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
-import ru.aleynikov.blogcamp.security.SessionManager;
+import ru.aleynikov.blogcamp.security.SessionState;
 import ru.aleynikov.blogcamp.services.CityService;
 import ru.aleynikov.blogcamp.services.CountryService;
 import ru.aleynikov.blogcamp.services.UserService;
-import ru.aleynikov.blogcamp.staticResources.StaticResources;
+import ru.aleynikov.blogcamp.statics.StaticContent;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Route(value = "about", layout = ProfileLayout.class)
 @PageTitle("Profile - About")
-@StyleSheet(StaticResources.PROFILE_STYLES)
+@StyleSheet(StaticContent.PROFILE_STYLES)
 public class AboutView extends Composite<Div> implements HasComponents, BeforeEnterObserver {
 
     @Autowired
@@ -48,7 +48,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
     private CityService cityService;
 
     @Autowired
-    private SessionManager sessionManager;
+    private SessionState sessionState;
 
     private User userInSession = SecurityUtils.getPrincipal();
 
@@ -176,7 +176,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
             infoForUpdate.put("status", statusArea.getValue().strip());
             infoForUpdate.put("current_user_id", SecurityUtils.getPrincipal().getId());
             userService.updateUserAboutInfo(infoForUpdate);
-            sessionManager.updateSessionUser();
+            sessionState.updateUserPrincipals();
 
             UI.getCurrent().navigate("profile/about");
             successfullyUpdatedSpan.setVisible(true);
