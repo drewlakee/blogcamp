@@ -2,9 +2,8 @@ package ru.aleynikov.blogcamp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.aleynikov.blogcamp.daoImpls.CityDaoImpl;
-import ru.aleynikov.blogcamp.daos.CityDao;
-import ru.aleynikov.blogcamp.models.City;
+import ru.aleynikov.blogcamp.daos.daoInterfeces.CityDao;
+import ru.aleynikov.blogcamp.domain.models.City;
 
 import java.util.List;
 

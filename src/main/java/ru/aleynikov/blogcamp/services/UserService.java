@@ -2,8 +2,8 @@ package ru.aleynikov.blogcamp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.aleynikov.blogcamp.daos.UserDao;
-import ru.aleynikov.blogcamp.models.User;
+import ru.aleynikov.blogcamp.daos.daoInterfeces.UserDao;
+import ru.aleynikov.blogcamp.domain.models.User;
 
 import java.sql.Timestamp;
 import java.util.HashMap;

@@ -2,9 +2,9 @@ package ru.aleynikov.blogcamp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.aleynikov.blogcamp.daos.TagDao;
-import ru.aleynikov.blogcamp.models.Post;
-import ru.aleynikov.blogcamp.models.Tag;
+import ru.aleynikov.blogcamp.daos.daoInterfeces.TagDao;
+import ru.aleynikov.blogcamp.domain.models.Post;
+import ru.aleynikov.blogcamp.domain.models.Tag;
 
 import java.sql.Timestamp;
 import java.util.List;

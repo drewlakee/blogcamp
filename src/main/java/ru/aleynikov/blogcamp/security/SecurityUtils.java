@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import ru.aleynikov.blogcamp.models.User;
+import ru.aleynikov.blogcamp.domain.models.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.stream.Stream;

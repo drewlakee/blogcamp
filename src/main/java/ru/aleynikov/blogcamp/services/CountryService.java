@@ -2,9 +2,8 @@ package ru.aleynikov.blogcamp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.aleynikov.blogcamp.daoImpls.CountryDaoImpl;
-import ru.aleynikov.blogcamp.daos.CountryDao;
-import ru.aleynikov.blogcamp.models.Country;
+import ru.aleynikov.blogcamp.daos.daoInterfeces.CountryDao;
+import ru.aleynikov.blogcamp.domain.models.Country;
 
 import java.util.List;
 

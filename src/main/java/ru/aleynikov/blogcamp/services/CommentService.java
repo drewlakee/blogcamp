@@ -2,9 +2,8 @@ package ru.aleynikov.blogcamp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.aleynikov.blogcamp.daoImpls.CommentDaoImpl;
-import ru.aleynikov.blogcamp.daos.CommentDao;
-import ru.aleynikov.blogcamp.models.Comment;
+import ru.aleynikov.blogcamp.daos.daoInterfeces.CommentDao;
+import ru.aleynikov.blogcamp.domain.models.Comment;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
