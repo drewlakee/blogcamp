@@ -190,7 +190,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
     }
 
     private void setCurrentUserInfo(User user) {
-        if (user.getFullName() != null) {
+        if (!user.getFullName().strip().isEmpty()) {
             ArrayList<String> userNames = new ArrayList<>(Arrays.asList(user.getFullName().split(" ")));
             Iterator namesIterator = userNames.iterator();
 
@@ -207,7 +207,7 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
             birthdayPicker.setValue(user.getBirthday().toLocalDate());
         }
 
-        if (user.getStatus() != null) {
+        if (!user.getStatus().strip().isEmpty()) {
             statusArea.setValue(user.getStatus());
         }
 
@@ -230,10 +230,10 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
             countrySelect.setItems(countriesMap.keySet());
 
         citySelect.setEmptySelectionAllowed(true);
-        if (userInSession.getCity() != null) {
-            citySelect.setEmptySelectionCaption(userInSession.getCity().getName());
+        if (userInSession.getCity().isPresent()) {
+            citySelect.setEmptySelectionCaption(userInSession.getCity().map(City::getName).get());
             citySelect.setItems(
-                    citiesMap.keySet().stream().filter(city -> !city.equals(userInSession.getCity().getName()) && citiesMap.get(city).getCountry().getName().equals(countrySelect.getEmptySelectionCaption())).collect(Collectors.toSet())
+                    citiesMap.keySet().stream().filter(city -> !city.equals(userInSession.getCity().map(City::getName).get()) && citiesMap.get(city).getCountry().getName().equals(countrySelect.getEmptySelectionCaption())).collect(Collectors.toSet())
             );
         } else
             citySelect.setItems(citiesMap.keySet().stream().filter(city -> citiesMap.get(city).getCountry().getName().equals(countrySelect.getEmptySelectionCaption())));

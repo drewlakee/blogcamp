@@ -19,6 +19,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.aleynikov.blogcamp.domain.models.City;
 import ru.aleynikov.blogcamp.domain.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.security.SessionState;
@@ -255,8 +256,8 @@ public class ProfileLayout extends Composite<Div> implements HasComponents, Rout
             infoLayout.add(userFullNameSpan);
         }
 
-        if (user.getCity() != null & user.getCountry() != null) {
-            userFromSpan.setText(user.getCity().getName() + ", " + user.getCountry().getName());
+        if (user.getCity().isPresent() & user.getCountry() != null) {
+            userFromSpan.setText(user.getCity().map(City::getName).get() + ", " + user.getCountry().getName());
             infoLayout.add(userFromSpan);
         }
 

@@ -11,6 +11,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Setter
@@ -28,7 +29,7 @@ public class User implements UserDetails, RoleProver {
     private String status;
     private Date birthday;
     private Country country;
-    private City city;
+    private Optional<City> city;
     private Role role;
     private String avatar;
     private boolean isBanned;

@@ -6,6 +6,7 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import ru.aleynikov.blogcamp.domain.models.City;
 import ru.aleynikov.blogcamp.domain.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.services.UserService;
@@ -71,10 +72,10 @@ public class UserComponent extends Div {
             contentBodyRightLayout.add(userFullNameSpan);
         }
 
-        if (currentUser.getCity() != null & currentUser.getCountry() != null) {
+        if (currentUser.getCity().isPresent() & currentUser.getCountry() != null) {
             userFromSpan.addClassName("user-from");
             userFromSpan.addClassName("margin-none");
-            userFromSpan.setText(currentUser.getCity().getName() + ", " + currentUser.getCountry().getName());
+            userFromSpan.setText(currentUser.getCity().map(City::getName).get() + ", " + currentUser.getCountry().getName());
             contentBodyRightLayout.add(userFromSpan);
         }
 

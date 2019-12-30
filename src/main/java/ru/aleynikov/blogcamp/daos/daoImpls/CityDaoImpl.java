@@ -12,6 +12,7 @@ import ru.aleynikov.blogcamp.domain.models.City;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class CityDaoImpl implements CityDao {
@@ -34,13 +35,14 @@ public class CityDaoImpl implements CityDao {
     }
 
     @Override
-    public City queryForObject(String query, Object[] qparams) {
-        City city;
+    public Optional<City> queryForObject(String query, Object[] qparams) {
+        Optional<City> city;
+
         try {
             log.info(query + ", {}", Arrays.toString(qparams));
-            city = (City) jdbc.queryForObject(query, qparams, cityRowMapper);
+            city = Optional.of((City) jdbc.queryForObject(query, qparams, cityRowMapper));
         } catch (EmptyResultDataAccessException e) {
-            city = null;
+            city = Optional.empty();
         }
 
         return city;
