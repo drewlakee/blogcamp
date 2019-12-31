@@ -13,10 +13,7 @@ import ru.aleynikov.blogcamp.domain.models.Tag;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.services.TagService;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class PostDaoImpl implements PostDao {
@@ -90,7 +87,7 @@ public class PostDaoImpl implements PostDao {
         String query = "UPDATE post SET deleted = true WHERE post_id = ?";
         Object[] qparams = new Object[] {id};
 
-        Post postForTagsCountsUpdate = queryForObject("SELECT * FROM post WHERE post_id = ?", new Object[] {id});
+        Post postForTagsCountsUpdate = queryForObject("SELECT * FROM post WHERE post_id = ?", new Object[] {id}).orElseThrow();
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
         jdbc.update(query, qparams);
@@ -119,14 +116,14 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public Post queryForObject(String query, Object[] qparams) {
-        Post post;
+    public Optional<Post> queryForObject(String query, Object[] qparams) {
+        Optional<Post> post;
 
         try {
             log.info(query + ", {}", qparams);
-            post = (Post) jdbc.queryForObject(query, qparams, postRowMapper);
+            post = Optional.of((Post) jdbc.queryForObject(query, qparams, postRowMapper));
         } catch (EmptyResultDataAccessException e) {
-            post = null;
+            post = Optional.empty();
         }
 
         return post;

@@ -39,10 +39,7 @@ import ru.aleynikov.blogcamp.ui.statics.StaticContent;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Route(value = "globe/post", layout = MainLayout.class)
 @StyleSheet(StaticContent.MAIN_STYLES)
@@ -287,13 +284,15 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
     }
 
     private boolean isValidParameter(Integer parameter) {
-        Post post = postService.findPostById(parameter);
+        Optional<Post> post = postService.findPostById(parameter);
+        boolean isValid = false;
 
-        if (post != null) {
-            currentPost = post;
-            return true;
-        } else
-            return false;
+        if (post.isPresent()) {
+            currentPost = post.get();
+            isValid = true;
+        }
+
+        return isValid;
     }
 
     @Override

@@ -4,6 +4,7 @@ import ru.aleynikov.blogcamp.domain.models.Post;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface PostDao {
@@ -14,7 +15,7 @@ public interface PostDao {
 
     int findPostIdByUserIdAndTitle(int userId, String title);
 
-    Post queryForObject(String query, Object[] qparams);
+    Optional<Post> queryForObject(String query, Object[] qparams);
     List<Post> queryForList(String query, Object[] qparams);
 
     void setTagsToPost(Set<String> tags, HashMap<String, Object> post);

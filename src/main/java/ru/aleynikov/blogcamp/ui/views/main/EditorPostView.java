@@ -250,13 +250,15 @@ public class EditorPostView extends Composite<Div> implements HasComponents, Has
     }
 
     private boolean isPermissionsAvailable(Integer parameter) {
-        postForEdit = postService.findPostById(parameter);
+        Optional<Post> post = postService.findPostById(parameter);
+        boolean isAvailable = false;
 
-        if (postForEdit != null && postForEdit.getUser().getUsername().equals(userInSession.getUsername()))
-            return true;
-        else {
-            return false;
+        if (post.isPresent() && post.map(Post::getUser).orElseThrow().getUsername().equals(userInSession.getUsername())) {
+            postForEdit = post.get();
+            isAvailable = true;
         }
+
+        return isAvailable;
     }
 
     private boolean isValidParameter(Integer parameter) {
