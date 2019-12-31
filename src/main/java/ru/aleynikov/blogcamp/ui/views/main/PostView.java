@@ -324,7 +324,9 @@ public class PostView extends Composite<Div> implements HasComponents, HasUrlPar
 
             userImage.setSrc(currentPost.getUser().getAvatar());
             userLink.setText(currentPost.getUser().getUsername());
-            userFullNameSpan.setText(currentPost.getUser().getFullName());
+
+            if (currentPost.getUser().getFullName().isPresent())
+                userFullNameSpan.setText(currentPost.getUser().getFullName().get());
 
             if (userInSession.isAdmin() || currentPost.getUser().getUsername().equals(userInSession.getUsername())) {
                 deleteSpan.setVisible(true);

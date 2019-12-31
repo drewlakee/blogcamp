@@ -190,8 +190,8 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
     }
 
     private void setCurrentUserInfo(User user) {
-        if (!user.getFullName().strip().isEmpty()) {
-            ArrayList<String> userNames = new ArrayList<>(Arrays.asList(user.getFullName().split(" ")));
+        if (user.getFullName().isPresent()) {
+            ArrayList<String> userNames = new ArrayList<>(Arrays.asList(user.getFullName().get().split(" ")));
             Iterator namesIterator = userNames.iterator();
 
             firstNameField.setValue(namesIterator.next().toString());
@@ -203,12 +203,12 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
             lastNameField.setValue(secondNames);
         }
 
-        if (user.getBirthday() != null) {
-            birthdayPicker.setValue(user.getBirthday().toLocalDate());
+        if (user.getBirthday().isPresent()) {
+            birthdayPicker.setValue(user.getBirthday().get().toLocalDate());
         }
 
-        if (!user.getStatus().strip().isEmpty()) {
-            statusArea.setValue(user.getStatus());
+        if (user.getStatus().isPresent()) {
+            statusArea.setValue(user.getStatus().get());
         }
 
     }

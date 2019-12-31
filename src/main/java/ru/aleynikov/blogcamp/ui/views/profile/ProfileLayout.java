@@ -252,8 +252,8 @@ public class ProfileLayout extends Composite<Div> implements HasComponents, Rout
         userUsernameSpan.setText(user.getUsername());
         infoLayout.add(userUsernameSpan);
 
-        if (user.getFullName() != null) {
-            userFullNameSpan.setText(user.getFullName());
+        if (user.getFullName().isPresent()) {
+            userFullNameSpan.setText(user.getFullName().get());
             infoLayout.add(userFullNameSpan);
         }
 
@@ -262,13 +262,13 @@ public class ProfileLayout extends Composite<Div> implements HasComponents, Rout
             infoLayout.add(userFromSpan);
         }
 
-        if (user.getBirthday() != null) {
-            userBirthdaySpan.setText(user.getBirthday().toLocalDate().format(DateTimeFormatter.ofPattern("d MMMM YYYY", Locale.ENGLISH)) + " (" + (currYear - user.getBirthday().toLocalDate().getYear()) + " years old)");
+        if (user.getBirthday().isPresent()) {
+            userBirthdaySpan.setText(user.getBirthday().get().toLocalDate().format(DateTimeFormatter.ofPattern("d MMMM YYYY", Locale.ENGLISH)) + " (" + (currYear - user.getBirthday().get().toLocalDate().getYear()) + " years old)");
             infoLayout.add(userBirthdaySpan);
         }
 
-        if (user.getStatus() != null) {
-            userStatusSpan.setText(user.getStatus());
+        if (user.getStatus().isPresent()) {
+            userStatusSpan.setText(user.getStatus().get());
             infoLayout.add(userStatusSpan);
         }
     }

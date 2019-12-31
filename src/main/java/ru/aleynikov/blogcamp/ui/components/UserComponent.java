@@ -66,10 +66,10 @@ public class UserComponent extends Div {
 
         contentBodyRightLayout.add(usernameLayout);
 
-        if (currentUser.getFullName() != null) {
+        if (currentUser.getFullName().isPresent()) {
             userFullNameSpan.addClassName("user-fullname");
             userFullNameSpan.addClassName("margin-none");
-            userFullNameSpan.setText(currentUser.getFullName());
+            userFullNameSpan.setText(currentUser.getFullName().get());
             contentBodyRightLayout.add(userFullNameSpan);
         }
 
@@ -84,13 +84,13 @@ public class UserComponent extends Div {
 
         contentLayout.add(contentBodyLayout);
 
-        if (currentUser.getStatus() != null) {
+        if (currentUser.getStatus().isPresent()) {
             contentFootLayout.setSizeFull();
             contentFootLayout.addClassName("padding-none");
             contentFootLayout.addClassName("user-about");
 
             userStatusSpan.addClassName("user-about-content");
-            userStatusSpan.setText(currentUser.getStatus());
+            userStatusSpan.setText(currentUser.getStatus().get());
 
             contentFootLayout.add(userStatusSpan);
 

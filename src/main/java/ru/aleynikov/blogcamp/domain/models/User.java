@@ -20,14 +20,14 @@ public class User implements UserDetails, RoleProver {
 
     private int id;
     private String username;
-    private String fullName;
+    private Optional<String> fullName;
     private String password;
     private String secretQuestion;
     private String secretAnswer;
     private boolean active;
     private Timestamp registeredDate;
-    private String status;
-    private Date birthday;
+    private Optional<String> status;
+    private Optional<Date> birthday;
     private Optional<Country> country;
     private Optional<City> city;
     private Role role;

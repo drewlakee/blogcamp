@@ -109,11 +109,11 @@ public class UserDetailDialog extends Dialog {
         detailUserUsername.setText(postUser.getUsername());
         rightSideLayout.add(detailUserUsername);
 
-        if (postUser.getFullName() != null) {
+        if (postUser.getFullName().isPresent()) {
             detailUserFullNameSpan.addClassName("grey-light");
             detailUserFullNameSpan.addClassName("margin-none");
             detailUserFullNameSpan.addClassName("padding-l-2px");
-            detailUserFullNameSpan.setText(postUser.getFullName());
+            detailUserFullNameSpan.setText(postUser.getFullName().get());
             rightSideLayout.add(detailUserFullNameSpan);
         }
 
@@ -125,16 +125,16 @@ public class UserDetailDialog extends Dialog {
             rightSideLayout.add(detailUserFromSpan);
         }
 
-        if (postUser.getBirthday() != null) {
+        if (postUser.getBirthday().isPresent()) {
             detailUserBirthdaySpan.addClassName("grey-light");
             detailUserBirthdaySpan.addClassName("margin-none");
             detailUserBirthdaySpan.addClassName("padding-l-2px");
-            detailUserBirthdaySpan.setText(postUser.getBirthday().toLocalDate().format(DateTimeFormatter.ofPattern("d MMMM YYYY", Locale.ENGLISH)) + " (" + (currYear - postUser.getBirthday().toLocalDate().getYear()) + " years old)");
+            detailUserBirthdaySpan.setText(postUser.getBirthday().get().toLocalDate().format(DateTimeFormatter.ofPattern("d MMMM YYYY", Locale.ENGLISH)) + " (" + (currYear - postUser.getBirthday().get().toLocalDate().getYear()) + " years old)");
             rightSideLayout.add(detailUserBirthdaySpan);
         }
 
-        if (postUser.getStatus() != null) {
-            detailUserStatusSpan.setText(postUser.getStatus());
+        if (postUser.getStatus().isPresent()) {
+            detailUserStatusSpan.setText(postUser.getStatus().get());
             rightSideLayout.add(detailUserStatusSpan);
         }
 

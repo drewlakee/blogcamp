@@ -230,7 +230,9 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
         userAvatarImage.setAlt("avatar");
         userAvatarImage.setSrc(user.getAvatar());
         usernameSpan.setText(user.getUsername());
-        statusSpan.setText(user.getStatus());
+
+        if (user.getStatus().isPresent())
+            statusSpan.setText(user.getStatus().get());
     }
 
     private void buildPostsBrowser(int page, String sortTab, String locationPath, String search, String tag, String user, String globalSearch) {
