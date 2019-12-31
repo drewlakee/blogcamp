@@ -10,6 +10,8 @@ public interface TagDao {
     void update(String query, Object[] qparams);
 
     List<Tag> queryForList(String query, Object[] qparams);
+
+    // TODO: Make optional return
     Tag queryForObject(String query, Object[] qparams);
 
     int count(String query, Object[] qparams);

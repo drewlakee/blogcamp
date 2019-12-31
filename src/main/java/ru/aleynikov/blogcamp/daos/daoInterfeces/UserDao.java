@@ -11,6 +11,7 @@ public interface UserDao {
     void unban(String query, Object[] qparams);
     void update(String query, Object[] qparams);
 
+    // TODO: Make optional return
     User queryForObject(String query, Object[] qparams);
     List<User> queryForList(String query, Object[] qparams);
 
