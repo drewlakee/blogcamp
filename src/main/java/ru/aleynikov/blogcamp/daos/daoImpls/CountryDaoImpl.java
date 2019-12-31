@@ -12,6 +12,7 @@ import ru.aleynikov.blogcamp.domain.models.Country;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class CountryDaoImpl implements CountryDao {
@@ -35,14 +36,14 @@ public class CountryDaoImpl implements CountryDao {
     }
 
     @Override
-    public Country queryForObject(String query, Object[] qparams) {
-        Country country;
+    public Optional<Country> queryForObject(String query, Object[] qparams) {
+        Optional<Country> country;
 
         try {
             log.info(query + ", {}", Arrays.toString(qparams));
-            country = (Country) jdbc.queryForObject(query, qparams, countryRowMapper);
+            country = Optional.of((Country) jdbc.queryForObject(query, qparams, countryRowMapper));
         } catch (EmptyResultDataAccessException e) {
-            country = null;
+            country = Optional.empty();
         }
 
         return country;

@@ -28,13 +28,13 @@ public class User implements UserDetails, RoleProver {
     private Timestamp registeredDate;
     private String status;
     private Date birthday;
-    private Country country;
+    private Optional<Country> country;
     private Optional<City> city;
     private Role role;
     private String avatar;
     private boolean isBanned;
 
-    public void refreshUser(User user) {
+    public void updateUserPrinciples(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.fullName = user.getFullName();

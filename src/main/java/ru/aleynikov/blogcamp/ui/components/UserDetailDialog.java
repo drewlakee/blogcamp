@@ -11,6 +11,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.QueryParameters;
 import ru.aleynikov.blogcamp.domain.models.City;
+import ru.aleynikov.blogcamp.domain.models.Country;
 import ru.aleynikov.blogcamp.domain.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 import ru.aleynikov.blogcamp.ui.web.JavaScript;
@@ -116,11 +117,11 @@ public class UserDetailDialog extends Dialog {
             rightSideLayout.add(detailUserFullNameSpan);
         }
 
-        if (postUser.getCity().isPresent() & postUser.getCountry() != null) {
+        if (postUser.getCity().isPresent() & postUser.getCountry().isPresent()) {
             detailUserFromSpan.addClassName("grey-light");
             detailUserFromSpan.addClassName("margin-none");
             detailUserFromSpan.addClassName("padding-l-2px");
-            detailUserFromSpan.setText(postUser.getCity().map(City::getName).get() + ", " + postUser.getCountry().getName());
+            detailUserFromSpan.setText(postUser.getCity().map(City::getName).get() + ", " + postUser.getCountry().map(Country::getName).get());
             rightSideLayout.add(detailUserFromSpan);
         }
 

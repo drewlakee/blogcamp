@@ -221,10 +221,13 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
         cityList.forEach(city -> citiesMap.put(city.getName(), city));
 
         countrySelect.setEmptySelectionAllowed(true);
-        if (userInSession.getCountry() != null) {
-            countrySelect.setEmptySelectionCaption(userInSession.getCountry().getName());
+        if (userInSession.getCountry().isPresent()) {
+            countrySelect.setEmptySelectionCaption(userInSession.getCountry().map(Country::getName).get());
             countrySelect.setItems(
-                    countriesMap.keySet().stream().filter(country -> !country.equals(userInSession.getCountry().getName())).collect(Collectors.toSet())
+                    countriesMap.keySet()
+                            .stream()
+                            .filter(country -> !country.equals(userInSession.getCountry().map(Country::getName).get()))
+                            .collect(Collectors.toSet())
             );
         } else
             countrySelect.setItems(countriesMap.keySet());
@@ -233,9 +236,15 @@ public class AboutView extends Composite<Div> implements HasComponents, BeforeEn
         if (userInSession.getCity().isPresent()) {
             citySelect.setEmptySelectionCaption(userInSession.getCity().map(City::getName).get());
             citySelect.setItems(
-                    citiesMap.keySet().stream().filter(city -> !city.equals(userInSession.getCity().map(City::getName).get()) && citiesMap.get(city).getCountry().getName().equals(countrySelect.getEmptySelectionCaption())).collect(Collectors.toSet())
+                    citiesMap.keySet()
+                            .stream()
+                            .filter(city -> !city.equals(userInSession.getCity().map(City::getName).get()) && citiesMap.get(city).getCountry().getName().equals(countrySelect.getEmptySelectionCaption()))
+                            .collect(Collectors.toSet())
             );
         } else
-            citySelect.setItems(citiesMap.keySet().stream().filter(city -> citiesMap.get(city).getCountry().getName().equals(countrySelect.getEmptySelectionCaption())));
+            citySelect.setItems(citiesMap.keySet()
+                    .stream()
+                    .filter(city -> citiesMap.get(city).getCountry().getName().equals(countrySelect.getEmptySelectionCaption()))
+            );
     }
 }

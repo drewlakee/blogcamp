@@ -11,6 +11,6 @@ public class SessionState {
     private UserService userService;
 
     public void updateUserPrincipals() {
-        SecurityUtils.getPrincipal().refreshUser(userService.findUserByUsername(SecurityUtils.getPrincipal().getUsername()));
+        SecurityUtils.getPrincipal().updateUserPrinciples(userService.findUserByUsername(SecurityUtils.getPrincipal().getUsername()));
     }
 }

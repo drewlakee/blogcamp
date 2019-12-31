@@ -10,6 +10,7 @@ import ru.aleynikov.blogcamp.services.CountryService;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 @Component
 public class UserRowMapper implements RowMapper {
@@ -42,7 +43,7 @@ public class UserRowMapper implements RowMapper {
         else
             user.setBirthday(null);
 
-        user.setCountry(countryService.findById(rs.getInt("country")));
+        user.setCountry((countryService.findById(rs.getInt("country"))));
         user.setCity(cityService.findCityById(rs.getInt("city")));
         user.setFullName(rs.getString("fullname"));
         user.setRole(Role.getRoleEnum(rs.getString("role")));

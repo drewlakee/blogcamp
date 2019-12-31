@@ -20,7 +20,7 @@ public class CityRowMapper implements RowMapper {
         City city = new City();
         city.setId(rs.getInt("city_id"));
         city.setName(rs.getString("name"));
-        city.setCountry(countryService.findById(rs.getInt("country")));
+        city.setCountry(countryService.findById(rs.getInt("country")).orElseThrow());
 
         return city;
     }
