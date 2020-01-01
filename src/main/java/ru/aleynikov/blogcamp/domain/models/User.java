@@ -86,6 +86,6 @@ public class User implements UserDetails, RoleProver {
 
     @Override
     public boolean isAnonymous() {
-        return role.equals(Role.UNKNOWN);
+        return role.equals(Role.ANONYMOUS);
     }
 }

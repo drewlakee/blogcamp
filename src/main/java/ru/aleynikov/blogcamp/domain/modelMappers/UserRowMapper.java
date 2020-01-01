@@ -36,7 +36,7 @@ public class UserRowMapper implements RowMapper {
         user.setCountry((countryService.findById(rs.getInt("country"))));
         user.setCity(cityService.findCityById(rs.getInt("city")));
         user.setFullName(Optional.ofNullable(rs.getString("fullname")));
-        user.setRole(Role.getRoleEnum(rs.getString("role")));
+        user.setRole(Role.valueOf(rs.getString("role")));
         user.setAvatar(rs.getString("avatar"));
         user.setBanned(rs.getBoolean("banned"));
 
