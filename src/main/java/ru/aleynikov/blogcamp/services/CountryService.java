@@ -2,11 +2,11 @@ package ru.aleynikov.blogcamp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.aleynikov.blogcamp.daoImpls.CountryDaoImpl;
-import ru.aleynikov.blogcamp.daos.CountryDao;
-import ru.aleynikov.blogcamp.models.Country;
+import ru.aleynikov.blogcamp.daos.daoInterfeces.CountryDao;
+import ru.aleynikov.blogcamp.domain.models.Country;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CountryService {
@@ -20,7 +20,7 @@ public class CountryService {
         return countryDao.queryForList(query, null);
     }
 
-    public Country findById(int id) {
+    public Optional<Country> findById(int id) {
         String query = "SELECT * FROM country WHERE country_id = ?";
         Object[] qparams = new Object[] {id};
 

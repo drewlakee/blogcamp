@@ -6,8 +6,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.aleynikov.blogcamp.daoImpls.UserDaoImpl;
-import ru.aleynikov.blogcamp.models.User;
+import ru.aleynikov.blogcamp.domain.models.User;
+
+import java.util.Optional;
 
 @Service("userDetailsService")
 public class MyUserDetailsService implements UserDetailsService {
@@ -18,7 +19,8 @@ public class MyUserDetailsService implements UserDetailsService {
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findUserByUsername(username);
-        return user;
+        Optional<User> user = userService.findUserByUsername(username);
+
+        return user.orElseThrow();
     }
 }

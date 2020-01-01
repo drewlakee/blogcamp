@@ -25,7 +25,7 @@ public class SpringContext {
     private String psqlPassword;
 
     @Bean
-    public HikariDataSource HikariDataSource() {
+    public HikariDataSource hikariDataSource() {
         HikariDataSource hikariDataSource = new HikariDataSource();
         hikariDataSource.setDriverClassName(jdbcDriver);
         hikariDataSource.setJdbcUrl(jdbcUrl);
@@ -36,26 +36,26 @@ public class SpringContext {
     }
 
     @Bean
-    public JdbcTemplate JdbcTemplate() {
-        return new JdbcTemplate(HikariDataSource());
+    public JdbcTemplate jdbcTemplate() {
+        return new JdbcTemplate(hikariDataSource());
     }
 
     @Bean
-    public BCryptPasswordEncoder BCryptPasswordEncoder() {
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public Pattern regularExpForUsername() {
-        int minLength = 6;
-        int maxLength = 30;
-        return Pattern.compile(String.format("^(\\w|\\d){%d,%d}+$", minLength, maxLength));
+        final int MIN_LENGTH = 6;
+        final int MAX_LENGTH = 30;
+        return Pattern.compile(String.format("^(\\w|\\d){%d,%d}+$", MIN_LENGTH, MAX_LENGTH));
     }
 
     @Bean
     public Pattern regularExpForPassword() {
-        int minLength = 8;
-        int maxLength = 30;
-        return Pattern.compile(String.format("^(\\w|\\d){%d,%d}+$", minLength, maxLength));
+        final int MIN_LENGTH = 8;
+        final int MAX_LENGTH = 30;
+        return Pattern.compile(String.format("^(\\w|\\d){%d,%d}+$", MIN_LENGTH, MAX_LENGTH));
     }
 }

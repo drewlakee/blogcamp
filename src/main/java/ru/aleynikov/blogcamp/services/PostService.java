@@ -2,12 +2,13 @@ package ru.aleynikov.blogcamp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.aleynikov.blogcamp.daos.PostDao;
-import ru.aleynikov.blogcamp.models.Post;
+import ru.aleynikov.blogcamp.daos.daoInterfeces.PostDao;
+import ru.aleynikov.blogcamp.domain.models.Post;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -35,7 +36,7 @@ public class PostService {
         postDao.setTagsToPost(tags, post);
     }
 
-    public Post findPostById(int id) {
+    public Optional<Post> findPostById(int id) {
         String query = "SELECT " + mainPostQueryParams + " " +
                 "FROM post, usr " +
                 "WHERE post_id = ? " +

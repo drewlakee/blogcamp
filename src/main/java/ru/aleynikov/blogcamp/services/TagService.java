@@ -2,12 +2,13 @@ package ru.aleynikov.blogcamp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.aleynikov.blogcamp.daos.TagDao;
-import ru.aleynikov.blogcamp.models.Post;
-import ru.aleynikov.blogcamp.models.Tag;
+import ru.aleynikov.blogcamp.daos.daoInterfeces.TagDao;
+import ru.aleynikov.blogcamp.domain.models.Post;
+import ru.aleynikov.blogcamp.domain.models.Tag;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TagService {
@@ -67,7 +68,7 @@ public class TagService {
         return tagDao.count(query, null);
     }
 
-    public Tag findTagByName(String name) {
+    public Optional<Tag> findTagByName(String name) {
         String query = "SELECT * FROM tag WHERE name = ?";
         Object[] qparams = new Object[] {name};
 

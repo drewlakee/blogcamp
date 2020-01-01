@@ -2,13 +2,14 @@ package ru.aleynikov.blogcamp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.aleynikov.blogcamp.daos.UserDao;
-import ru.aleynikov.blogcamp.models.User;
+import ru.aleynikov.blogcamp.daos.daoInterfeces.UserDao;
+import ru.aleynikov.blogcamp.domain.models.User;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -57,7 +58,7 @@ public class UserService {
         return userDao.count(query, null);
     }
 
-    public User findUserByUsername(String username) {
+    public Optional<User> findUserByUsername(String username) {
         String query = "SELECT * FROM usr " +
                 "WHERE LOWER(usr.username) = LOWER(?) " +
                 "AND banned = false";
@@ -66,7 +67,7 @@ public class UserService {
         return userDao.queryForObject(query, qparams);
     }
 
-    public User findUserById(int id) {
+    public Optional<User> findUserById(int id) {
         String query = "SELECT * FROM usr WHERE user_id = ?";
         Object[] qparams = new Object[] {id};
 
