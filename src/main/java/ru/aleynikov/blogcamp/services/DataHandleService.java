@@ -15,6 +15,7 @@ public class DataHandleService {
         return offset;
     }
 
+    // TODO: Fix offset problem on users page and refactor this method
     public static int calculatePageLimit(float countOfComponents, int limitOfComponentsOnPage) {
         int pageLimit = Math.round((countOfComponents + limitOfComponentsOnPage / 2) / limitOfComponentsOnPage);
 
