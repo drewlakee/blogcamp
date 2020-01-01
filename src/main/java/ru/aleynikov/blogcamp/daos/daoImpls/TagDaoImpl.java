@@ -13,6 +13,7 @@ import ru.aleynikov.blogcamp.security.SecurityUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class TagDaoImpl implements TagDao {
@@ -58,14 +59,14 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public Tag queryForObject(String query, Object[] qparams) {
-        Tag tag;
+    public Optional<Tag> queryForObject(String query, Object[] qparams) {
+        Optional<Tag> tag;
 
         try {
             log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", Arrays.toString(qparams));
-            tag = (Tag) jdbc.queryForObject(query, qparams, tagRowMapper);
+            tag = Optional.of((Tag) jdbc.queryForObject(query, qparams, tagRowMapper));
         } catch (EmptyResultDataAccessException e) {
-            tag = null;
+            tag = Optional.empty();
         }
 
         return tag;

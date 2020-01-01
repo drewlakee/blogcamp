@@ -53,16 +53,19 @@ public class PostDaoImpl implements PostDao {
 
         if (postIdFromDb != -1) {
             for (String tag : tags) {
-                Tag tagFromDb = tagService.findTagByName(tag);
+                Optional<Tag> tagFromDb = tagService.findTagByName(tag);
 
-                if (tagFromDb != null) {
-                    qparamsForInsert = new Object[] {postIdFromDb, tagFromDb.getId()};
+                // check tag - is it exist?
+                // if exist, then do inserts
+                // else save new tag, then take it from db and do inserts
+                if (tagFromDb.isPresent()) {
+                    qparamsForInsert = new Object[] {postIdFromDb, tagFromDb.get().getId()};
                     jdbc.update(insertTagToPostQuery, qparamsForInsert);
                 } else {
                     tagService.save(tag);
                     tagFromDb = tagService.findTagByName(tag);
 
-                    qparamsForInsert = new Object[] {postIdFromDb, tagFromDb.getId()};
+                    qparamsForInsert = new Object[] {postIdFromDb, tagFromDb.get().getId()};
                     jdbc.update(insertTagToPostQuery, qparamsForInsert);
                 }
             }
@@ -76,9 +79,12 @@ public class PostDaoImpl implements PostDao {
         Object[] qparams;
 
         for (String tag : tags) {
-            Tag tagFromDb = tagService.findTagByName(tag);
-            qparams = new Object[] {post.get("post_id"), tagFromDb.getId()};
-            jdbc.update(dropQuery, qparams);
+            Optional<Tag> tagFromDb = tagService.findTagByName(tag);
+
+            if (tagFromDb.isPresent()) {
+                qparams = new Object[] {post.get("post_id"), tagFromDb.get().getId()};
+                jdbc.update(dropQuery, qparams);
+            }
         }
     }
 
