@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.aleynikov.blogcamp.domain.models.User;
 
+import java.util.Optional;
+
 @Service("userDetailsService")
 public class MyUserDetailsService implements UserDetailsService {
 
@@ -17,7 +19,8 @@ public class MyUserDetailsService implements UserDetailsService {
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findUserByUsername(username);
-        return user;
+        Optional<User> user = userService.findUserByUsername(username);
+
+        return user.orElseThrow();
     }
 }

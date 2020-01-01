@@ -20,6 +20,7 @@ import ru.aleynikov.blogcamp.domain.models.User;
 import ru.aleynikov.blogcamp.services.UserService;
 import ru.aleynikov.blogcamp.ui.statics.StaticContent;
 
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 @PageTitle("Password restore")
@@ -194,8 +195,12 @@ public class PasswordRestoreView extends HorizontalLayout {
     }
 
     private boolean isAccountExist() {
-        if (existingAccount == null)
-            existingAccount = userService.findUserByUsername(usernameField.getValue().strip());
+        if (existingAccount == null) {
+            Optional<User> user = userService.findUserByUsername(usernameField.getValue().strip());
+
+            if (user.isPresent())
+                existingAccount = user.get();
+        }
 
         if (existingAccount != null) {
             passRestoreErrorLayout.setVisible(false);

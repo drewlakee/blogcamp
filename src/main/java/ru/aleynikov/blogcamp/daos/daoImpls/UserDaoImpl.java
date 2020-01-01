@@ -13,6 +13,7 @@ import ru.aleynikov.blogcamp.security.SecurityUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class UserDaoImpl implements UserDao {
@@ -42,14 +43,14 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User queryForObject(String query, Object[] qparams) {
-        User user;
+    public Optional<User> queryForObject(String query, Object[] qparams) {
+        Optional<User> user;
 
         try {
             log.info(query + ", {}", Arrays.toString(qparams));
-            user = (User) jdbc.queryForObject(query, qparams, userRowMapper);
+            user = Optional.of((User) jdbc.queryForObject(query, qparams, userRowMapper));
         } catch (EmptyResultDataAccessException e) {
-            user = null;
+            user = Optional.empty();
         }
 
         return user;

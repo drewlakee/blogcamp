@@ -31,6 +31,7 @@ import ru.aleynikov.blogcamp.ui.views.main.HomeView;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 
@@ -207,14 +208,15 @@ public class SignUpView extends HorizontalLayout {
     }
 
     private boolean isUsernameUnique() {
-        User existingUser = userService.findUserByUsername(usernameField.getValue().strip());
+        Optional<User> existingUser = userService.findUserByUsername(usernameField.getValue().strip());
+        boolean isUnique = false;
 
-        if (existingUser == null)
-            return true;
-        else {
+        if (existingUser.isPresent())
+            isUnique = true;
+        else
             signUpErrorLayout.setVisible(true);
-            return false;
-        }
+
+        return isUnique;
     }
 
     private boolean isSecretFormValid() {

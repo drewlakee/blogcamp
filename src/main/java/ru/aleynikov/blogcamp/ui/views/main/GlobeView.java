@@ -259,9 +259,11 @@ public class GlobeView extends Composite<Div> implements HasComponents, HasUrlPa
         } else if (!user.isEmpty()) {
             posts = postService.getPostListByUsername(page, POST_ON_PAGE_LIMIT, user);
             count = postService.countPostsByUsername(user);
-            User foundedUser = userService.findUserByUsername(user);
-            if (foundedUser != null)
-                buildUserDetailInfo(foundedUser);
+            Optional<User> foundedUser = userService.findUserByUsername(user);
+
+            if (foundedUser.isPresent())
+                buildUserDetailInfo(foundedUser.get());
+
             customQueryParams.put("user", user);
         } else if (sortTab.equals(interestingTab.getLabel().toLowerCase())) {
             posts = postService.getInterestingPostList(page, POST_ON_PAGE_LIMIT);

@@ -30,7 +30,7 @@ public class PostRowMapper implements RowMapper {
         post.setDeleted(rs.getBoolean("deleted"));
         post.setCommentCount(rs.getInt("comments_count"));
         post.setTags(tagService.getTagsListByPostId(post.getId()));
-        post.setUser(userService.findUserById(rs.getInt("user")));
+        post.setUser(userService.findUserById(rs.getInt("user")).orElseThrow());
 
         return post;
     }
