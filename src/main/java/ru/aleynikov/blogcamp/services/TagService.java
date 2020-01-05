@@ -103,16 +103,6 @@ public class TagService {
         tagDao.update(query, qparams);
     }
 
-    public void updateTagsCountOfPostByPostId(Post post) {
-        String query = "UPDATE post_to_tag SET tag_id = ? WHERE tag_id = ? AND post_id = ?";
-        Object[] qparams;
-
-        for(Tag tag : post.getTags()) {
-            qparams = new Object[] {tag.getId(), tag.getId(), post.getId()};
-            tagDao.update(query, qparams);
-        }
-    }
-
     public List<Tag> getTagsSortedByNameAsc(int page, int componentsLimit) {
         String query = "SELECT tag.tag_id, tag.name, tag.description, tag.created FROM tag " +
                 "JOIN post_to_tag ON tag.tag_id = post_to_tag.tag_id " +
