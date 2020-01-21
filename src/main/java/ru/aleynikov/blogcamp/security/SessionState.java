@@ -13,6 +13,10 @@ public class SessionState {
     @Autowired
     private UserService userService;
 
+    /**
+     *  Updates user information in current session
+     *  after information update in database
+     */
     public void updateUserPrincipals() {
         Optional<User> userForUpdate = userService.findUserByUsername(SecurityUtils.getPrincipal().getUsername());
 

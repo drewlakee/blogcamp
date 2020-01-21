@@ -1,15 +1,12 @@
 package ru.aleynikov.blogcamp.daos.daoInterfeces;
 
+import ru.aleynikov.blogcamp.daos.extensions.Countable;
+import ru.aleynikov.blogcamp.daos.extensions.Deleteable;
+import ru.aleynikov.blogcamp.daos.extensions.Saveable;
+import ru.aleynikov.blogcamp.daos.extensions.StandartQueryable;
 import ru.aleynikov.blogcamp.domain.models.Comment;
 
 import java.util.List;
 
-public interface CommentDao {
-
-    void delete(String query, Object[] qparams);
-    void save(String query, Object[] qparams);
-
-    List<Comment> queryForList(String query, Object[] qparams);
-
-    int count(String query, Object[] qparams);
+public interface CommentDao extends Saveable, Deleteable, StandartQueryable, Countable {
 }

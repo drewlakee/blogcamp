@@ -26,6 +26,7 @@ public class PostDaoImpl implements PostDao {
     @Autowired
     private PostRowMapper postRowMapper;
 
+    // TODO: Need to refactor - separate service and dao layer
     @Autowired
     private TagService tagService;
 
@@ -89,16 +90,10 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public void delete(int id) {
-        String query = "UPDATE post SET deleted = true WHERE post_id = ?";
-        Object[] qparams = new Object[] {id};
-
-        Post postForTagsCountsUpdate = queryForObject("SELECT * FROM post WHERE post_id = ?", new Object[] {id}).orElseThrow();
+    public void delete(String query, Object[] qparams) {
 
         log.info(SecurityUtils.getPrincipal().getUsername() + ": " + query + ", {}", qparams);
         jdbc.update(query, qparams);
-
-        tagService.updateTagsCountOfPostByPostId(postForTagsCountsUpdate);
     }
 
     @Override

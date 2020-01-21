@@ -3,11 +3,13 @@ package ru.aleynikov.blogcamp.daos.daoImpls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.aleynikov.blogcamp.daos.daoInterfeces.CommentDao;
 import ru.aleynikov.blogcamp.domain.modelMappers.CommentRowMapper;
 import ru.aleynikov.blogcamp.domain.models.Comment;
+import ru.aleynikov.blogcamp.domain.models.User;
 import ru.aleynikov.blogcamp.security.SecurityUtils;
 
 import java.util.*;
@@ -41,6 +43,20 @@ public class CommentDaoImpl implements CommentDao {
         comments = jdbc.query(query, qparams, commentRowMapper);
 
         return comments;
+    }
+
+    @Override
+    public Optional queryForObject(String query, Object[] qparams) {
+        Optional<Comment> comment;
+
+        try {
+            log.info(query + ", {}", Arrays.toString(qparams));
+            comment = Optional.of((Comment) jdbc.queryForObject(query, qparams, commentRowMapper));
+        } catch (EmptyResultDataAccessException e) {
+            comment = Optional.empty();
+        }
+
+        return comment;
     }
 
     @Override

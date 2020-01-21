@@ -233,7 +233,11 @@ public class PostService {
     }
 
     public void deleteById(int id) {
-        postDao.delete(id);
+        String query = "UPDATE post SET deleted = true " +
+                "WHERE post_id = ?";
+        Object[] qparams = new Object[] {id};
+
+        postDao.delete(query, qparams);
     }
 
     public void removeTagsFromPost(Set<String> tags, HashMap<String, Object> post) {
