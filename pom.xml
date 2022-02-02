@@ -17,7 +17,7 @@
         <lombok.version>1.18.8</lombok.version>
         <spring.version>5.1.5.RELEASE</spring.version>
         <hikariCP.version>3.2.0</hikariCP.version>
-        <postgresql>42.2.6</postgresql>
+        <postgresql>42.2.25</postgresql>
         <slf4j.version>1.7.25</slf4j.version>
 
         <drivers.dir>${project.basedir}/drivers</drivers.dir>
